@@ -102,6 +102,33 @@ git push -u origin master
 
 如果 Gitee 要求登录，请按 Git 弹窗输入 Gitee 用户名和密码/私人令牌。
 
+## Gitee Pages
+
+本仓库已经按静态网页方式整理：
+
+- 入口文件：`index.html`
+- 分支：`master`
+- 发布目录：仓库根目录 `/`
+- 本地 Leaflet 资源：`assets/vendor/leaflet`
+- `.nojekyll`：已添加，避免静态资源被发布流程改写
+
+如果你的 Gitee 账号页面仍提供 Pages 服务，可以在仓库页面进入：
+
+```text
+服务 -> Gitee Pages
+```
+
+然后选择：
+
+```text
+部署分支：master
+部署目录：/
+```
+
+部署完成后访问 Gitee 给出的 Pages 地址即可。
+
+如果页面提示 Gitee Pages 功能已下线或不可用，则无法在 Gitee 直接托管网页。可以改用 GitHub Pages、Vercel、Netlify，或继续用本地服务器分享。
+
 ## 出发前仍需确认
 
 - 6 月 18 日乌鲁木齐到伊宁的实际车次/航班。
