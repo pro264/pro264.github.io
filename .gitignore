@@ -1,0 +1,15 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Dependencies / temporary output
+node_modules/
+*.log
+
+# Optional generated archives
+*.zip
+
+# Local server caches
+.cache/

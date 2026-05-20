@@ -1,0 +1,10 @@
+{
+  "name": "xinjiang-ili-duku-trip",
+  "version": "1.0.0",
+  "description": "新疆伊犁-独库公路自驾旅行地图和打印版行程",
+  "private": true,
+  "scripts": {
+    "serve": "python -m http.server 8002",
+    "serve:8003": "python -m http.server 8003"
+  }
+}

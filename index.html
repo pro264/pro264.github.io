@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>新疆伊犁-独库公路自驾地图</title>
+<meta name="description" content="2026年6月17日-6月30日，洛阳出发，新疆伊犁、赛里木湖、特克斯、新源、独库公路自驾参考行程。">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="./assets/vendor/leaflet/dist/leaflet.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css';" />
+<script src="./assets/vendor/leaflet/dist/leaflet.js" onerror="document.write('<script src=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js&quot;><\\/script>')"></script>
+<style>
+/* ═══════════════════════════════════════════
+   Design System — edit :root to change theme
+   ═══════════════════════════════════════════ */
+:root {
+  --bg-primary:    #fffaf3;
+  --bg-secondary:  #f4f0e8;
+  --bg-tertiary:   #fffdf8;
+  --bg-grouped:    #eee8dc;
+  --bg-elevated:   #ffffff;
+  --text-primary:   #1d1d1f;
+  --text-secondary: #86868b;
+  --text-tertiary:  #aeaeb2;
+  --accent:        #0f766e;
+  --accent-hover:  #0d9488;
+  --tint-red:    #ff3b30;
+  --tint-orange: #ff9500;
+  --tint-green:  #34c759;
+  --tint-blue:   #007aff;
+  --tint-purple: #af52de;
+  --tint-pink:   #ff2d55;
+  --separator:  rgba(60, 60, 67, .12);
+  --shadow-sm:  0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:  0 4px 14px rgba(0,0,0,.08);
+  --shadow-lg:  0 8px 30px rgba(0,0,0,.12);
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+  --radius-xl:  20px;
+  --safe-top:    env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+               "Helvetica Neue", "Arial", sans-serif;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.47059;
+  letter-spacing: -0.022em;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Map ── */
+#map { width: 100%; height: 42vh; min-height: 300px; position: sticky; top: 0; z-index: 100; }
+#map::before {
+  content: '地图初始化中...';
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  color: var(--text-secondary); font-size: 14px; background: linear-gradient(135deg,#eef2f7,#f8fafc);
+}
+#map.leaflet-container::before { display: none; }
+.map-offline {
+  position: absolute; left: 12px; bottom: 12px; z-index: 500;
+  background: rgba(255,255,255,.94); color: var(--text-secondary);
+  border: .5px solid var(--separator); border-radius: 8px;
+  padding: 6px 10px; font-size: 12px; box-shadow: var(--shadow-sm);
+}
+.map-offline.error { color: var(--tint-red); }
+.locate-btn {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: rgba(255,255,255,.92); backdrop-filter: blur(8px);
+  border: none; box-shadow: 0 1px 4px rgba(0,0,0,.18);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.locate-btn.active { color: #007aff; }
+@keyframes loc-pulse {
+  0%   { transform: scale(1); opacity: .55; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+.loc-pulse {
+  width: 14px; height: 14px; border-radius: 50%;
+  background: rgba(0,122,255,.25);
+  animation: loc-pulse 1.6s ease-out infinite;
+}
+
+/* ── Tabs ── */
+.tabs {
+  display: flex; gap: 6px; padding: 12px 16px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+  background: rgba(255,255,255,.85); -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px); position: sticky; top: 40vh; z-index: 99;
+  border-bottom: .5px solid var(--separator); scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  flex-shrink: 0; padding: 7px 16px; border-radius: 980px; border: none;
+  background: var(--bg-grouped); color: var(--text-secondary);
+  font-size: 14px; font-weight: 500; cursor: pointer; transition: all .25s ease;
+  white-space: nowrap; letter-spacing: -0.01em;
+}
+.tab:active { transform: scale(.96); }
+.tab.active { background: var(--accent); color: #fff; box-shadow: 0 6px 18px rgba(15,118,110,.22); }
+
+/* ── Main content ── */
+.content { max-width: 760px; margin: 0 auto; padding: 16px 16px calc(24px + var(--safe-bottom)); }
+
+@media (min-width: 1100px) {
+  body { overflow-x: hidden; }
+  #map {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 50vw;
+    height: 100vh;
+    min-height: 100vh;
+    z-index: 80;
+  }
+  .tabs {
+    position: fixed;
+    left: 50vw;
+    top: 0;
+    width: 50vw;
+    z-index: 120;
+    padding: 14px 20px;
+    border-left: .5px solid var(--separator);
+  }
+  .content {
+    width: 50vw;
+    max-width: none;
+    margin-left: 50vw;
+    padding: 72px 28px 36px;
+  }
+  .content > * {
+    max-width: 780px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .hero { text-align: left; }
+  .tab { padding: 8px 17px; }
+}
+
+/* ── Overview ── */
+.hero { text-align: center; padding: 28px 20px 20px; }
+.hero h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.025em; line-height: 1.15; }
+.hero .subtitle { font-size: 17px; color: var(--text-secondary); margin-top: 6px; font-weight: 400; }
+
+.hero-panel {
+  background: linear-gradient(135deg, #f8fafc 0%, #ecfeff 55%, #fff7ed 100%);
+  border: .5px solid rgba(15,118,110,.16);
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: var(--shadow-md);
+}
+
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.info-card { background: var(--bg-elevated); border-radius: var(--radius-lg); padding: 16px; box-shadow: var(--shadow-sm); }
+.info-card .label { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .02em; margin-bottom: 6px; }
+.info-card .value { font-size: 15px; font-weight: 600; line-height: 1.4; }
+
+/* ── Section headers ── */
+.section-head { font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .03em; padding: 20px 0 8px; }
+
+/* ── Day header ── */
+.day-head { padding: 20px 0 12px; }
+.day-head h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+.day-head p { font-size: 15px; color: var(--text-secondary); margin-top: 2px; }
+
+/* ── Route bar ── */
+.route-bar { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 14px; box-shadow: var(--shadow-sm); font-size: 13px; color: var(--text-secondary); line-height: 1.7; white-space: pre-line; }
+.route-bar strong { color: var(--text-primary); }
+
+/* ── Timeline ── */
+.timeline { position: relative; padding-left: 24px; }
+.timeline::before { content: ''; position: absolute; left: 7px; top: 20px; bottom: 20px; width: 1.5px; background: var(--separator); }
+.tl-item { position: relative; margin-bottom: 10px; }
+.tl-dot { position: absolute; left: -20px; top: 18px; width: 10px; height: 10px; border-radius: 50%; z-index: 1; box-shadow: 0 0 0 3px var(--bg-secondary); }
+.tl-dot.food    { background: var(--tint-red); }
+.tl-dot.spot    { background: var(--tint-blue); }
+.tl-dot.hotel   { background: var(--tint-orange); }
+.tl-dot.drink   { background: var(--tint-purple); }
+.tl-dot.transport { background: var(--text-tertiary); }
+
+/* ── Card ── */
+.card { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 14px 16px; box-shadow: var(--shadow-sm); transition: box-shadow .25s ease; cursor: pointer; }
+.card:active { box-shadow: var(--shadow-md); }
+.card .time { font-size: 12px; font-weight: 600; color: var(--text-tertiary); letter-spacing: .01em; }
+.card .name { font-size: 17px; font-weight: 600; margin: 2px 0 4px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 6px; }
+.card .desc { font-size: 14px; color: var(--text-secondary); line-height: 1.45; }
+
+/* Badge */
+.badge { display: inline-flex; align-items: center; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 4px; }
+.badge.food   { background: rgba(255,59,48,.1);  color: var(--tint-red); }
+.badge.spot   { background: rgba(0,122,255,.1);  color: var(--tint-blue); }
+.badge.drink  { background: rgba(175,82,222,.1); color: var(--tint-purple); }
+
+/* Budget */
+.budget { display: inline-block; margin-top: 6px; padding: 3px 10px; background: var(--bg-grouped); border-radius: var(--radius-sm); font-size: 12px; color: var(--text-secondary); font-weight: 500; }
+
+/* Payment */
+.pays { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+.pay { font-size: 11px; padding: 2px 7px; border-radius: 4px; font-weight: 600; }
+.pay.ok  { background: rgba(52,199,89,.1);  color: var(--tint-green); }
+.pay.no  { background: rgba(255,59,48,.08); color: var(--tint-red); }
+.pay.idk { background: rgba(255,149,0,.1);  color: var(--tint-orange); }
+
+/* Links row */
+.links { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 8px 14px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 600; border: none; cursor: pointer;
+  text-decoration: none !important; transition: filter .2s;
+}
+.btn:active { filter: brightness(.9); }
+.btn.nav    { background: var(--accent); color: #fff; }
+.btn.xhs    { background: #ff2442; color: #fff; }
+.btn.dp     { background: #ffa700; color: #fff; }
+.btn.rsv    { background: var(--tint-green); color: #fff; }
+
+/* Action Sheet */
+.as-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,.35); backdrop-filter: blur(2px);
+  display: flex; align-items: flex-end; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity .25s;
+}
+.as-overlay.show { opacity: 1; pointer-events: auto; }
+.as-sheet {
+  width: 100%; max-width: 420px;
+  padding: 0 8px 34px;
+  transform: translateY(100%); transition: transform .3s cubic-bezier(.22,1,.36,1);
+}
+.as-overlay.show .as-sheet { transform: translateY(0); }
+.as-group {
+  background: rgba(255,255,255,.88); backdrop-filter: blur(20px);
+  border-radius: 14px; overflow: hidden; margin-bottom: 8px;
+}
+.as-group .as-item {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 16px; font-size: 18px; color: #007aff; font-weight: 500;
+  border: none; background: none; width: 100%; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.as-group .as-item + .as-item { border-top: .5px solid rgba(0,0,0,.12); }
+.as-group .as-item:active { background: rgba(0,0,0,.06); }
+.as-cancel { font-weight: 600; }
+
+/* Details — default open */
+.details {
+  margin-top: 10px; padding-top: 10px;
+  border-top: .5px solid var(--separator);
+  font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+}
+.details.closed { display: none; }
+
+/* ── Overview day list ── */
+.day-list .card { margin-bottom: 8px; }
+.day-list .card .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+
+/* ── Payment summary ── */
+.pay-summary { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 14px 16px; box-shadow: var(--shadow-sm); font-size: 13px; line-height: 1.7; margin-bottom: 10px; }
+.pay-summary h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.pay-summary .warn { color: var(--tint-red); }
+.pay-summary .ok-text { color: var(--tint-green); }
+
+.quick-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0 18px; }
+.stat-pill {
+  background: rgba(255,255,255,.82);
+  border: .5px solid var(--separator);
+  border-radius: 12px;
+  padding: 10px 12px;
+  box-shadow: var(--shadow-sm);
+}
+.stat-pill .k { font-size: 11px; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; letter-spacing: .03em; }
+.stat-pill .v { font-size: 15px; color: var(--text-primary); font-weight: 750; margin-top: 2px; line-height: 1.25; }
+.route-card {
+  background: linear-gradient(180deg, #ffffff, #fffaf3);
+  border: .5px solid rgba(15,118,110,.14);
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 12px;
+}
+.route-card .route-title { font-size: 14px; font-weight: 800; margin-bottom: 8px; }
+.route-card .route-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.route-card .route-note { margin-top: 9px; color: var(--text-secondary); font-size: 12px; line-height: 1.55; }
+.food-picks { display: grid; gap: 10px; margin-bottom: 14px; }
+.food-card {
+  background: var(--bg-elevated);
+  border: .5px solid var(--separator);
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: var(--shadow-sm);
+}
+.food-card .food-top { display: flex; align-items: start; justify-content: space-between; gap: 10px; }
+.food-card .food-name { font-size: 16px; font-weight: 800; line-height: 1.3; }
+.food-card .food-area { color: var(--text-secondary); font-size: 12px; margin-top: 3px; }
+.food-card .food-why { color: var(--text-secondary); font-size: 13px; line-height: 1.55; margin-top: 8px; }
+.food-card .food-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 9px; }
+.food-tag { display: inline-flex; align-items: center; border-radius: 6px; background: var(--bg-grouped); color: var(--text-secondary); font-size: 11px; font-weight: 700; padding: 3px 8px; }
+.food-tag.pick { background: rgba(15,118,110,.12); color: #0f766e; }
+.hotel-card {
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  border: .5px solid rgba(255,149,0,.22);
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 12px;
+}
+.hotel-card .hotel-name { font-size: 16px; font-weight: 850; }
+.hotel-card .hotel-address { color: var(--text-secondary); font-size: 13px; line-height: 1.5; margin-top: 4px; }
+.hotel-card .hotel-verdict { font-size: 13px; line-height: 1.6; margin-top: 9px; }
+.hotel-card .hotel-risk { color: var(--text-secondary); font-size: 12px; line-height: 1.55; margin-top: 7px; }
+.hotel-table { display: grid; gap: 8px; }
+.hotel-row {
+  background: var(--bg-elevated);
+  border: .5px solid var(--separator);
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: var(--shadow-sm);
+}
+.hotel-row .top { display:flex; justify-content:space-between; gap:10px; align-items:flex-start; }
+.hotel-row .date { color: var(--text-secondary); font-size: 12px; font-weight: 700; white-space: nowrap; }
+.hotel-row .name { font-weight: 800; line-height: 1.35; }
+.hotel-row .addr { color: var(--text-secondary); font-size: 12px; margin-top: 4px; line-height: 1.45; }
+
+@media (max-width: 560px) {
+  .quick-stats { grid-template-columns: 1fr; }
+  .route-card .route-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ── Legend ── */
+.legend { display: flex; gap: 14px; flex-wrap: wrap; padding: 8px 0; font-size: 12px; color: var(--text-secondary); }
+.legend-item { display: flex; align-items: center; gap: 5px; }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* ── Leaflet overrides ── */
+.leaflet-popup-content-wrapper { border-radius: var(--radius-md) !important; box-shadow: var(--shadow-lg) !important; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif !important; }
+.leaflet-popup-content { font-size: 14px !important; line-height: 1.5 !important; margin: 12px 14px !important; }
+.leaflet-popup-content a { color: var(--accent) !important; }
+.leaflet-popup-tip { background: #fff !important; }
+.leaflet-control-zoom a { width: 34px !important; height: 34px !important; line-height: 34px !important; font-size: 16px !important; border-radius: 10px !important; background: rgba(255,255,255,.85) !important; -webkit-backdrop-filter: blur(10px) !important; backdrop-filter: blur(10px) !important; border: .5px solid var(--separator) !important; color: var(--text-primary) !important; }
+.leaflet-control-zoom { border-radius: 12px !important; overflow: hidden; box-shadow: var(--shadow-md) !important; border: none !important; }
+.leaflet-control-attribution { font-size: 9px !important; opacity: .5; }
+.map-marker {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 2.5px solid #fff;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 14px; font-weight: 800;
+  box-shadow: 0 4px 12px rgba(15,23,42,.25);
+  position: relative;
+}
+.map-marker .num {
+  position: absolute; right: -6px; top: -7px;
+  min-width: 16px; height: 16px; padding: 0 4px;
+  border-radius: 999px; background: #111827; color:#fff;
+  border: 1.5px solid #fff; font-size: 10px; line-height: 14px;
+  text-align: center;
+}
+.map-marker.hotel { background: #f97316; }
+.map-marker.food { background: #dc2626; }
+.map-marker.spot { background: #2563eb; }
+.map-marker.transport { background: #64748b; }
+.map-marker.start { background: #16a34a; }
+.map-marker.end { background: #be123c; }
+.map-arrow {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: rgba(15,118,110,.92); color:#fff;
+  border: 2px solid #fff;
+  display:flex; align-items:center; justify-content:center;
+  font-size: 12px; box-shadow: 0 3px 10px rgba(15,23,42,.18);
+  opacity: .86;
+}
+.route-label {
+  background: rgba(255,255,255,.94);
+  color: #0f766e;
+  border: 1px solid rgba(15,118,110,.25);
+  border-radius: 999px;
+  padding: 4px 9px;
+  font-size: 11px;
+  font-weight: 800;
+  box-shadow: var(--shadow-sm);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.as-title { padding: 14px 16px 10px; text-align: center; color: var(--text-secondary); font-size: 13px; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div id="map"></div>
+<div class="tabs" id="tabs"></div>
+<div class="content" id="content"></div>
+
+<script>
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  REPLACE THIS SECTION — Hotel and Days data                 ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+const HOTEL = { name: '实际住宿已写入每日行程', lat: 43.9219, lng: 81.3242 };
+
+const HOTEL_STAYS = {
+  1: { date:'6月17日', name:'汉庭乌鲁木齐天山国际机场酒店', city:'乌鲁木齐机场', address:'乌鲁木齐市新市区林苑巷002号（机场片区）', lat:43.9008, lng:87.4878, verdict:'合理。落地第一晚住机场片区，减少夜间进城和第二天转场压力。', risk:'离市区餐厅远，晚餐以机场/酒店周边简单解决为主；第二天去火车站或机场转伊宁要预留通勤时间。', source:'公开酒店/地图搜索；机场店地址复核' },
+  2: { date:'6月18日', name:'汉庭伊宁巴彦岱', city:'伊宁巴彦岱', address:'伊宁市巴彦岱镇宁远路/218国道片区（以高德店名导航为准）', lat:43.9438, lng:81.2028, verdict:'基本合理。巴彦岱在伊宁西侧，第二天去霍尔果斯、果子沟、赛里木湖方向更顺。', risk:'不在六星街/喀赞其核心区，晚上逛市区后回酒店会多一点车程；适合自驾，不适合纯步行夜生活。', source:'公开地图搜索；按巴彦岱片区定位' },
+  3: { date:'6月19日', name:'赛里木湖桔子水晶', city:'赛里木湖', address:'赛里木湖景区/游客中心周边（以高德店名导航为准）', lat:44.5806, lng:81.1742, verdict:'很合理。住赛湖附近可以保留傍晚和清晨光线，第二天不用从伊宁往返。', risk:'旺季价格波动明显；小红书 2026 年有房型/价格笔记，出发前再看近期差评和停车。', source:'小红书 2026-03/04/05 赛里木湖桔子水晶相关笔记；公开地图搜索' },
+  4: { date:'6月20日', name:'汉庭伊宁巴彦岱', city:'伊宁巴彦岱', address:'伊宁市巴彦岱镇宁远路/218国道片区（以高德店名导航为准）', lat:43.9438, lng:81.2028, verdict:'合理。赛湖回伊宁后住同一家，便于补给、洗衣、休息。', risk:'晚餐若想去六星街/喀赞其，要预留往返车程。', source:'公开地图搜索；路线逻辑复核' },
+  5: { date:'6月21日', name:'朝沐民俗八卦城店', city:'特克斯八卦城', address:'特克斯八卦城/离街片区（以高德店名导航为准）', lat:43.2140, lng:81.8362, verdict:'合理。住八卦城片区，晚上逛街吃饭方便，第二天去喀拉峻/琼库什台也顺。', risk:'民宿类要重点确认停车、热水、隔音和是否可晚到。', source:'公开地图搜索；特克斯小红书美食/八卦城笔记补充' },
+  6: { date:'6月22日', name:'朝沐民俗八卦城店', city:'特克斯八卦城', address:'特克斯八卦城/离街片区（以高德店名导航为准）', lat:43.2140, lng:81.8362, verdict:'合理。连住两晚减少行李折腾，景区回来能直接休息。', risk:'同上，提前确认停车位和夜间到店规则。', source:'公开地图搜索；路线逻辑复核' },
+  7: { date:'6月23日', name:'汉庭新源天鹅湖', city:'新源县城', address:'新源县江额尔森西街005号/天鹅湖片区（以高德店名导航为准）', lat:43.4318, lng:83.2570, verdict:'合理。新源县城补给强于景区镇，适合作为那拉提和独库前的中继。', risk:'距离那拉提镇仍有车程，D8 早上去景区需要早一点出发。', source:'公开酒店/地图搜索；新源片区定位' },
+  8: { date:'6月24日', name:'汉庭新源天鹅湖', city:'新源县城', address:'新源县江额尔森西街005号/天鹅湖片区（以高德店名导航为准）', lat:43.4318, lng:83.2570, verdict:'可以接受。连住两晚稳定、省心，性价比通常优于景区镇。', risk:'那拉提游玩结束回新源会增加往返车程；如果当天很累，控制景区停留时间。', source:'公开地图搜索；路线逻辑复核' },
+  9: { date:'6月25日', name:'巴音布鲁克浩博酒店', city:'巴音布鲁克镇', address:'巴音布鲁克镇赛马场南侧/镇区片区（以高德店名导航为准）', lat:42.8370, lng:84.1500, verdict:'合理。走完独库中段后就地休息，是这天最省体力的选择。', risk:'巴音布鲁克镇旺季房源紧、价格波动，重点确认供暖/热水/停车和是否可晚到。', source:'公开地图搜索；小红书巴音布鲁克住宿笔记补充' },
+  10:{ date:'6月26日', name:'汉庭库车南湖', city:'库车市区', address:'库车市南湖片区（以高德店名导航为准）', lat:41.7088, lng:82.9606, verdict:'合理。独库南段下山后住市区，吃饭、补给、休整都比景区路边稳。', risk:'D10 抵达可能偏晚，提前确认停车和前台保留时间。', source:'公开地图搜索；库车小红书美食笔记补充' },
+  11:{ date:'6月27日', name:'汉庭库车南湖', city:'库车市区', address:'库车市南湖片区（以高德店名导航为准）', lat:41.7088, lng:82.9606, verdict:'合理。独库后连住库车一晚，有恢复余量；也方便选择是否去天山神秘大峡谷。', risk:'如果你实际只订了一晚，需要把 D11 调整为库车到库尔勒。', source:'公开地图搜索；路线逻辑复核' },
+  12:{ date:'6月28日', name:'库尔勒建国北路金三角酒店', city:'库尔勒市区', address:'库尔勒建国北路金三角片区（以高德店名导航为准）', lat:41.7418, lng:86.1548, verdict:'合理。作为库车回乌鲁木齐前的缓冲点，住市区方便吃饭和补给。', risk:'第二天去乌鲁木齐仍然很长，建议住处附近加油/洗车，早出发。', source:'公开地图搜索；库尔勒市区片区定位' },
+  13:{ date:'6月29日', name:'海友乌鲁木齐天山国际机场', city:'乌鲁木齐机场', address:'乌鲁木齐天山国际机场片区（以高德店名导航为准）', lat:43.9016, lng:87.4870, verdict:'很合理。最后一晚住机场片区，给还车和 UQ2621 返程留余量。', risk:'离市区远，最后一晚不建议再进城吃饭；还车前拍照留证、确认油量。', source:'公开地图搜索；机场片区定位' }
+};
+
+const DAYS = [
+  { id: 0, label: '总览', color: '#0071e3', locations: [] },
+  {
+    id: 1, label: 'D1', date: '6月17日 · 洛阳 → 乌鲁木齐', title: '飞抵乌鲁木齐，轻量适应', color: '#64748b',
+    locations: [
+      { name:'洛阳北郊机场', lat:34.7411, lng:112.3880, type:'transport', time:'待航司确认', desc:'UQ2524 洛阳到乌鲁木齐。航班时间请以航旅纵横/航司短信为准。', detail:'第一天不安排任何远点，只处理飞行、取行李、休息和补给。', gmap:'洛阳北郊机场' },
+      { name:'乌鲁木齐地窝堡国际机场', lat:43.9071, lng:87.4742, type:'transport', time:'抵达', desc:'抵达后进市区住宿，第二天去伊宁前别安排太满。', detail:'如第二天坐火车，优先住乌鲁木齐站/高铁站附近；如改飞伊宁，住机场附近也可。', gmap:'乌鲁木齐地窝堡国际机场' },
+      { name:'汉庭乌鲁木齐天山国际机场酒店', lat:HOTEL_STAYS[1].lat, lng:HOTEL_STAYS[1].lng, type:'hotel', time:'夜宿', desc:'6月17日晚实际住宿。地址：'+HOTEL_STAYS[1].address, detail:HOTEL_STAYS[1].verdict+' '+HOTEL_STAYS[1].risk, gmap:'汉庭乌鲁木齐天山国际机场酒店' },
+      { name:'晚餐关键词：新疆菜/抓饭/拌面', lat:43.8256, lng:87.6168, type:'food', time:'晚餐', desc:'落地第一顿只在酒店附近解决，不追网红排队店。', budget:'¥40-100/人', detail:'小红书调研：乌鲁木齐本地新疆菜、抓饭、拌面内容多；大众点评新疆城市检索不稳定，按关键词现场筛近期评价。', xhsKeyword:'乌鲁木齐 新疆菜 本地人 不排队', dianpingKeyword:'乌鲁木齐 新疆菜 抓饭 拌面', pay:{cash:1, alipay:1, wechat:1} }
+    ]
+  },
+  {
+    id: 2, label:'D2', date:'6月18日 · 乌鲁木齐 → 伊宁', title:'到伊宁取车，喀赞其/六星街慢逛', color:'#0f766e',
+    locations:[
+      { name:'乌鲁木齐 → 伊宁交通（待确认）', lat:43.8383, lng:87.5290, type:'transport', time:'上午/中午', desc:'UQ2621 已确认为 6月30日返程洛阳航班，不作为本段交通。6月18日优先 12306 查乌鲁木齐至伊宁动车/火车，飞机作为备选。', detail:'出发前在 12306 或航司确认 6月18日乌鲁木齐到伊宁的车次/航班、到站和到达时间；这会影响伊宁取车时间。', gmap:'乌鲁木齐站' },
+      { name:'伊宁站 / 伊宁机场取车', lat:43.9550, lng:81.2820, type:'transport', time:'抵达后', desc:'伊宁取车，检查轮胎、备胎、玻璃水、随车工具、异地还车单。', detail:'新疆自驾建议确认：异地还车费、独库是否允许通行、是否限制走非铺装路、保险免赔。', gmap:'伊宁站' },
+      { name:'喀赞其民俗旅游区', lat:43.9165, lng:81.3336, type:'spot', time:'下午', desc:'到伊宁后的轻量适应点，蓝房子、街巷、手工冰淇淋，适合慢逛。', xhsKeyword:'伊宁 喀赞其 慢逛 攻略', dianpingKeyword:'伊宁 喀赞其 美食', gmap:'伊宁 喀赞其' },
+      { name:'六星街', lat:43.9290, lng:81.3165, type:'spot', time:'傍晚', desc:'城市氛围点，拍照和吃饭都方便。', xhsKeyword:'伊宁 六星街 美食 咖啡', dianpingKeyword:'伊宁 六星街 美食', gmap:'伊宁 六星街' },
+      { name:'汉庭伊宁巴彦岱', lat:HOTEL_STAYS[2].lat, lng:HOTEL_STAYS[2].lng, type:'hotel', time:'夜宿', desc:'6月18日晚实际住宿。地址：'+HOTEL_STAYS[2].address, detail:HOTEL_STAYS[2].verdict+' '+HOTEL_STAYS[2].risk, gmap:'汉庭伊宁巴彦岱' },
+      { name:'晚餐关键词：抓饭/烤包子/拌面', lat:43.9219, lng:81.3242, type:'food', time:'晚餐', desc:'小红书能查到伊宁本地特色内容；大众点评县市检索 degraded，现场按关键词筛近评。', budget:'¥30-90/人', xhsKeyword:'伊宁 本地特色 抓饭 拌面 不排队', dianpingKeyword:'伊宁 本地特色 抓饭 拌面', pay:{cash:1, alipay:1, wechat:1} }
+    ]
+  },
+  {
+    id: 3, label:'D3', date:'6月19日 · 伊宁 → 霍尔果斯 → 赛里木湖', title:'口岸轻逛，果子沟进赛湖', color:'#2563eb',
+    locations:[
+      { name:'伊宁出发', lat:43.9219, lng:81.3242, type:'transport', time:'09:30', desc:'约 1.5-2 小时到霍尔果斯，全天总驾驶约 3.5-4.5 小时。', gmap:'伊宁市' },
+      { name:'霍尔果斯口岸', lat:44.2180, lng:80.4186, type:'spot', time:'11:30', desc:'可选口岸点，轻逛即可，不为购物耽误赛湖时间。', detail:'如遇排队或兴趣不高，直接删，早点去赛里木湖。', xhsKeyword:'霍尔果斯口岸 6月 攻略', dianpingKeyword:'霍尔果斯 午餐', gmap:'霍尔果斯口岸' },
+      { name:'果子沟大桥观景', lat:44.4370, lng:80.8120, type:'spot', time:'15:00', desc:'去赛里木湖顺路观景点，停车安全第一。', xhsKeyword:'果子沟大桥 观景点 自驾', gmap:'果子沟大桥' },
+      { name:'赛里木湖东门/南门', lat:44.5580, lng:81.1740, type:'spot', time:'16:30', desc:'先看湖边傍晚光线，第二天再完整环湖。', detail:'自驾入园/门票/区间规则请出发前在官方渠道确认。风大、降温快，车上备外套。', xhsKeyword:'赛里木湖 自驾 预约 6月 注意事项', dianpingKeyword:'赛里木湖 住宿 晚餐', gmap:'赛里木湖东门' },
+      { name:'赛里木湖桔子水晶', lat:HOTEL_STAYS[3].lat, lng:HOTEL_STAYS[3].lng, type:'hotel', time:'夜宿', desc:'6月19日晚实际住宿。地址：'+HOTEL_STAYS[3].address, detail:HOTEL_STAYS[3].verdict+' '+HOTEL_STAYS[3].risk, gmap:'赛里木湖桔子水晶酒店' },
+      { name:'晚餐关键词：简餐/大盘鸡/拌面', lat:44.5800, lng:81.1000, type:'food', time:'晚餐', desc:'景区周边性价比波动大，先看近期差评，别追贵价湖景餐。', budget:'¥40-120/人', xhsKeyword:'赛里木湖 晚餐 住宿 避雷', dianpingKeyword:'赛里木湖 晚餐', pay:{cash:1, alipay:1, wechat:1} }
+    ]
+  },
+  {
+    id:4, label:'D4', date:'6月20日 · 赛里木湖慢玩', title:'赛湖环湖，下午回伊宁', color:'#0284c7',
+    locations:[
+      { name:'赛里木湖环湖', lat:44.6000, lng:81.1800, type:'spot', time:'09:00', desc:'今天只把赛湖玩透，不急着赶去特克斯。', detail:'按天气选择逆/顺时针，风大时减少下车点。自驾入园规则和预约必须出发前确认。', xhsKeyword:'赛里木湖 环湖 自驾 6月', gmap:'赛里木湖' },
+      { name:'赛里木湖 → 伊宁', lat:43.9219, lng:81.3242, type:'transport', time:'15:30', desc:'约 2.5-3.5 小时回伊宁，避免连续长途驾驶。', gmap:'赛里木湖 到 伊宁' },
+      { name:'汉庭伊宁巴彦岱', lat:HOTEL_STAYS[4].lat, lng:HOTEL_STAYS[4].lng, type:'hotel', time:'夜宿', desc:'6月20日晚实际住宿。地址：'+HOTEL_STAYS[4].address, detail:HOTEL_STAYS[4].verdict+' '+HOTEL_STAYS[4].risk, gmap:'汉庭伊宁巴彦岱' },
+      { name:'晚餐关键词：伊宁烤肉/抓饭/冰淇淋', lat:43.9219, lng:81.3242, type:'food', time:'晚餐', desc:'继续选酒店附近本地特色，预算友好。', budget:'¥30-100/人', xhsKeyword:'伊宁 烤肉 抓饭 本地人', dianpingKeyword:'伊宁 烤肉 抓饭', pay:{cash:1, alipay:1, wechat:1} }
+    ]
+  },
+  {
+    id:5, label:'D5', date:'6月21日 · 伊宁 → 特克斯', title:'八卦城轻松日', color:'#7c3aed',
+    locations:[
+      { name:'伊宁 → 特克斯', lat:43.2140, lng:81.8362, type:'transport', time:'10:00', desc:'约 3-4 小时，途中不加重景点。', gmap:'伊宁 到 特克斯' },
+      { name:'特克斯八卦城', lat:43.2140, lng:81.8362, type:'spot', time:'15:30', desc:'到达后看城市格局、离街、晚霞，轻松收尾。', xhsKeyword:'特克斯 八卦城 慢逛 美食', dianpingKeyword:'特克斯 八卦城 美食', gmap:'特克斯八卦城' },
+      { name:'朝沐民俗八卦城店', lat:HOTEL_STAYS[5].lat, lng:HOTEL_STAYS[5].lng, type:'hotel', time:'夜宿', desc:'6月21日晚实际住宿。地址：'+HOTEL_STAYS[5].address, detail:HOTEL_STAYS[5].verdict+' '+HOTEL_STAYS[5].risk, gmap:'朝沐民俗八卦城店' },
+      { name:'晚餐关键词：羊肉/拌面/丸子汤', lat:43.2140, lng:81.8362, type:'food', time:'晚餐', desc:'小红书查询特克斯美食即可；大众点评县城检索 degraded，现场看近评。', budget:'¥30-100/人', xhsKeyword:'特克斯 八卦城 美食 本地人', dianpingKeyword:'特克斯 本地特色 晚餐', pay:{cash:1, alipay:1, wechat:1} }
+    ]
+  },
+  {
+    id:6, label:'D6', date:'6月22日 · 特克斯周边', title:'喀拉峻或琼库什台二选一', color:'#9333ea',
+    locations:[
+      { name:'喀拉峻草原', lat:43.0990, lng:82.0100, type:'spot', time:'09:30', desc:'推荐主选：比琼库什台更适合当天往返，景区规则清楚。', detail:'门票/区间车/开放区域出发前确认。天气不好就减少游览，下午回县城。', xhsKeyword:'喀拉峻 6月 自驾 攻略', dianpingKeyword:'喀拉峻 特克斯', gmap:'喀拉峻草原' },
+      { name:'琼库什台备选', lat:43.0050, lng:82.2450, type:'spot', time:'—', desc:'很美但路更慢，若去建议替换喀拉峻并早出发。', detail:'不建议同一天硬塞喀拉峻+琼库什台。路窄弯多，雨天谨慎。', xhsKeyword:'琼库什台 自驾 路况 6月', gmap:'琼库什台村' },
+      { name:'朝沐民俗八卦城店', lat:HOTEL_STAYS[6].lat, lng:HOTEL_STAYS[6].lng, type:'hotel', time:'夜宿', desc:'6月22日晚实际住宿。地址：'+HOTEL_STAYS[6].address, detail:HOTEL_STAYS[6].verdict+' '+HOTEL_STAYS[6].risk, gmap:'朝沐民俗八卦城店' },
+      { name:'晚餐关键词：县城家常新疆菜', lat:43.2140, lng:81.8362, type:'food', time:'晚餐', desc:'今天景区体力消耗大，回县城吃顺路热饭。', budget:'¥40-100/人', xhsKeyword:'特克斯 县城 晚餐 本地菜', dianpingKeyword:'特克斯 晚餐', pay:{cash:1, alipay:1, wechat:1} }
+    ]
+  },
+  {
+    id:7, label:'D7', date:'6月23日 · 特克斯 → 新源/那拉提', title:'转场新源，下午休整', color:'#16a34a',
+    locations:[
+      { name:'特克斯 → 新源/那拉提', lat:43.4318, lng:83.2570, type:'transport', time:'10:00', desc:'约 4-5 小时，今天以转场为主。', gmap:'特克斯 到 新源 那拉提' },
+      { name:'新源县城补给', lat:43.4318, lng:83.2570, type:'spot', time:'15:30', desc:'洗车、加油、补水、买零食，准备后续独库段。', gmap:'新源县' },
+      { name:'汉庭新源天鹅湖', lat:HOTEL_STAYS[7].lat, lng:HOTEL_STAYS[7].lng, type:'hotel', time:'夜宿', desc:'6月23日晚实际住宿。地址：'+HOTEL_STAYS[7].address, detail:HOTEL_STAYS[7].verdict+' '+HOTEL_STAYS[7].risk, gmap:'汉庭新源天鹅湖' },
+      { name:'晚餐关键词：新源抓饭/羊肉串/面肺子', lat:43.4318, lng:83.2570, type:'food', time:'晚餐', desc:'小红书近期反馈有新源/那拉提性价比小吃，适合不追排队店。', budget:'¥25-90/人', xhsKeyword:'新源 那拉提 美食 本地特色', dianpingKeyword:'新源 那拉提 本地特色 晚餐', pay:{cash:1, alipay:1, wechat:1} }
+    ]
+  },
+  {
+    id:8, label:'D8', date:'6月24日 · 那拉提慢玩', title:'那拉提草原一整天', color:'#22c55e',
+    locations:[
+      { name:'那拉提旅游风景区', lat:43.3190, lng:84.0550, type:'spot', time:'09:00', desc:'今天只安排那拉提，不再赶路。', detail:'自驾入园/区间车票/预约规则请出发前官方确认。若不能自驾入园，就按景区交通游览。', xhsKeyword:'那拉提 自驾 入园 预约 6月', dianpingKeyword:'那拉提 门票 自驾', gmap:'那拉提旅游风景区' },
+      { name:'那拉提镇休息', lat:43.3355, lng:84.0260, type:'spot', time:'17:30', desc:'回镇上吃饭休息，别再加远景点。', gmap:'那拉提镇' },
+      { name:'汉庭新源天鹅湖', lat:HOTEL_STAYS[8].lat, lng:HOTEL_STAYS[8].lng, type:'hotel', time:'夜宿', desc:'6月24日晚实际住宿。地址：'+HOTEL_STAYS[8].address, detail:HOTEL_STAYS[8].verdict+' '+HOTEL_STAYS[8].risk, gmap:'汉庭新源天鹅湖' },
+      { name:'晚餐关键词：面肺子/烤肉/抓饭', lat:43.3355, lng:84.0260, type:'food', time:'晚餐', desc:'小红书调研反复出现那拉提镇面肺子、新源抓饭羊肉串等低价本地小吃。', budget:'¥20-90/人', xhsKeyword:'那拉提镇 面肺子 美食', dianpingKeyword:'那拉提 晚餐', pay:{cash:1, alipay:1, wechat:1} }
+    ]
+  },
+  {
+    id:9, label:'D9', date:'6月25日 · 那拉提 → 巴音布鲁克', title:'独库中段，进入巴音布鲁克', color:'#65a30d',
+    locations:[
+      { name:'独库公路中段入口', lat:43.3355, lng:84.0260, type:'transport', time:'09:30', desc:'按独库开放主线执行，从那拉提经独库中段去巴音布鲁克。', detail:'虽然主线按开放规划，仍建议出发前一天确认当天限行、天气、落石和施工信息。', xhsKeyword:'独库公路 6月 路况 限行 天气', gmap:'那拉提 到 巴音布鲁克' },
+      { name:'巴音布鲁克草原', lat:42.8380, lng:84.1500, type:'spot', time:'15:00', desc:'下午到达，视体力和天气决定是否进景区看九曲十八弯。', detail:'高海拔草原温差大，日落很晚但返程路黑，量力而行。', xhsKeyword:'巴音布鲁克 独库公路 住宿 美食', dianpingKeyword:'巴音布鲁克 晚餐 住宿', gmap:'巴音布鲁克景区' },
+      { name:'巴音布鲁克浩博酒店', lat:HOTEL_STAYS[9].lat, lng:HOTEL_STAYS[9].lng, type:'hotel', time:'夜宿', desc:'6月25日晚实际住宿。地址：'+HOTEL_STAYS[9].address, detail:HOTEL_STAYS[9].verdict+' '+HOTEL_STAYS[9].risk, gmap:'巴音布鲁克浩博酒店' },
+      { name:'晚餐关键词：牦牛肉/拌面/汤饭', lat:42.8370, lng:84.1500, type:'food', time:'晚餐', desc:'小红书有巴音布鲁克吃饭和住宿反馈；选择镇上近酒店、热乎、少排队的店。', budget:'¥40-120/人', xhsKeyword:'巴音布鲁克 吃饭 推荐', dianpingKeyword:'巴音布鲁克 晚餐', pay:{cash:1, alipay:1, wechat:1} }
+    ]
+  },
+  {
+    id:10, label:'D10', date:'6月26日 · 巴音布鲁克 → 库车', title:'独库南段，不赶夜路', color:'#ea580c',
+    locations:[
+      { name:'独库南段：巴音布鲁克 → 库车', lat:41.7179, lng:82.9637, type:'transport', time:'09:00', desc:'约 5.5-7 小时，山路多弯，今天只看沿途，不安排重景区。', detail:'按独库开放主线南下库车；当天仍要看天气、限行和临时交通管制。', xhsKeyword:'独库南段 巴音布鲁克 库车 自驾', gmap:'巴音布鲁克 到 库车' },
+      { name:'大小龙池/沿途观景', lat:42.0200, lng:83.3400, type:'spot', time:'途中', desc:'沿途停车点看天气和停车条件，不在危险路段停车。', xhsKeyword:'独库南段 大小龙池 自驾', gmap:'大小龙池 库车' },
+      { name:'汉庭库车南湖', lat:HOTEL_STAYS[10].lat, lng:HOTEL_STAYS[10].lng, type:'hotel', time:'夜宿', desc:'6月26日晚实际住宿。地址：'+HOTEL_STAYS[10].address, detail:HOTEL_STAYS[10].verdict+' '+HOTEL_STAYS[10].risk, gmap:'汉庭库车南湖' },
+      { name:'晚餐关键词：库车抓饭/烤肉/拌面', lat:41.7179, lng:82.9637, type:'food', time:'晚餐', desc:'优先市区评价稳定、停车方便的本地餐。', budget:'¥30-100/人', xhsKeyword:'库车 美食 独库公路 抓饭', dianpingKeyword:'库车 抓饭 烤肉', pay:{cash:1, alipay:1, wechat:1} }
+    ]
+  },
+  {
+    id:11, label:'D11', date:'6月27日 · 库车休整', title:'库车大峡谷或市区轻松日', color:'#f97316',
+    locations:[
+      { name:'天山神秘大峡谷', lat:42.0950, lng:83.0500, type:'spot', time:'上午', desc:'可选半日景点，天气热就早去早回。', detail:'如前一天独库消耗大，直接删掉，改库车市区休整。', xhsKeyword:'库车 天山神秘大峡谷 6月 攻略', dianpingKeyword:'天山神秘大峡谷 库车', gmap:'天山神秘大峡谷' },
+      { name:'库车王府/老城轻逛', lat:41.7270, lng:82.9360, type:'spot', time:'下午', desc:'轻松补一点人文，不做长距离转场。', xhsKeyword:'库车 老城 王府 美食', gmap:'库车王府' },
+      { name:'汉庭库车南湖', lat:HOTEL_STAYS[11].lat, lng:HOTEL_STAYS[11].lng, type:'hotel', time:'夜宿', desc:'6月27日晚实际住宿。地址：'+HOTEL_STAYS[11].address, detail:HOTEL_STAYS[11].verdict+' '+HOTEL_STAYS[11].risk, gmap:'汉庭库车南湖' },
+      { name:'晚餐关键词：鸽子汤/馕坑肉/抓饭', lat:41.7179, lng:82.9637, type:'food', time:'晚餐', desc:'不追排队店，找市区停车方便、近评稳定的本地馆子。', budget:'¥40-120/人', xhsKeyword:'库车 鸽子汤 馕坑肉 抓饭', dianpingKeyword:'库车 晚餐 本地菜', pay:{cash:1, alipay:1, wechat:1} }
+    ]
+  },
+  {
+    id:12, label:'D12', date:'6月28日 · 库车 → 库尔勒', title:'南疆回程缓冲', color:'#d97706',
+    locations:[
+      { name:'库车 → 库尔勒', lat:41.7259, lng:86.1746, type:'transport', time:'10:00', desc:'约 4-5 小时高速/国道转场，作为回乌鲁木齐前缓冲。', gmap:'库车 到 库尔勒' },
+      { name:'库尔勒市区休整', lat:41.7259, lng:86.1746, type:'spot', time:'下午', desc:'洗车、补给、休息，检查还车前车辆状态。', xhsKeyword:'库尔勒 美食 新疆菜 本地人', gmap:'库尔勒市' },
+      { name:'库尔勒建国北路金三角酒店', lat:HOTEL_STAYS[12].lat, lng:HOTEL_STAYS[12].lng, type:'hotel', time:'夜宿', desc:'6月28日晚实际住宿。地址：'+HOTEL_STAYS[12].address, detail:HOTEL_STAYS[12].verdict+' '+HOTEL_STAYS[12].risk, gmap:'库尔勒 建国北路 金三角 酒店' },
+      { name:'晚餐关键词：梨城本地新疆菜/烤肉/拌面', lat:41.7259, lng:86.1746, type:'food', time:'晚餐', desc:'小红书搜索库尔勒美食，本地菜为主，别安排大餐硬赶路。', budget:'¥40-120/人', xhsKeyword:'库尔勒 美食 新疆菜 本地人', dianpingKeyword:'库尔勒 晚餐 新疆菜', pay:{cash:1, alipay:1, wechat:1} }
+    ]
+  },
+  {
+    id:13, label:'D13', date:'6月29日 · 库尔勒 → 乌鲁木齐', title:'回乌鲁木齐还车前夜', color:'#dc2626',
+    locations:[
+      { name:'库尔勒 → 乌鲁木齐', lat:43.8256, lng:87.6168, type:'transport', time:'09:00', desc:'约 6-7 小时，今天只负责安全回城。', detail:'不要把还车和返程航班压在同一天极限完成，留一晚缓冲是正确选择。', gmap:'库尔勒 到 乌鲁木齐' },
+      { name:'乌鲁木齐还车预检查', lat:43.8383, lng:87.5290, type:'transport', time:'傍晚', desc:'加满油、洗车、拍照留存车况，确认第二天还车地点和时间。', gmap:'乌鲁木齐 租车还车' },
+      { name:'海友乌鲁木齐天山国际机场', lat:HOTEL_STAYS[13].lat, lng:HOTEL_STAYS[13].lng, type:'hotel', time:'夜宿', desc:'6月29日晚实际住宿。地址：'+HOTEL_STAYS[13].address, detail:HOTEL_STAYS[13].verdict+' '+HOTEL_STAYS[13].risk, gmap:'海友乌鲁木齐天山国际机场' },
+      { name:'晚餐关键词：乌鲁木齐新疆菜收尾', lat:43.8256, lng:87.6168, type:'food', time:'晚餐', desc:'小红书近期乌鲁木齐本地馆子内容多；大众点评城市检索本次不稳定，现场用关键词筛近评。', budget:'¥50-150/人', xhsKeyword:'乌鲁木齐 新疆菜 本地人 不排队', dianpingKeyword:'乌鲁木齐 新疆菜 抓饭 拌面', pay:{cash:1, alipay:1, wechat:1} }
+    ]
+  },
+  {
+    id:14, label:'D14', date:'6月30日 · 乌鲁木齐返程', title:'还车，UQ2621 乌鲁木齐返回洛阳', color:'#475569',
+    locations:[
+      { name:'乌鲁木齐还车', lat:43.8383, lng:87.5290, type:'transport', time:'按航班提前', desc:'建议至少航班前 4 小时开始还车流程，避免异地还车排队。', detail:'还车点、油量、违章押金、机场接驳都要提前确认。', gmap:'乌鲁木齐 租车还车' },
+      { name:'乌鲁木齐地窝堡国际机场', lat:43.9071, lng:87.4742, type:'transport', time:'返程', desc:'UQ2621 按你确认的信息作为 6月30日乌鲁木齐返回洛阳航班。', detail:'请临行前确认 UQ2621 起飞时间、航站楼、值机截止时间和行李额。', gmap:'乌鲁木齐地窝堡国际机场' },
+      { name:'机场简餐/伴手礼', lat:43.9071, lng:87.4742, type:'food', time:'候机', desc:'最后一天不再安排市区景点，避免误机。', budget:'按机场价', dianpingKeyword:'乌鲁木齐机场 餐饮', xhsKeyword:'乌鲁木齐机场 伴手礼', pay:{cash:1, alipay:1, wechat:1} }
+    ]
+  }
+];
+
+const COST_MODEL = {
+  fuelType: '95号汽油',
+  pricePerLiter: 8.7,
+  consumption: 7.5,
+  note: '按 1.4T 家用车保守估算：综合油耗 7.5L/100km；山路、满载、空调会升到 8-9L/100km。油价按 8.7 元/L 估算，实际以加油站当天为准。'
+};
+
+const HOTEL_STAYS_RESEARCH = {
+  1: { date:'6月17日', name:'汉庭乌鲁木齐天山国际机场酒店', city:'乌鲁木齐机场', address:'乌鲁木齐市新市区林苑巷002号（机场片区）', lat:43.9008, lng:87.4878, verdict:'合理。落地第一晚住机场片区，减少夜间进城和第二天转场压力。', risk:'离市区餐厅远，晚餐以机场/酒店周边简单解决为主；第二天去火车站或机场转伊宁要预留通勤时间。', source:'公开酒店/地图搜索；机场店地址复核' },
+  2: { date:'6月18日', name:'汉庭伊宁巴彦岱', city:'伊宁巴彦岱', address:'伊宁市巴彦岱镇宁远路/218国道片区（以高德店名导航为准）', lat:43.9438, lng:81.2028, verdict:'基本合理。巴彦岱在伊宁西侧，第二天去霍尔果斯、果子沟、赛里木湖方向更顺。', risk:'不在六星街/喀赞其核心区，晚上逛市区后回酒店会多一点车程；适合自驾，不适合纯步行夜生活。', source:'公开地图搜索；按巴彦岱片区定位' },
+  3: { date:'6月19日', name:'赛里木湖桔子水晶', city:'赛里木湖', address:'赛里木湖景区/游客中心周边（以高德店名导航为准）', lat:44.5806, lng:81.1742, verdict:'很合理。住赛湖附近可以保留傍晚和清晨光线，第二天不用从伊宁往返。', risk:'旺季价格波动明显；小红书 2026 年有房型/价格笔记，出发前再看近期差评和停车。', source:'小红书 2026-03/04/05 赛里木湖桔子水晶相关笔记；公开地图搜索' },
+  4: { date:'6月20日', name:'汉庭伊宁巴彦岱', city:'伊宁巴彦岱', address:'伊宁市巴彦岱镇宁远路/218国道片区（以高德店名导航为准）', lat:43.9438, lng:81.2028, verdict:'合理。赛湖回伊宁后住同一家，便于补给、洗衣、休息。', risk:'晚餐若想去六星街/喀赞其，要预留往返车程。', source:'公开地图搜索；路线逻辑复核' },
+  5: { date:'6月21日', name:'朝沐民俗八卦城店', city:'特克斯八卦城', address:'特克斯八卦城/离街片区（以高德店名导航为准）', lat:43.2140, lng:81.8362, verdict:'合理。住八卦城片区，晚上逛街吃饭方便，第二天去喀拉峻/琼库什台也顺。', risk:'民宿类要重点确认停车、热水、隔音和是否可晚到。', source:'公开地图搜索；特克斯小红书美食/八卦城笔记补充' },
+  6: { date:'6月22日', name:'朝沐民俗八卦城店', city:'特克斯八卦城', address:'特克斯八卦城/离街片区（以高德店名导航为准）', lat:43.2140, lng:81.8362, verdict:'合理。连住两晚减少行李折腾，景区回来能直接休息。', risk:'同上，提前确认停车位和夜间到店规则。', source:'公开地图搜索；路线逻辑复核' },
+  7: { date:'6月23日', name:'汉庭新源天鹅湖', city:'新源县城', address:'新源县江额尔森西街005号/天鹅湖片区（以高德店名导航为准）', lat:43.4318, lng:83.2570, verdict:'合理。新源县城补给强于景区镇，适合作为那拉提和独库前的中继。', risk:'距离那拉提镇仍有车程，D8 早上去景区需要早一点出发。', source:'公开酒店/地图搜索；新源片区定位' },
+  8: { date:'6月24日', name:'汉庭新源天鹅湖', city:'新源县城', address:'新源县江额尔森西街005号/天鹅湖片区（以高德店名导航为准）', lat:43.4318, lng:83.2570, verdict:'可以接受。连住两晚稳定、省心，性价比通常优于景区镇。', risk:'那拉提游玩结束回新源会增加往返车程；如果当天很累，控制景区停留时间。', source:'公开地图搜索；路线逻辑复核' },
+  9: { date:'6月25日', name:'巴音布鲁克浩博酒店', city:'巴音布鲁克镇', address:'巴音布鲁克镇赛马场南侧/镇区片区（以高德店名导航为准）', lat:42.8370, lng:84.1500, verdict:'合理。走完独库中段后就地休息，是这天最省体力的选择。', risk:'巴音布鲁克镇旺季房源紧、价格波动，重点确认供暖/热水/停车和是否可晚到。', source:'公开地图搜索；小红书巴音布鲁克住宿笔记补充' },
+  10:{ date:'6月26日', name:'汉庭库车南湖', city:'库车市区', address:'库车市南湖片区（以高德店名导航为准）', lat:41.7088, lng:82.9606, verdict:'合理。独库南段下山后住市区，吃饭、补给、休整都比景区路边稳。', risk:'D10 抵达可能偏晚，提前确认停车和前台保留时间。', source:'公开地图搜索；库车小红书美食笔记补充' },
+  11:{ date:'6月27日', name:'汉庭库车南湖', city:'库车市区', address:'库车市南湖片区（以高德店名导航为准）', lat:41.7088, lng:82.9606, verdict:'合理。独库后连住库车一晚，有恢复余量；也方便选择是否去天山神秘大峡谷。', risk:'如果你实际只订了一晚，需要把 D11 调整为库车到库尔勒。', source:'公开地图搜索；路线逻辑复核' },
+  12:{ date:'6月28日', name:'库尔勒建国北路金三角酒店', city:'库尔勒市区', address:'库尔勒建国北路金三角片区（以高德店名导航为准）', lat:41.7418, lng:86.1548, verdict:'合理。作为库车回乌鲁木齐前的缓冲点，住市区方便吃饭和补给。', risk:'第二天去乌鲁木齐仍然很长，建议住处附近加油/洗车，早出发。', source:'公开地图搜索；库尔勒市区片区定位' },
+  13:{ date:'6月29日', name:'海友乌鲁木齐天山国际机场', city:'乌鲁木齐机场', address:'乌鲁木齐天山国际机场片区（以高德店名导航为准）', lat:43.9016, lng:87.4870, verdict:'很合理。最后一晚住机场片区，给还车和 UQ2621 返程留余量。', risk:'离市区远，最后一晚不建议再进城吃饭；还车前拍照留证、确认油量。', source:'公开地图搜索；机场片区定位' }
+};
+
+const OVERVIEW_ROUTE = [
+  { name:'洛阳', lat:34.7411, lng:112.3880 },
+  { name:'乌鲁木齐', lat:43.8256, lng:87.6168 },
+  { name:'伊宁', lat:43.9219, lng:81.3242 },
+  { name:'霍尔果斯', lat:44.2180, lng:80.4186 },
+  { name:'赛里木湖', lat:44.6000, lng:81.1800 },
+  { name:'伊宁', lat:43.9219, lng:81.3242 },
+  { name:'特克斯', lat:43.2140, lng:81.8362 },
+  { name:'喀拉峻/琼库什台', lat:43.0990, lng:82.0100 },
+  { name:'新源/那拉提', lat:43.3355, lng:84.0260 },
+  { name:'巴音布鲁克', lat:42.8380, lng:84.1500 },
+  { name:'库车', lat:41.7179, lng:82.9637 },
+  { name:'库尔勒', lat:41.7259, lng:86.1746 },
+  { name:'乌鲁木齐', lat:43.8256, lng:87.6168 },
+  { name:'地窝堡机场', lat:43.9071, lng:87.4742 }
+];
+
+const DAY_PATHS = {
+  1: [[34.7411,112.3880],[43.9071,87.4742],[43.8383,87.5290]],
+  2: [[43.8383,87.5290],[43.9550,81.2820],[43.9219,81.3242]],
+  3: [[43.9219,81.3242],[44.2180,80.4186],[44.4370,80.8120],[44.6000,81.1800]],
+  4: [[44.6000,81.1800],[44.5580,81.1740],[43.9219,81.3242]],
+  5: [[43.9219,81.3242],[43.2140,81.8362]],
+  6: [[43.2140,81.8362],[43.0990,82.0100],[43.2140,81.8362]],
+  7: [[43.2140,81.8362],[43.4318,83.2570],[HOTEL_STAYS[7].lat,HOTEL_STAYS[7].lng]],
+  8: [[HOTEL_STAYS[8].lat,HOTEL_STAYS[8].lng],[43.3190,84.0550],[HOTEL_STAYS[8].lat,HOTEL_STAYS[8].lng]],
+  9: [[HOTEL_STAYS[8].lat,HOTEL_STAYS[8].lng],[43.3355,84.0260],[42.8380,84.1500]],
+  10:[[42.8380,84.1500],[42.0200,83.3400],[41.7179,82.9637]],
+  11:[[41.7179,82.9637],[42.0950,83.0500],[41.7270,82.9360],[41.7179,82.9637]],
+  12:[[41.7179,82.9637],[41.7259,86.1746]],
+  13:[[41.7259,86.1746],[43.8256,87.6168],[43.8383,87.5290]],
+  14:[[43.8383,87.5290],[43.9071,87.4742]]
+};
+
+const ROUTE_STATS = {
+  1: { route:'洛阳北郊机场 -> 乌鲁木齐市区', mode:'飞机 + 市区交通', km:'市区约 20-30km', drive:'落地后 30-60 分钟', fuel:'—', toll:'—', cost:'市区打车约 ¥40-90', note:'第一天不取车，不计算自驾油耗。' },
+  2: { route:'乌鲁木齐 -> 伊宁', mode:'火车/飞机 + 伊宁市区取车', km:'铁路约 600km；市区自驾约 10-30km', drive:'动车/火车约 5-7h；取车后短途', fuel:'取车后约 1-3L', toll:'—', cost:'车票以 12306 为准；取车后油费约 ¥10-30', note:'UQ2621 已按返程航班处理，本段单独订乌鲁木齐到伊宁。' },
+  3: { route:'伊宁 -> 霍尔果斯 -> 果子沟 -> 赛里木湖', mode:'自驾', km:'约 240-280km', drive:'约 3.5-4.5h', fuel:'18-21L / ¥155-185', toll:'约 ¥50-100', cost:'油费+过路费约 ¥210-285', note:'如果霍尔果斯排队，直接删掉口岸，早点进赛湖。' },
+  4: { route:'赛里木湖环湖 -> 伊宁', mode:'自驾', km:'约 220-260km', drive:'约 3.5-4.5h', fuel:'17-20L / ¥145-175', toll:'约 ¥40-80', cost:'约 ¥185-255', note:'赛湖环湖和返伊宁合并估算，景区内规则以当天为准。' },
+  5: { route:'伊宁 -> 特克斯', mode:'自驾', km:'约 120-150km', drive:'约 2.5-3.5h', fuel:'9-12L / ¥80-105', toll:'约 ¥0-40', cost:'约 ¥80-145', note:'今天留足特克斯县城休整，不叠加远景点。' },
+  6: { route:'特克斯 -> 喀拉峻/琼库什台 -> 特克斯', mode:'自驾 + 景区交通', km:'喀拉峻约 70-110km；琼库什台约 170-220km', drive:'约 2-5h', fuel:'6-17L / ¥50-150', toll:'多为景区票/区间车', cost:'交通油费约 ¥50-150，门票另算', note:'推荐喀拉峻主选，琼库什台路更慢，不要同天双刷。' },
+  7: { route:'特克斯 -> 新源/那拉提', mode:'自驾', km:'约 220-260km', drive:'约 4-5h', fuel:'17-20L / ¥145-175', toll:'约 ¥20-60', cost:'约 ¥165-235', note:'这是补给日：加油、洗车、买水和零食。' },
+  8: { route:'那拉提景区及镇区', mode:'短途自驾 + 景区交通', km:'约 30-80km', drive:'约 1-2h', fuel:'3-7L / ¥25-60', toll:'景区票/区间车另算', cost:'自驾油费约 ¥25-60', note:'那拉提自驾入园或区间车以官方规则为准。' },
+  9: { route:'那拉提 -> 独库中段 -> 巴音布鲁克', mode:'自驾山路', km:'约 90-130km', drive:'约 3-4.5h', fuel:'8-13L / ¥70-115', toll:'通常以景区/停车为主', cost:'约 ¥70-115 + 景区费用', note:'按独库开放主线走；山路不要赶夜路。' },
+  10:{ route:'巴音布鲁克 -> 独库南段 -> 库车', mode:'自驾山路', km:'约 260-300km', drive:'约 5.5-7h', fuel:'23-30L / ¥200-260', toll:'少量或无，按当天道路为准', cost:'约 ¥200-260', note:'全天只跑独库南段和沿途观景，不追加重景区。' },
+  11:{ route:'库车市区 -> 天山神秘大峡谷 -> 库车', mode:'可选自驾', km:'约 130-170km', drive:'约 2.5-4h', fuel:'10-15L / ¥90-130', toll:'门票/停车另算', cost:'油费约 ¥90-130', note:'如果 D10 累，直接删掉峡谷，留在库车休整。' },
+  12:{ route:'库车 -> 库尔勒', mode:'自驾', km:'约 290-330km', drive:'约 4-5h', fuel:'22-25L / ¥190-220', toll:'约 ¥80-140', cost:'约 ¥270-360', note:'南疆回程缓冲段，下午做还车前检查。' },
+  13:{ route:'库尔勒 -> 乌鲁木齐', mode:'自驾', km:'约 470-520km', drive:'约 6-7.5h', fuel:'35-43L / ¥305-375', toll:'约 ¥140-220', cost:'约 ¥445-595', note:'全天只负责安全回城，不再安排远景点。' },
+  14:{ route:'乌鲁木齐市区/还车点 -> 地窝堡机场', mode:'短途自驾/接驳', km:'约 20-40km', drive:'约 30-70 分钟', fuel:'2-4L / ¥20-35', toll:'停车/接驳为主', cost:'约 ¥20-80', note:'至少航班前 4 小时开始还车。' }
+};
+
+const FOOD_PICKS = {
+  1: [
+    { name:'米拉吉', area:'乌鲁木齐市区', pick:'新疆菜正餐', budget:'¥80-150/人', why:'适合落地第一顿，菜品覆盖烤肉、抓饭、酸奶、馕坑肉一类经典新疆菜；比排队小店更稳。', source:'高德/小红书复核', query:'乌鲁木齐 米拉吉 新疆菜' },
+    { name:'吾吾子羊羔肉', area:'乌鲁木齐和平南路/市区', pick:'羊羔肉/抓饭', budget:'¥60-120/人', why:'小红书近期有“本地人推荐”方向内容，适合不想排网红店但想吃羊肉的晚餐。', source:'小红书 2025-2026 笔记', query:'乌鲁木齐 吾吾子羊羔肉' }
+  ],
+  2: [
+    { name:'塔西来甫开饭', area:'伊宁市区', pick:'抓饭/家常新疆菜', budget:'¥35-90/人', why:'作为伊宁第一晚正餐候选，位置比景区店更稳；到店前看当天营业和近评。', source:'小红书伊宁美食结果', query:'伊宁 塔西来甫开饭' },
+    { name:'古兰丹姆冰淇淋', area:'六星街/喀赞其周边', pick:'冰淇淋/甜品', budget:'¥10-30/人', why:'适合喀赞其、六星街慢逛时顺路补甜品，不作为正餐。', source:'伊宁经典本地甜品', query:'伊宁 古兰丹姆冰淇淋' },
+    { name:'喀赞其烤包子老店', area:'喀赞其周边', pick:'烤包子', budget:'¥10-30/人', why:'小红书 2025 年有伊宁烤包子高互动内容；用按钮按位置找近评最稳的老店。', source:'小红书 2025-05 伊宁烤包子', query:'伊宁 喀赞其 烤包子' }
+  ],
+  3: [
+    { name:'霍尔果斯市区拌面/丸子汤候选', area:'霍尔果斯口岸附近', pick:'路餐', budget:'¥25-60/人', why:'这天重点是赶到赛里木湖，午餐只选停车方便、上菜快的拌面/丸子汤。', source:'路线策略', query:'霍尔果斯 拌面 丸子汤' },
+    { name:'赛里木湖景区外大盘鸡/拌面候选', area:'赛里木湖东门/南门外', pick:'晚餐', budget:'¥40-120/人', why:'景区周边价格波动较大，不锁死一家；优先看近评、明码标价和停车。', source:'景区餐饮风险提示', query:'赛里木湖 大盘鸡 拌面 晚餐' }
+  ],
+  4: [
+    { name:'塔西来甫开饭', area:'伊宁市区', pick:'回城正餐', budget:'¥35-90/人', why:'从赛湖回伊宁后适合吃热饭，减少景区周边高价餐。', source:'小红书伊宁美食结果', query:'伊宁 塔西来甫开饭 抓饭' },
+    { name:'伊宁本地烤肉店候选', area:'六星街/伊犁河路周边', pick:'烤肉', budget:'¥40-100/人', why:'当天已经长时间吹风，不建议跨城觅食；住哪就选附近近评稳定的烤肉。', source:'路线策略', query:'伊宁 六星街 烤肉 本地人' }
+  ],
+  5: [
+    { name:'速美达农家餐厅', area:'特克斯八卦城/县城', pick:'家常新疆菜', budget:'¥45-100/人', why:'适合作为特克斯第一晚正餐，菜式覆盖羊肉、拌面、家常热菜；到店前核验营业。', source:'公开 POI/旅行笔记复核', query:'特克斯 速美达农家餐厅' },
+    { name:'特克斯县城拌面烤肉候选', area:'八卦城内圈/离街周边', pick:'拌面/烤肉', budget:'¥30-80/人', why:'小红书有多条“特克斯八卦城美食”笔记，建议按住处选步行可达店。', source:'小红书 2025-2026 特克斯美食', query:'特克斯 八卦城 拌面 烤肉' }
+  ],
+  6: [
+    { name:'速美达农家餐厅', area:'特克斯县城', pick:'景区后热饭', budget:'¥45-100/人', why:'喀拉峻/琼库什台回城后不建议再找远店，县城家常菜更稳。', source:'公开 POI/旅行笔记复核', query:'特克斯 速美达农家餐厅' },
+    { name:'特克斯丸子汤/拌面候选', area:'县城主路', pick:'简餐', budget:'¥25-60/人', why:'如果景区回来晚，优先选择停车容易、翻台快的简餐。', source:'路线策略', query:'特克斯 丸子汤 拌面' }
+  ],
+  7: [
+    { name:'新源抓饭羊肉串候选', area:'新源县城', pick:'转场晚餐', budget:'¥30-80/人', why:'小红书反复出现新源抓饭、羊肉串、那拉提面肺子方向；县城通常比景区镇性价比更好。', source:'小红书新源/那拉提结果', query:'新源 抓饭 羊肉串' },
+    { name:'那拉提镇面肺子店候选', area:'那拉提镇', pick:'本地小吃', budget:'¥20-50/人', why:'适合住那拉提镇时吃轻一点，第二天景区日不增加负担。', source:'小红书那拉提美食结果', query:'那拉提镇 面肺子' }
+  ],
+  8: [
+    { name:'那拉提镇面肺子店候选', area:'那拉提镇', pick:'景区后简餐', budget:'¥20-50/人', why:'全天草原游玩后，选镇上热乎、便宜、近酒店的小吃。', source:'小红书那拉提美食结果', query:'那拉提镇 面肺子 美食' },
+    { name:'新源抓饭候选', area:'新源县城', pick:'备选正餐', budget:'¥30-80/人', why:'如果住新源，回县城吃饭比景区口更稳。', source:'小红书新源美食结果', query:'新源 抓饭 本地人' }
+  ],
+  9: [
+    { name:'巴音布鲁克镇牦牛肉火锅候选', area:'巴音布鲁克镇', pick:'高海拔热餐', budget:'¥60-130/人', why:'镇上餐饮选择少且旺季波动大，优先选明码标价、离酒店近、能停车的牦牛肉/汤饭店。', source:'小红书巴音布鲁克住宿美食结果', query:'巴音布鲁克 牦牛肉 火锅' },
+    { name:'巴音布鲁克拌面汤饭候选', area:'镇区主路', pick:'简餐', budget:'¥25-60/人', why:'如果进景区看日落回来晚，简餐比大餐更稳。', source:'路线策略', query:'巴音布鲁克 拌面 汤饭' }
+  ],
+  10:[
+    { name:'库车市区抓饭烤肉候选', area:'库车市区', pick:'独库后正餐', budget:'¥30-90/人', why:'下独库后优先休息和补水，选市区停车方便的抓饭/烤肉，不跨城觅食。', source:'小红书 2024-2026 库车美食', query:'库车 抓饭 烤肉 本地人' },
+    { name:'库车老城鸽子汤候选', area:'库车老城/王府周边', pick:'汤食', budget:'¥40-100/人', why:'适合山路后吃热汤，第二天如市区轻逛也可安排。', source:'小红书库车美食清单', query:'库车 鸽子汤' }
+  ],
+  11:[
+    { name:'库车老城鸽子汤候选', area:'库车老城/王府周边', pick:'午餐/晚餐', budget:'¥40-100/人', why:'休整日适合安排有地方特色但不折腾的汤食。', source:'小红书库车美食清单', query:'库车 鸽子汤 老城' },
+    { name:'库车馕坑肉/抓饭候选', area:'库车市区', pick:'正餐', budget:'¥40-110/人', why:'如果不去峡谷，就在市区慢慢吃；按近评避开游客团餐。', source:'小红书库车美食结果', query:'库车 馕坑肉 抓饭' }
+  ],
+  12:[
+    { name:'库尔勒本地新疆菜候选', area:'库尔勒市区', pick:'回程缓冲晚餐', budget:'¥40-110/人', why:'这天不追远店，住市区后选择附近新疆菜/烤肉。', source:'路线策略', query:'库尔勒 新疆菜 烤肉 本地人' },
+    { name:'库尔勒拌面/丸子汤候选', area:'市区主路', pick:'快餐', budget:'¥25-60/人', why:'适合转场日，停车快、上菜快。', source:'路线策略', query:'库尔勒 拌面 丸子汤' }
+  ],
+  13:[
+    { name:'米拉吉', area:'乌鲁木齐市区', pick:'收尾正餐', budget:'¥80-150/人', why:'适合最后一晚吃一顿完整新疆菜，环境和菜品稳定性更高。', source:'高德/小红书复核', query:'乌鲁木齐 米拉吉 新疆菜' },
+    { name:'金沙市场周边新疆菜馆子', area:'乌鲁木齐金沙市场', pick:'本地馆子', budget:'¥40-100/人', why:'小红书 2026-04 有“本地人吃的新疆菜馆子”方向笔记，适合不追网红队。', source:'小红书 2026-04-30', query:'乌鲁木齐 金沙市场 新疆菜' }
+  ],
+  14:[
+    { name:'地窝堡机场简餐', area:'乌鲁木齐机场', pick:'候机餐', budget:'按机场价', why:'返程日不进城觅食，避免误机。', source:'行程安全策略', query:'乌鲁木齐地窝堡机场 餐饮' },
+    { name:'机场伴手礼/干果候选', area:'乌鲁木齐机场', pick:'伴手礼', budget:'按机场价', why:'仅作为补充，不建议为购物压缩还车时间。', source:'行程安全策略', query:'乌鲁木齐机场 伴手礼 干果' }
+  ]
+};
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  REPLACE THIS SECTION — Overview tab content                ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+function overviewContent() {
+  return `
+<div class="hero hero-panel"><h1>新疆伊犁-独库公路自驾</h1><p class="subtitle">6月17日-6月30日 · 伊宁取车，乌鲁木齐还车 · 慢玩不赶路</p></div>
+<div class="quick-stats">
+  <div class="stat-pill"><div class="k">自驾里程</div><div class="v">约 2300-2700km</div></div>
+  <div class="stat-pill"><div class="k">1.4T 油费</div><div class="v">约 ¥1500-1800</div></div>
+  <div class="stat-pill"><div class="k">高速/停车</div><div class="v">约 ¥500-900</div></div>
+</div>
+<div class="info-grid">
+  <div class="info-card"><div class="label">硬约束</div><div class="value">6/17 洛阳飞乌鲁木齐<br>6/18 伊宁取车<br>6/30 乌鲁木齐还车返程</div></div>
+  <div class="info-card"><div class="label">主线</div><div class="value">伊宁 - 赛里木湖 - 特克斯 - 新源/那拉提 - 独库 - 库车 - 库尔勒 - 乌鲁木齐</div></div>
+  <div class="info-card"><div class="label">待确认</div><div class="value">6/18 乌鲁木齐到伊宁车次/航班<br>UQ2524 / UQ2621 起降时间<br>景区预约与当天路况</div></div>
+  <div class="info-card"><div class="label">节奏</div><div class="value">慢玩优先<br>每天一个主任务<br>长途后安排缓冲</div></div>
+</div>
+<div class="section-head">整体总结</div>
+<div class="pay-summary"><h4>这条线怎么走</h4><div>前半段在伊犁慢玩：伊宁适应，赛里木湖留完整半天，特克斯住两晚，新源/那拉提作为进独库前补给点。后半段走独库主线：那拉提到巴音布鲁克，再从巴音布鲁克下到库车，最后经库尔勒回乌鲁木齐还车。</div></div>
+<div class="pay-summary"><h4>节奏判断</h4><div>最累的是 D10 独库南段和 D13 库尔勒回乌鲁木齐；其余每天只保留一个主任务。餐厅以顺路、停车方便、价格可控为优先，不为了网红店绕路。</div></div>
+<div class="pay-summary"><h4>地图说明</h4><div>总览地图上的青色粗线是全程参考主线，单日地图上的虚线是当天城市/景区之间的移动方向；它不是精准导航路线，正式行车仍以高德/车机实时路况为准。</div></div>
+<div class="section-head">实际住宿与评估</div>
+<div class="hotel-table">${Object.values(HOTEL_STAYS).map(h=>`<div class="hotel-row"><div class="top"><div><div class="name">${h.name}</div><div class="addr">${h.city} · ${h.address}</div></div><div class="date">${h.date}</div></div><div class="hotel-risk">${h.verdict}</div></div>`).join('')}</div>
+<div class="section-head">行程概览</div>
+<div class="day-list">${DAYS.slice(1).map(d=>`<div class="card" onclick="go(${d.id})"><div class="name"><span class="dot" style="background:${d.color}"></span>${d.label} · ${d.title}</div><div class="desc">${d.date}</div></div>`).join('')}</div>
+<div class="section-head">支付提醒</div>
+<div class="pay-summary"><h4>交通核对</h4><div>UQ2621 已按 6月30日乌鲁木齐返回洛阳处理；6月18日乌鲁木齐到伊宁仍需单独确认车次/航班，优先查 12306。</div></div>
+<div class="pay-summary"><h4>独库主线</h4><div>本版按独库开放主线执行：那拉提 - 巴音布鲁克 - 库车。出发前仍需确认当天限行、天气、落石和施工，避免临时管制。</div></div>
+<div class="pay-summary"><h4>费用模型</h4><div>${COST_MODEL.note}</div></div>
+<div class="pay-summary"><h4>预约提醒</h4><div>赛里木湖、那拉提、喀拉峻、巴音布鲁克如涉及门票、自驾入园、区间车、停车预约，请以官方当天规则为准。</div></div>
+<div class="pay-summary"><h4>餐厅调研状态</h4><div>页面已改为具体餐厅/候选店：乌鲁木齐、伊宁、特克斯、库车有明确店名；景区镇如赛里木湖、巴音布鲁克、那拉提因旺季营业和评价波动大，给“具体可导航候选类型 + 现场近评核验”。</div></div>
+<div class="section-head">图例</div>
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--tint-red)"></div>餐厅</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--tint-blue)"></div>景点</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--tint-purple)"></div>酒吧</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--tint-orange)"></div>酒店</div>
+</div>`;
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  ENGINE — Do not modify below unless customizing behavior   ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+if (!window.L) {
+  document.getElementById('map').innerHTML = '<div class="map-offline error">Leaflet JS 加载失败；请通过本地服务器打开，并确认 assets/vendor/leaflet 已复制。</div>';
+  throw new Error('Leaflet failed to load');
+}
+
+const map = L.map('map', {
+  center: [HOTEL.lat || 35.69, HOTEL.lng || 139.74],
+  zoom: 8,
+  zoomControl: false,
+  attributionControl: true,
+  zoomSnap: 0.25,
+  zoomDelta: 0.5,
+  wheelPxPerZoomLevel: 90,
+  preferCanvas: true
+});
+L.control.zoom({ position: 'topright' }).addTo(map);
+L.control.scale({ position: 'bottomleft', imperial: false }).addTo(map);
+const TILE_SOURCES = [
+  {
+    name: '高德地图',
+    url: 'https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}',
+    options: { subdomains: ['1', '2', '3', '4'], maxZoom: 19, attribution: '&copy; 高德地图' }
+  },
+  {
+    name: 'OpenStreetMap',
+    url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    options: { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }
+  }
+];
+
+let baseTiles;
+let tileSourceIndex = 0;
+let tileErrorCount = 0;
+let tileNotice;
+let tileTimeout;
+
+function showTileNotice(message, isError = false) {
+  if (!tileNotice) {
+    tileNotice = document.createElement('div');
+    tileNotice.className = 'map-offline';
+    document.getElementById('map').appendChild(tileNotice);
+  }
+  tileNotice.classList.toggle('error', isError);
+  tileNotice.textContent = message;
+}
+
+function clearTileNotice() {
+  if (tileNotice) tileNotice.remove();
+  tileNotice = null;
+  if (tileTimeout) clearTimeout(tileTimeout);
+  tileTimeout = null;
+}
+
+function setTileSource(index) {
+  const source = TILE_SOURCES[index];
+  tileErrorCount = 0;
+  if (baseTiles) map.removeLayer(baseTiles);
+  baseTiles = L.tileLayer(source.url, {
+    ...source.options,
+    crossOrigin: true,
+    errorTileUrl: ''
+  }).addTo(map);
+  showTileNotice(`正在加载底图：${source.name}`);
+  if (tileTimeout) clearTimeout(tileTimeout);
+  tileTimeout = setTimeout(() => {
+    showTileNotice('底图加载失败，但行程点位仍可查看', true);
+  }, 8000);
+  baseTiles.on('tileload', clearTileNotice);
+  baseTiles.on('tileerror tileloaderror', () => {
+    tileErrorCount += 1;
+    if (tileErrorCount === 3 && tileSourceIndex + 1 < TILE_SOURCES.length) {
+      tileSourceIndex += 1;
+      showTileNotice(`${source.name} 加载失败，正在切换底图...`, true);
+      setTileSource(tileSourceIndex);
+      return;
+    }
+    if (tileErrorCount >= 3) {
+      showTileNotice('底图加载失败，但行程点位仍可查看', true);
+    }
+  });
+}
+
+setTileSource(tileSourceIndex);
+
+/* ── Geolocation ── */
+const LocateControl = L.Control.extend({
+  options: { position: 'bottomright' },
+  onAdd() {
+    const btn = L.DomUtil.create('button', 'locate-btn');
+    btn.innerHTML = '📍';
+    btn.title = '我的位置';
+    L.DomEvent.disableClickPropagation(btn);
+    btn.addEventListener('click', () => {
+      btn.classList.add('active');
+      map.locate({ setView: true, maxZoom: 15 });
+    });
+    this._btn = btn;
+    return btn;
+  }
+});
+new LocateControl().addTo(map);
+let locMarker, locCircle;
+map.on('locationfound', e => {
+  const r = e.accuracy / 2;
+  if (locMarker) { locMarker.setLatLng(e.latlng); locCircle.setLatLng(e.latlng).setRadius(r); }
+  else {
+    locMarker = L.marker(e.latlng, {
+      icon: L.divIcon({ className:'', html:'<div style="width:14px;height:14px;border-radius:50%;background:#007aff;border:2.5px solid #fff;box-shadow:0 0 6px rgba(0,122,255,.5)"></div><div class="loc-pulse" style="position:absolute;top:0;left:0"></div>', iconSize:[14,14], iconAnchor:[7,7] }),
+      zIndexOffset: 2000
+    }).addTo(map);
+    locCircle = L.circle(e.latlng, { radius: r, color: '#007aff', fillColor: '#007aff', fillOpacity: .08, weight: 1 }).addTo(map);
+  }
+});
+map.on('locationerror', () => {});
+
+function markerIcon(type, emoji, num, color, role = '') {
+  const cls = role || type || 'spot';
+  const n = num ? `<span class="num">${num}</span>` : '';
+  const style = color ? ` style="background:${color}"` : '';
+  return L.divIcon({
+    className: '',
+    html: `<div class="map-marker ${cls}"${style}>${emoji || ''}${n}</div>`,
+    iconSize: [32,32],
+    iconAnchor: [16,16],
+    popupAnchor: [0,-18]
+  });
+}
+
+function icon(color, emoji) {
+  return markerIcon('spot', emoji, '', color);
+}
+
+if (HOTEL.lat) L.marker([HOTEL.lat, HOTEL.lng], { icon: markerIcon('hotel','🏨'), zIndexOffset: 1000 }).addTo(map).bindPopup(`<b>${HOTEL.name}</b>`);
+
+let markers = [], polylines = [];
+const emojis = { food:'🍽️', spot:'📍', hotel:'🏨', transport:'🚗', drink:'🍺' };
+const roleLabels = { food:'餐饮', spot:'景点', hotel:'住宿', transport:'交通', drink:'饮品' };
+
+function clearMap() { markers.forEach(m=>map.removeLayer(m)); polylines.forEach(p=>map.removeLayer(p)); markers=[]; polylines=[]; }
+
+function routeBearing(a, b) {
+  const pa = map.latLngToLayerPoint(L.latLng(a[0], a[1]));
+  const pb = map.latLngToLayerPoint(L.latLng(b[0], b[1]));
+  return Math.atan2(pb.y - pa.y, pb.x - pa.x) * 180 / Math.PI;
+}
+
+function fitMapTo(points, options = {}) {
+  if (!points || !points.length) return;
+  const bounds = L.latLngBounds(points.map(p => L.latLng(p[0], p[1])));
+  const span = Math.max(
+    Math.abs(bounds.getNorth() - bounds.getSouth()),
+    Math.abs(bounds.getEast() - bounds.getWest())
+  );
+  const desktop = window.matchMedia('(min-width: 1100px)').matches;
+  const maxZoom = options.overview ? 6.5 : (span < 0.18 ? 12 : span < 0.7 ? 10 : span < 2.2 ? 8.5 : 6.5);
+  map.invalidateSize();
+  map.fitBounds(bounds, {
+    padding: desktop ? [72, 72] : [36, 36],
+    maxZoom
+  });
+  setTimeout(() => map.invalidateSize(), 120);
+}
+
+function addRouteDecorations(coords, color, label, options = {}) {
+  if (!coords || coords.length < 2) return;
+  const segments = [];
+  for (let i = 0; i < coords.length - 1; i++) segments.push([coords[i], coords[i + 1], i]);
+  const pick = options.overview
+    ? segments.filter((_, i) => i % Math.ceil(segments.length / 4) === 0).slice(0, 4)
+    : (segments.length <= 2 ? segments : [segments[Math.floor(segments.length / 2)]]);
+  pick.forEach(([a, b, i]) => {
+    const lat = (a[0] + b[0]) / 2;
+    const lng = (a[1] + b[1]) / 2;
+    const angle = routeBearing(a, b);
+    const arrow = L.marker([lat, lng], {
+      icon: L.divIcon({
+        className: '',
+        html: `<div class="map-arrow" style="background:${color};transform:rotate(${angle}deg)">➜</div>`,
+        iconSize:[20,20],
+        iconAnchor:[10,10]
+      }),
+      interactive: false,
+      zIndexOffset: 1200
+    }).addTo(map);
+    markers.push(arrow);
+  });
+  if (label) {
+    const mid = coords[Math.floor(coords.length / 2)];
+    const lb = L.marker(mid, {
+      icon: L.divIcon({ className:'', html:`<div class="route-label">${label}</div>`, iconSize:[160,24], iconAnchor:[80,12] }),
+      interactive: false,
+      zIndexOffset: 1100
+    }).addTo(map);
+    markers.push(lb);
+  }
+}
+
+function showDay(idx) {
+  clearMap();
+  if (idx === 0) {
+    const routePts = OVERVIEW_ROUTE.map(p => [p.lat, p.lng]);
+    if(routePts.length > 1) {
+      const glow = L.polyline(routePts, { color:'#14b8a6', weight:12, opacity:.16, lineCap:'round', smoothFactor:1.2 }).addTo(map);
+      const mainLine = L.polyline(routePts, { color:'#0f766e', weight:4.5, opacity:.82, dashArray:'12,8', lineCap:'round', smoothFactor:1.2 }).addTo(map);
+      polylines.push(glow, mainLine);
+      addRouteDecorations(routePts, '#0f766e', '全程主线', { overview: true });
+    }
+    OVERVIEW_ROUTE.forEach((p, i) => {
+      const role = i === 0 ? 'start' : (i === OVERVIEW_ROUTE.length - 1 ? 'end' : 'spot');
+      const m = L.marker([p.lat,p.lng], { icon: markerIcon(role, i === 0 ? '起' : (i === OVERVIEW_ROUTE.length - 1 ? '终' : '•'), i+1, '#0f766e', role), zIndexOffset: 900 + i })
+        .addTo(map).bindPopup(`<b>${i+1}. ${p.name}</b><br><span style="color:#86868b">全程主线节点</span>`);
+      markers.push(m);
+    });
+    const pts = routePts.slice();
+    Object.values(HOTEL_STAYS).forEach(h => { if(h.lat) pts.push([h.lat,h.lng]); });
+    fitMapTo(pts, { overview: true });
+    DAYS.slice(1).forEach(d => {
+      d.locations.filter(l=>l.type==='hotel').forEach(l => {
+        const m = L.circleMarker([l.lat,l.lng], { radius:5, fillColor:'#f97316', color:'#fff', weight:1.5, fillOpacity:.9 })
+          .addTo(map).bindPopup(`<b>${l.name}</b><br><span style="color:#86868b">${d.label} · ${roleLabels[l.type] || '点位'}</span>`);
+        markers.push(m);
+      });
+    });
+    return;
+  }
+  const day = DAYS.find(d=>d.id===idx);
+  if(!day) return;
+  const coords = [];
+  let pointIndex = 0;
+  day.locations.forEach(l => {
+    if(!l.lat) return;
+    pointIndex += 1;
+    const role = pointIndex === 1 ? 'start' : '';
+    const m = L.marker([l.lat,l.lng], { icon: markerIcon(l.type, emojis[l.type]||'📌', pointIndex, role ? undefined : day.color, role || l.type), zIndexOffset: l.type==='hotel'?1300:1000+pointIndex }).addTo(map);
+    const gmapQ = l.gmap||encodeURIComponent(l.name+' Tokyo');
+    m.bindPopup(`<b>${pointIndex}. ${l.name}</b>${l.time!=='—'?'<br><span style="color:#86868b">'+l.time+' · '+(roleLabels[l.type]||'点位')+'</span>':''}<br>${l.desc}${l.budget?'<br><span style="color:#ff9500">'+l.budget+'</span>':''}<br><a href="#" onclick="event.preventDefault();openAS('${l.name.replace(/'/g,"\\'")}',${l.lat},${l.lng},'${gmapQ}')">📍 导航</a>${l.xhs?' · <a href="'+l.xhs+'" target="_blank">📕 小红书</a>':''}`);
+    markers.push(m);
+    if(l.time!=='—') coords.push([l.lat,l.lng]);
+  });
+  const routeCoords = DAY_PATHS[idx] || coords;
+  if(routeCoords.length>1) {
+    const glow = L.polyline(routeCoords, { color:day.color, weight:11, opacity:.14, lineCap:'round', smoothFactor:1.1 }).addTo(map);
+    const pl = L.polyline(routeCoords, { color:day.color, weight:4.5, opacity:.72, dashArray:'10,6', lineCap:'round', smoothFactor:1.1 }).addTo(map);
+    polylines.push(glow, pl);
+    const routeLabel = (ROUTE_STATS[idx] && ROUTE_STATS[idx].km) ? `${day.label} · ${ROUTE_STATS[idx].km}` : day.label;
+    addRouteDecorations(routeCoords, day.color, routeLabel);
+  }
+  const boundsPts = [...routeCoords, ...coords];
+  fitMapTo(boundsPts);
+}
+
+// ══════════ RENDER ══════════
+function payChips(pay) {
+  if(!pay) return '';
+  let h = '<div class="pays">';
+  const m = { cash:'💴', card:'💳', suica:'Suica', paypay:'PayPay', alipay:'支付宝', wechat:'微信' };
+  for(const [k,label] of Object.entries(m)) {
+    if(pay[k]!==undefined) { const c = pay[k]===1?'ok':pay[k]===0.5?'idk':'no'; h += `<span class="pay ${c}">${label}</span>`; }
+  }
+  return h+'</div>';
+}
+
+// ── 运行环境检测：在第三方 App 的 WebView 里，自定义 scheme 基本会被拦截 ──
+const IN_APP_WEBVIEW = (() => {
+  const ua = (navigator.userAgent || '').toLowerCase();
+  return /micromessenger|xhs|xhsdiscover|discover\/|tiktok|aweme|weibo|qq\/|qqbrowser|alipayclient|dingtalk|lark|feishu|ucbrowser|baiduboxapp|toutiao|newsarticle/.test(ua);
+})();
+
+function xhsKeyword(loc) {
+  if(loc.xhsKeyword) return loc.xhsKeyword.trim();
+  return (loc.name||'').replace(/⭐.*$/g,'').replace(/（.*?）/g,'').replace(/\(.*?\)/g,'').replace(/\s+/g,' ').trim();
+}
+function xhsAppUrl(loc) { return `xhsdiscover://search/result?keyword=${encodeURIComponent(xhsKeyword(loc))}&target_search=notes&source=deeplink`; }
+function xhsWebUrl(loc) { return `https://www.xiaohongshu.com/search_result?keyword=${encodeURIComponent(xhsKeyword(loc))}&source=web_explore_feed`; }
+
+function dpKeyword(loc) {
+  if(loc.dianpingKeyword) return loc.dianpingKeyword.trim();
+  return (loc.name||'').replace(/⭐.*$/g,'').replace(/（.*?）/g,'').replace(/\(.*?\)/g,'').replace(/\s+/g,' ').trim();
+}
+function dpAppUrl(loc) { return `dianping://searchshoplist?keyword=${encodeURIComponent(dpKeyword(loc))}`; }
+function dpWebUrl(loc) { return `https://m.dianping.com/searchshop?keyword=${encodeURIComponent(dpKeyword(loc))}`; }
+
+window._extLocs = {};
+DAYS.forEach(d => d.locations.forEach(l => { window._extLocs[`${d.id}::${l.name}`] = l; }));
+window._xhsLocs = window._extLocs;
+
+function openExt(key, kind) {
+  const loc = window._extLocs[key]; if(!loc) return false;
+  if (IN_APP_WEBVIEW) {
+    window.location.href = kind==='dp' ? dpWebUrl(loc) : xhsWebUrl(loc);
+  } else {
+    window.location.href = kind==='dp' ? dpAppUrl(loc) : xhsAppUrl(loc);
+  }
+  return false;
+}
+function openXhs(key) { return openExt(key, 'xhs'); }
+function openDp(key)  { return openExt(key, 'dp'); }
+
+function locCard(loc, dayIdx) {
+  const dot = loc.type==='food'?'food':loc.type==='spot'?'spot':loc.type==='drink'?'drink':loc.type==='hotel'?'hotel':'transport';
+  const bdg = loc.type==='food'?'<span class="badge food">餐</span>':loc.type==='spot'?'<span class="badge spot">景</span>':loc.type==='drink'?'<span class="badge drink">饮</span>':'';
+  const uid = `d${dayIdx}-${loc.name.replace(/\W/g,'')}`;
+  const locKey = `${dayIdx}::${loc.name}`;
+  const gmapQ = loc.gmap||encodeURIComponent(loc.name+' Tokyo');
+  let lnk = `<button class="btn nav" onclick="openAS('${loc.name.replace(/'/g,"\\'")}',${loc.lat},${loc.lng},'${gmapQ}')">📍 导航</button>`;
+  if(loc.xhs||loc.xhsKeyword) {
+    const xhsHref = IN_APP_WEBVIEW ? xhsWebUrl(loc) : xhsAppUrl(loc);
+    const xhsLabel = IN_APP_WEBVIEW ? '📕 小红书' : '📕 小红书 App';
+    lnk += `<a href="${xhsHref}" onclick="return openXhs('${locKey.replace(/'/g,"\\'")}')" class="btn xhs">${xhsLabel}</a>`;
+  }
+  const dpEnabled = loc.dianping !== false &&
+    (loc.dianping || loc.dianpingKeyword || loc.type==='food' || loc.type==='drink');
+  if(dpEnabled) {
+    const dpHref = IN_APP_WEBVIEW ? dpWebUrl(loc) : dpAppUrl(loc);
+    const dpLabel = IN_APP_WEBVIEW ? '🍜 大众点评' : '🍜 大众点评 App';
+    lnk += `<a href="${dpHref}" onclick="return openDp('${locKey.replace(/'/g,"\\'")}')" class="btn dp">${dpLabel}</a>`;
+  }
+  if(loc.reserve) lnk += `<a href="${loc.reserve}" target="_blank" class="btn rsv">📅 预约</a>`;
+  return `<div class="tl-item"><div class="tl-dot ${dot}"></div><div class="card" onclick="if(!event.target.closest('.btn,.links'))toggle('${uid}')"><div class="time">${loc.time!=='—'?loc.time:'备选'}</div><div class="name">${bdg} ${loc.name}</div><div class="desc">${loc.desc}</div>${loc.budget?'<div class="budget">'+loc.budget+'</div>':''}${payChips(loc.pay)}<div class="links">${lnk}</div>${loc.detail?'<div class="details" id="'+uid+'">'+loc.detail.replace(/\n/g,'<br>')+'</div>':''}</div></div>`;
+}
+
+function renderDay(idx) {
+  const d = DAYS.find(x=>x.id===idx); if(!d) return '';
+  const main = d.locations.filter(l=>l.time!=='—');
+  const alt = d.locations.filter(l=>l.time==='—');
+  let h = `<div class="day-head"><h2>${d.title}</h2><p>${d.date}</p></div>`;
+  h += hotelAssessmentHtml(idx);
+  h += routeStatsHtml(idx);
+  h += foodPicksHtml(idx);
+  if(main.length) { h += '<div class="section-head">行程</div><div class="timeline">'; main.forEach(l => h += locCard(l, idx)); h += '</div>'; }
+  if(alt.length) { h += '<div class="section-head">备选</div><div class="timeline">'; alt.forEach(l => h += locCard(l, idx)); h += '</div>'; }
+  return h;
+}
+
+function hotelAssessmentHtml(idx) {
+  const h = HOTEL_STAYS[idx]; if(!h) return '';
+  return `<div class="section-head">住宿定位与评估</div>
+  <div class="hotel-card">
+    <div class="hotel-name">${h.name}</div>
+    <div class="hotel-address">${h.city} · ${h.address}</div>
+    <div class="hotel-verdict">${h.verdict}</div>
+    <div class="hotel-risk">${h.risk}<br>调研来源：${h.source}。定位坐标已按公开地址/片区写入地图，最终导航请用高德店名搜索确认。</div>
+    <div class="links">
+      <button class="btn nav" onclick="openAS('${h.name.replace(/'/g,"\\'")}',${h.lat},${h.lng},'${h.name.replace(/'/g,"\\'")}')">📍 导航</button>
+      <a href="${xhsWebUrl({xhsKeyword:h.name+' 住宿 停车 早餐'})}" class="btn xhs" target="_blank">📕 小红书</a>
+      <a href="${dpWebUrl({dianpingKeyword:h.name})}" class="btn dp" target="_blank">🍜 大众点评</a>
+    </div>
+  </div>`;
+}
+
+function routeStatsHtml(idx) {
+  const s = ROUTE_STATS[idx]; if(!s) return '';
+  return `<div class="section-head">路程与成本</div>
+  <div class="route-card">
+    <div class="route-title">${s.route}</div>
+    <div class="route-grid">
+      <div class="stat-pill"><div class="k">方式</div><div class="v">${s.mode}</div></div>
+      <div class="stat-pill"><div class="k">距离</div><div class="v">${s.km}</div></div>
+      <div class="stat-pill"><div class="k">时间</div><div class="v">${s.drive}</div></div>
+      <div class="stat-pill"><div class="k">费用</div><div class="v">${s.cost}</div></div>
+    </div>
+    <div class="route-note">油耗：${s.fuel}；过路/停车：${s.toll}。${s.note}</div>
+  </div>`;
+}
+
+function foodPicksHtml(idx) {
+  const picks = FOOD_PICKS[idx] || [];
+  if(!picks.length) return '';
+  let h = '<div class="section-head">具体餐厅候选</div><div class="food-picks">';
+  picks.forEach(p => {
+    const locKey = `${idx}::${p.name}`;
+    window._extLocs[locKey] = { name:p.name, dianpingKeyword:p.query, xhsKeyword:p.query, gmap:p.query, lat:0, lng:0 };
+    h += `<div class="food-card">
+      <div class="food-top">
+        <div><div class="food-name">${p.name}</div><div class="food-area">${p.area}</div></div>
+        <span class="food-tag pick">${p.pick}</span>
+      </div>
+      <div class="food-why">${p.why}</div>
+      <div class="food-meta"><span class="food-tag">${p.budget}</span><span class="food-tag">${p.source}</span></div>
+      <div class="links">
+        <button class="btn nav" onclick="openAS('${p.name.replace(/'/g,"\\'")}',0,0,'${p.query.replace(/'/g,"\\'")}')">📍 导航</button>
+        <a href="${xhsWebUrl({xhsKeyword:p.query})}" class="btn xhs" target="_blank">📕 小红书</a>
+        <a href="${dpWebUrl({dianpingKeyword:p.query})}" class="btn dp" target="_blank">🍜 大众点评</a>
+      </div>
+    </div>`;
+  });
+  return h + '</div>';
+}
+
+// ══════════ NAV ══════════
+let cur = 0;
+const tabsEl = document.getElementById('tabs');
+const contentEl = document.getElementById('content');
+let resizeTimer;
+
+DAYS.forEach(d => {
+  const btn = document.createElement('button');
+  btn.className = 'tab' + (d.id===0?' active':'');
+  btn.dataset.day = d.id;
+  btn.textContent = d.label;
+  tabsEl.appendChild(btn);
+});
+
+function go(idx) {
+  cur = idx;
+  tabsEl.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', +t.dataset.day===idx));
+  contentEl.innerHTML = idx===0 ? overviewContent() : renderDay(idx);
+  showDay(idx);
+  contentEl.scrollTo({top:0});
+  window.scrollTo({top:0, behavior:'smooth'});
+  const tab = tabsEl.querySelector(`[data-day="${idx}"]`);
+  if(tab) tab.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+}
+
+function toggle(id) { const el=document.getElementById(id); if(el) el.classList.toggle('closed'); }
+
+tabsEl.addEventListener('click', e => { const t=e.target.closest('.tab'); if(t) go(+t.dataset.day); });
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    map.invalidateSize();
+    showDay(cur);
+  }, 160);
+});
+
+go(0);
+
+/* ── Action Sheet for Navigation ── */
+const asOverlay = document.createElement('div');
+asOverlay.className = 'as-overlay';
+asOverlay.innerHTML = `<div class="as-sheet">
+  <div class="as-group"><div class="as-title" id="as-title">选择导航方式</div></div>
+  <div class="as-group" id="as-opts"></div>
+  <div class="as-group"><button class="as-item as-cancel" onclick="closeAS()">取消</button></div>
+</div>`;
+document.body.appendChild(asOverlay);
+asOverlay.addEventListener('click', e => { if (e.target === asOverlay) closeAS(); });
+
+const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+function amapAppUrl(name, lat, lng) {
+  const scheme = IS_IOS ? 'iosamap' : 'androidamap';
+  return `${scheme}://viewMap?sourceApplication=trip&poiname=${encodeURIComponent(name)}&lat=${lat}&lon=${lng}&dev=0`;
+}
+function amapWebUrl(name, lat, lng) {
+  return `https://uri.amap.com/marker?position=${lng},${lat}&name=${encodeURIComponent(name)}&src=trip&coordinate=wgs84&callnative=1`;
+}
+function amapRouteUrl(name, lat, lng) {
+  return `https://uri.amap.com/navigation?to=${lng},${lat},${encodeURIComponent(name)}&mode=car&policy=1&coordinate=wgs84&callnative=1`;
+}
+function baiduRouteUrl(name, lat, lng) {
+  return `https://api.map.baidu.com/direction?destination=latlng:${lat},${lng}|name:${encodeURIComponent(name)}&mode=driving&coord_type=wgs84&output=html&src=trip-map-builder`;
+}
+function openAmap(name, lat, lng) {
+  if (IN_APP_WEBVIEW) { window.open(amapWebUrl(name, lat, lng)); return; }
+  window.location.href = amapAppUrl(name, lat, lng);
+}
+function openAmapRoute(name, lat, lng) {
+  window.open(amapRouteUrl(name, lat, lng));
+}
+
+function openAS(name, lat, lng, gmap) {
+  const q = gmap || encodeURIComponent(name + ' Tokyo');
+  const encName = encodeURIComponent(name);
+  const safeName = name.replace(/'/g,"\\'");
+  document.getElementById('as-title').textContent = name;
+  if (!lat || !lng) {
+    const amapSearch = `https://www.amap.com/search?query=${encodeURIComponent(q)}`;
+    const googleSearch = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+    document.getElementById('as-opts').innerHTML =
+      `<button class="as-item" onclick="window.open('${amapSearch}');closeAS()">🧭 高德搜索</button>` +
+      `<button class="as-item" onclick="window.open('${googleSearch}');closeAS()">🗺️ Google 搜索</button>`;
+    asOverlay.classList.add('show');
+    return;
+  }
+  // WebView 内 maps:// 通常被拦截，改用 https Apple Maps URL —— iOS 系统会自动拉起 Apple Maps
+  const appleUrl = IN_APP_WEBVIEW
+    ? `https://maps.apple.com/?q=${lat},${lng}&ll=${lat},${lng}&name=${encName}`
+    : `maps://maps.apple.com/?q=${lat},${lng}&name=${encName}`;
+  const googleUrl = `https://www.google.com/maps/search/?api=1&query=${q}`;
+  const googleRouteUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`;
+  const baiduUrl = baiduRouteUrl(name, lat, lng);
+  document.getElementById('as-opts').innerHTML =
+    `<button class="as-item" onclick="openAmapRoute('${safeName}',${lat},${lng});closeAS()">🚗 高德驾车导航</button>` +
+    `<button class="as-item" onclick="openAmap('${safeName}',${lat},${lng});closeAS()">📍 高德查看地点</button>` +
+    `<button class="as-item" onclick="window.open('${baiduUrl}');closeAS()">🧭 百度驾车路线</button>` +
+    `<button class="as-item" onclick="window.open('${googleRouteUrl}');closeAS()">🗺️ Google 驾车路线</button>` +
+    `<button class="as-item" onclick="window.open('${appleUrl}');closeAS()">🍎 Apple Maps</button>`;
+  asOverlay.classList.add('show');
+}
+function closeAS() { asOverlay.classList.remove('show'); }
+</script>
+</body>
+</html>
