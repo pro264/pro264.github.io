@@ -416,7 +416,7 @@ const HOTEL_STAYS = {
   10:{ date:'6月26日', name:'汉庭库车南湖', city:'库车市区', address:'库车市南湖片区（以高德店名导航为准）', lat:41.7088, lng:82.9606, verdict:'合理。独库南段下山后住市区，吃饭、补给、休整都比景区路边稳。', risk:'D10 抵达可能偏晚，提前确认停车和前台保留时间。', source:'公开地图搜索；库车小红书美食笔记补充' },
   11:{ date:'6月27日', name:'汉庭库车南湖', city:'库车市区', address:'库车市南湖片区（以高德店名导航为准）', lat:41.7088, lng:82.9606, verdict:'合理。独库后连住库车一晚，有恢复余量；也方便选择是否去天山神秘大峡谷。', risk:'如果你实际只订了一晚，需要把 D11 调整为库车到库尔勒。', source:'公开地图搜索；路线逻辑复核' },
   12:{ date:'6月28日', name:'库尔勒建国北路金三角酒店', city:'库尔勒市区', address:'库尔勒建国北路金三角片区（以高德店名导航为准）', lat:41.7418, lng:86.1548, verdict:'合理。作为库车回乌鲁木齐前的缓冲点，住市区方便吃饭和补给。', risk:'第二天去乌鲁木齐仍然很长，建议住处附近加油/洗车，早出发。', source:'公开地图搜索；库尔勒市区片区定位' },
-  13:{ date:'6月29日', name:'海友乌鲁木齐天山国际机场', city:'乌鲁木齐机场', address:'乌鲁木齐天山国际机场片区（以高德店名导航为准）', lat:43.9016, lng:87.4870, verdict:'很合理。最后一晚住机场片区，给还车和 UQ2641 早班返程留余量。', risk:'离市区远，最后一晚不建议再进城吃饭；还车前拍照留证、确认油量。', source:'公开地图搜索；机场片区定位' }
+  13:{ date:'6月29日', name:'海友乌鲁木齐天山国际机场', city:'乌鲁木齐机场', address:'乌鲁木齐天山国际机场片区（以高德店名导航为准）', lat:43.9016, lng:87.4870, verdict:'很合理。最后一晚住机场片区，给 19:30 前还车和 UQ2641 早班返程留余量。', risk:'离市区远，最后一晚不建议再进城吃饭；还车前拍照留证、确认油量、ETC 和押金。', source:'公开地图搜索；机场片区定位' }
 };
 
 const DAYS = [
@@ -539,18 +539,18 @@ const DAYS = [
   {
     id:13, label:'D13', date:'6月29日 · 库尔勒 → 乌鲁木齐', title:'回乌鲁木齐，可选天山大峡谷', color:'#dc2626',
     locations:[
-      { name:'库尔勒 → 乌鲁木齐', lat:43.8256, lng:87.6168, type:'transport', time:'08:00', desc:'约 6-7 小时，今天核心仍是安全回城。若要加天山大峡谷，必须早出发。', detail:'不要把还车和返程航班压在同一天极限完成，留一晚缓冲是正确选择。', gmap:'库尔勒 到 乌鲁木齐' },
-      { name:'乌鲁木齐天山大峡谷', lat:43.4800, lng:87.4300, type:'spot', time:'下午可选', desc:'新增为可选加项：若 15:00 前抵达乌鲁木齐南郊且体力足，可走短线；否则放弃。', detail:'这一天本身路程很长，天山大峡谷不作为硬性任务。若返程航班时间较晚，也可改到 D14 航班前短玩。', xhsKeyword:'乌鲁木齐 天山大峡谷 6月 自驾', dianpingKeyword:'乌鲁木齐 天山大峡谷', gmap:'乌鲁木齐天山大峡谷' },
-      { name:'乌鲁木齐还车预检查', lat:43.8383, lng:87.5290, type:'transport', time:'傍晚', desc:'加满油、洗车、拍照留存车况，确认第二天还车地点和时间。', gmap:'乌鲁木齐 租车还车' },
+      { name:'库尔勒 → 乌鲁木齐', lat:43.8256, lng:87.6168, type:'transport', time:'08:00', desc:'约 6-7 小时，今天核心仍是安全回城并完成还车。若要加天山大峡谷，必须早出发。', detail:'还车截止按租车订单 6月29日 19:30，地点为天山国际机场北航站楼服务点；不要把还车拖到 6月30日早班机当天。', gmap:'库尔勒 到 乌鲁木齐' },
+      { name:'乌鲁木齐天山大峡谷', lat:43.4800, lng:87.4300, type:'spot', time:'下午可选', desc:'新增为可选加项：若 15:00 前抵达乌鲁木齐南郊且体力足，可走短线；否则放弃。', detail:'这一天本身路程很长，天山大峡谷不作为硬性任务；任何情况下都要优先保证 19:30 前机场服务点还车。', xhsKeyword:'乌鲁木齐 天山大峡谷 6月 自驾', dianpingKeyword:'乌鲁木齐 天山大峡谷', gmap:'乌鲁木齐天山大峡谷' },
+      { name:'天山国际机场北航站楼服务点还车', lat:43.9071, lng:87.4742, type:'transport', time:'19:30前', desc:'租车订单：大众探歌，车牌公开页脱敏为川G·LS***，ETC 已启用。', detail:'还车前加满油，拍车身、轮胎、油表、里程和车内；确认 ETC 明细、违章押金、停车费凭证上传。', gmap:'天山国际机场北航站楼服务点' },
       { name:'海友乌鲁木齐天山国际机场', lat:HOTEL_STAYS[13].lat, lng:HOTEL_STAYS[13].lng, type:'hotel', time:'夜宿', desc:'6月29日晚实际住宿。地址：'+HOTEL_STAYS[13].address, detail:HOTEL_STAYS[13].verdict+' '+HOTEL_STAYS[13].risk, gmap:'海友乌鲁木齐天山国际机场' },
       { name:'晚餐关键词：乌鲁木齐新疆菜收尾', lat:43.8256, lng:87.6168, type:'food', time:'晚餐', desc:'小红书近期乌鲁木齐本地馆子内容多；大众点评城市检索本次不稳定，现场用关键词筛近评。', budget:'¥50-150/人', xhsKeyword:'乌鲁木齐 新疆菜 本地人 不排队', dianpingKeyword:'乌鲁木齐 新疆菜 抓饭 拌面', pay:{cash:1, alipay:1, wechat:1} }
     ]
   },
   {
-    id:14, label:'D14', date:'6月30日 · 乌鲁木齐返程', title:'还车，UQ2641 乌鲁木齐返回洛阳', color:'#475569',
+    id:14, label:'D14', date:'6月30日 · 乌鲁木齐返程', title:'机场返程，UQ2641 乌鲁木齐返回洛阳', color:'#475569',
     locations:[
-      { name:'乌鲁木齐还车', lat:43.8383, lng:87.5290, type:'transport', time:'按航班提前', desc:'建议至少航班前 4 小时开始还车流程，避免异地还车排队。', detail:'还车点、油量、违章押金、机场接驳都要提前确认。', gmap:'乌鲁木齐 租车还车' },
-      { name:'乌鲁木齐天山机场', lat:43.9071, lng:87.4742, type:'transport', time:'07:00-10:45', desc:'UQ2641 乌鲁木齐天山机场 07:00 起飞，10:45 到洛阳北郊机场。', detail:'早班机，6月29日晚住机场片区是正确选择；建议 04:30-05:00 开始还车/值机准备，行李额和航站楼以航司信息为准。', gmap:'乌鲁木齐天山机场' },
+      { name:'机场酒店 → 乌鲁木齐天山机场', lat:43.9071, lng:87.4742, type:'transport', time:'04:30-05:00', desc:'6月29日晚已完成还车，今天只处理机场短驳、值机、安检和返程。', detail:'早班机不要再安排市区或景区；行李额、航站楼、值机截止时间以航司信息为准。', gmap:'乌鲁木齐天山机场' },
+      { name:'乌鲁木齐天山机场', lat:43.9071, lng:87.4742, type:'transport', time:'07:00-10:45', desc:'UQ2641 乌鲁木齐天山机场 07:00 起飞，10:45 到洛阳北郊机场。', detail:'建议 04:30-05:00 开始值机和安检准备；6月29日晚住机场片区是正确选择。', gmap:'乌鲁木齐天山机场' },
       { name:'机场简餐/伴手礼', lat:43.9071, lng:87.4742, type:'food', time:'候机', desc:'最后一天不再安排市区景点，避免误机。', budget:'按机场价', dianpingKeyword:'乌鲁木齐机场 餐饮', xhsKeyword:'乌鲁木齐机场 伴手礼', pay:{cash:1, alipay:1, wechat:1} }
     ]
   }
@@ -576,7 +576,7 @@ const HOTEL_STAYS_RESEARCH = {
   10:{ date:'6月26日', name:'汉庭库车南湖', city:'库车市区', address:'库车市南湖片区（以高德店名导航为准）', lat:41.7088, lng:82.9606, verdict:'合理。独库南段下山后住市区，吃饭、补给、休整都比景区路边稳。', risk:'D10 抵达可能偏晚，提前确认停车和前台保留时间。', source:'公开地图搜索；库车小红书美食笔记补充' },
   11:{ date:'6月27日', name:'汉庭库车南湖', city:'库车市区', address:'库车市南湖片区（以高德店名导航为准）', lat:41.7088, lng:82.9606, verdict:'合理。独库后连住库车一晚，有恢复余量；也方便选择是否去天山神秘大峡谷。', risk:'如果你实际只订了一晚，需要把 D11 调整为库车到库尔勒。', source:'公开地图搜索；路线逻辑复核' },
   12:{ date:'6月28日', name:'库尔勒建国北路金三角酒店', city:'库尔勒市区', address:'库尔勒建国北路金三角片区（以高德店名导航为准）', lat:41.7418, lng:86.1548, verdict:'合理。作为库车回乌鲁木齐前的缓冲点，住市区方便吃饭和补给。', risk:'第二天去乌鲁木齐仍然很长，建议住处附近加油/洗车，早出发。', source:'公开地图搜索；库尔勒市区片区定位' },
-  13:{ date:'6月29日', name:'海友乌鲁木齐天山国际机场', city:'乌鲁木齐机场', address:'乌鲁木齐天山国际机场片区（以高德店名导航为准）', lat:43.9016, lng:87.4870, verdict:'很合理。最后一晚住机场片区，给还车和 UQ2641 早班返程留余量。', risk:'离市区远，最后一晚不建议再进城吃饭；还车前拍照留证、确认油量。', source:'公开地图搜索；机场片区定位' }
+  13:{ date:'6月29日', name:'海友乌鲁木齐天山国际机场', city:'乌鲁木齐机场', address:'乌鲁木齐天山国际机场片区（以高德店名导航为准）', lat:43.9016, lng:87.4870, verdict:'很合理。最后一晚住机场片区，给 19:30 前还车和 UQ2641 早班返程留余量。', risk:'离市区远，最后一晚不建议再进城吃饭；还车前拍照留证、确认油量、ETC 和押金。', source:'公开地图搜索；机场片区定位' }
 };
 
 const OVERVIEW_ROUTE = [
@@ -630,7 +630,7 @@ const ROUTE_STATS = {
   11:{ route:'库车市区 -> 天山神秘大峡谷 -> 库车', mode:'自驾', km:'约 130-170km', drive:'约 2.5-4h', fuel:'10-15L / ¥90-130', toll:'门票/停车另算', cost:'油费约 ¥90-130', note:'天山神秘大峡谷正式加入，但遇暴雨、落石或前日过累就缩短游览。' },
   12:{ route:'库车 -> 博斯腾湖 -> 库尔勒', mode:'自驾 + 湖区观光', km:'约 380-450km', drive:'约 6-7.5h 含观光', fuel:'29-36L / ¥250-310', toll:'约 ¥120-220', cost:'约 ¥370-530 + 景区费用', note:'博斯腾湖正式加入观光，只选一个入口；铁门关/孔雀河降级为到库尔勒还早才顺手看。' },
   13:{ route:'库尔勒 -> 乌鲁木齐/天山大峡谷 -> 机场片区', mode:'自驾', km:'约 520-600km', drive:'约 7-9h 含可选绕行', fuel:'39-50L / ¥340-435', toll:'约 ¥150-240', cost:'约 ¥490-675', note:'乌鲁木齐天山大峡谷只在早出发、早到达、体力足时短线加入。' },
-  14:{ route:'乌鲁木齐市区/还车点 -> 地窝堡机场', mode:'短途自驾/接驳', km:'约 20-40km', drive:'约 30-70 分钟', fuel:'2-4L / ¥20-35', toll:'停车/接驳为主', cost:'约 ¥20-80', note:'至少航班前 4 小时开始还车。' }
+  14:{ route:'机场酒店 -> 乌鲁木齐天山机场', mode:'短驳/步行/接驳', km:'机场片区短距离', drive:'约 10-30 分钟', fuel:'—', toll:'接驳/停车为主', cost:'约 ¥0-50', note:'6月29日 19:30 前已完成还车，D14 不再安排还车流程。' }
 };
 
 const FOOD_PICKS = {
@@ -699,20 +699,20 @@ const FOOD_PICKS = {
 
 function overviewContent() {
   return `
-<div class="hero hero-panel"><h1>新疆伊犁-独库公路自驾</h1><p class="subtitle">6月17日-6月30日 · 伊宁取车，乌鲁木齐还车 · 慢玩不赶路</p></div>
+<div class="hero hero-panel"><h1>新疆伊犁-独库公路自驾</h1><p class="subtitle">6月17日-6月30日 · 大众探歌自驾 · 6/29 机场还车 · 慢玩不赶路</p></div>
 <div class="quick-stats">
   <div class="stat-pill"><div class="k">自驾里程</div><div class="v">约 2500-3000km</div></div>
   <div class="stat-pill"><div class="k">1.4T 油费</div><div class="v">约 ¥1650-2050</div></div>
   <div class="stat-pill"><div class="k">高速/停车</div><div class="v">约 ¥550-1000</div></div>
 </div>
 <div class="info-grid">
-  <div class="info-card"><div class="label">硬约束</div><div class="value">6/17 UQ2524 洛阳飞乌鲁木齐<br>6/18 C845 到伊宁取车<br>6/30 UQ2641 返程洛阳</div></div>
+  <div class="info-card"><div class="label">硬约束</div><div class="value">6/17 UQ2524 洛阳飞乌鲁木齐<br>6/18 C845 到伊宁<br>6/30 UQ2641 返程洛阳</div></div>
   <div class="info-card"><div class="label">主线</div><div class="value">伊宁 - 赛里木湖 - 伊昭公路 - 特克斯 - 喀拉峻 - 新源/那拉提 - 独库 - 库车 - 库尔勒 - 乌鲁木齐</div></div>
-  <div class="info-card"><div class="label">待确认</div><div class="value">UQ2524 / UQ2641 行李额和航站楼<br>C845 检票口与是否晚点<br>景区预约与当天路况</div></div>
+  <div class="info-card"><div class="label">已确认租车</div><div class="value">大众探歌 · 川G·LS***<br>ETC 已启用<br>6/29 19:30 前机场服务点还车</div></div>
   <div class="info-card"><div class="label">节奏</div><div class="value">慢玩优先<br>每天一个主任务<br>长途后安排缓冲</div></div>
 </div>
 <div class="section-head">整体总结</div>
-<div class="pay-summary"><h4>这条线怎么走</h4><div>前半段在伊犁慢玩：伊宁适应，赛里木湖留完整半天，D5 走伊昭公路进特克斯，D6 固定喀拉峻。后半段保留那拉提慢玩，D9 正式参观巴音布鲁克九曲十八弯，再从库车经库尔勒回乌鲁木齐还车。</div></div>
+<div class="pay-summary"><h4>这条线怎么走</h4><div>前半段在伊犁慢玩：伊宁适应，赛里木湖留完整半天，D5 走伊昭公路进特克斯，D6 固定喀拉峻。后半段保留那拉提慢玩，D9 正式参观巴音布鲁克九曲十八弯，再从库车经库尔勒回乌鲁木齐，6月29日 19:30 前完成机场还车。</div></div>
 <div class="pay-summary"><h4>节奏判断</h4><div>最累的是 D5 伊昭公路、D10 独库南段和 D13 库尔勒回乌鲁木齐；天山神秘大峡谷放在库车休整日，乌鲁木齐天山大峡谷只做早到达时的可选加项。餐厅以顺路、停车方便、价格可控为优先。</div></div>
 <div class="pay-summary"><h4>地图说明</h4><div>总览地图上的青色粗线是全程参考主线，单日地图上的虚线是当天城市/景区之间的移动方向；它不是精准导航路线，正式行车仍以高德/车机实时路况为准。</div></div>
 <div class="section-head">实际住宿与评估</div>
@@ -721,6 +721,7 @@ function overviewContent() {
 <div class="day-list">${DAYS.slice(1).map(d=>`<div class="card" onclick="go(${d.id})"><div class="name"><span class="dot" style="background:${d.color}"></span>${d.label} · ${d.title}</div><div class="desc">${d.date}</div></div>`).join('')}</div>
 <div class="section-head">支付提醒</div>
 <div class="pay-summary"><h4>交通核对</h4><div>大交通已更新：UQ2524 6月17日 20:05 洛阳北郊起飞，6月18日 00:05 到乌鲁木齐；C845 6月18日 10:05-15:04 到伊宁；UQ2641 6月30日 07:00-10:45 返洛阳。</div></div>
+<div class="pay-summary"><h4>租车核对</h4><div>租车订单显示：大众探歌，车牌公开页脱敏为川G·LS***，ETC 已启用；租期 5月31日 19:30 到 6月29日 19:30，还车点为天山国际机场北航站楼服务点。还车前加满油、拍车况/油表/里程，按 App 提示上传停车费凭证并确认 ETC 明细。</div></div>
 <div class="pay-summary"><h4>景区门票与预约</h4><div>按 2 名成人 + 1 名学生估算，必玩景区普通门票/景交约 ¥1800-2250；如果赛里木湖和那拉提都选择自驾入园，预算约 ¥2400-3150。学生票通常只优惠门票，区间车、游船、自驾票、停车多数按全价。</div></div>
 <div class="pay-summary"><h4>重点预约顺序</h4><div>那拉提自驾入园名额最需要提前看；赛里木湖如果想开车环湖也要提前抢自驾票。巴音布鲁克建议提前 1 天买票并预留日落排队时间；博斯腾湖提前看开放入口和游船班次即可。</div></div>
 <div class="pay-summary"><h4>学生票准备</h4><div>学生本人带身份证、学生证，最好准备学信网学籍页截图。到景区或平台购票时优先买学生门票，区间车/游船/自驾票按现场规则补全。</div></div>

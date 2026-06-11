@@ -105,7 +105,7 @@ pre { background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 10px; paddi
 <body>
 <div class="cover">
   <h1>新疆伊犁-独库公路自驾行程</h1>
-  <p class="muted">2026年6月17日-6月30日 · 洛阳出发 · 伊宁取车 · 乌鲁木齐还车 · UQ2641返程</p>
+  <p class="muted">2026年6月17日-6月30日 · 洛阳出发 · 大众探歌自驾 · 6月29日机场还车 · UQ2641返程</p>
 </div>
 ${html}
 </body>
