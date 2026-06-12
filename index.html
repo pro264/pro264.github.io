@@ -220,27 +220,58 @@ a:hover { text-decoration: underline; }
 .btn.xhs    { background: #ff2442; color: #fff; }
 .btn.dp     { background: #ffa700; color: #fff; }
 .btn.rsv    { background: var(--tint-green); color: #fff; }
-.plan-entry {
+.overview-actions {
   display: grid;
-  gap: 6px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
   margin: 10px 0 18px;
+}
+.overview-action {
+  display: grid;
+  gap: 5px;
   padding: 14px 16px;
-  border-radius: var(--radius-md);
+  border-radius: 14px;
+  border: .5px solid rgba(15,118,110,.16);
+  background: rgba(255,255,255,.92);
+  box-shadow: var(--shadow-sm);
+  text-decoration: none !important;
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.overview-action:hover { box-shadow: var(--shadow-md); }
+.overview-action:active { transform: scale(.98); }
+.overview-action.current { background: linear-gradient(180deg, #ffffff, #f8fffb); }
+.overview-action.primary {
   background: linear-gradient(135deg, #0f766e, #0d9488);
   color: #fff;
   box-shadow: 0 8px 24px rgba(15,118,110,.24);
 }
-.plan-entry .plan-title { font-size: 16px; font-weight: 850; line-height: 1.25; }
-.plan-entry .plan-desc { color: rgba(255,255,255,.86); font-size: 13px; line-height: 1.55; }
-.plan-entry .plan-cta {
+.overview-action .eyebrow {
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: #0f766e;
+}
+.overview-action.primary .eyebrow { color: rgba(255,255,255,.78); }
+.overview-action .title { font-size: 16px; font-weight: 850; line-height: 1.25; }
+.overview-action .desc { font-size: 13px; line-height: 1.55; color: var(--text-secondary); }
+.overview-action.primary .desc { color: rgba(255,255,255,.88); }
+.overview-action .cta {
   width: fit-content;
-  margin-top: 4px;
-  padding: 7px 11px;
-  border-radius: var(--radius-sm);
+  margin-top: 3px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(15,118,110,.08);
+  color: #0f766e;
+  font-size: 12px;
+  font-weight: 800;
+}
+.overview-action.primary .cta {
   background: rgba(255,255,255,.18);
   color: #fff;
-  font-size: 13px;
-  font-weight: 800;
+}
+@media (max-width: 640px) {
+  .overview-actions { grid-template-columns: 1fr; }
 }
 
 /* Action Sheet */
@@ -767,11 +798,20 @@ function overviewContent() {
   <div class="stat-pill"><div class="k">少开长途</div><div class="v">约 520-600km</div></div>
   <div class="stat-pill"><div class="k">沙漠备选</div><div class="v">罗布人村寨</div></div>
 </div>
-<a class="plan-entry" href="./scenic-plan.html">
-  <span class="plan-title">每日景区玩法</span>
-  <span class="plan-desc">按日期查看起床、出发、进景区、游玩路线、吃饭、返程和备选方案，适合手机截图和打印。</span>
-  <span class="plan-cta">打开当天游玩规划</span>
-</a>
+<div class="overview-actions">
+  <button class="overview-action current" type="button" onclick="go(0)">
+    <span class="eyebrow">当前页面</span>
+    <span class="title">主行程总览</span>
+    <span class="desc">看总路线、地图、酒店、租车、门票预算和整体节奏判断。</span>
+    <span class="cta">正在查看</span>
+  </button>
+  <a class="overview-action primary" href="./scenic-plan.html">
+    <span class="eyebrow">子页面</span>
+    <span class="title">每日景区玩法</span>
+    <span class="desc">查看每天几点出发、景区里怎么走、吃什么、怎么取舍。</span>
+    <span class="cta">打开执行版攻略</span>
+  </a>
+</div>
 <div class="info-grid">
   <div class="info-card"><div class="label">硬约束</div><div class="value">6/17 UQ2524 洛阳飞乌鲁木齐<br>6/18 C845 到伊宁<br>6/30 UQ2641 返程洛阳</div></div>
   <div class="info-card"><div class="label">主线</div><div class="value">伊宁 - 赛里木湖 - 伊昭公路 - 特克斯 - 喀拉峻 - 那拉提 - 独库 - 库车 - 博斯腾湖 - 库尔勒</div></div>

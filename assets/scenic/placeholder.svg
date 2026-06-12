@@ -1,23 +1,28 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
   <title id="title">景区图片占位图</title>
-  <desc id="desc">用于每日景区玩法页面，等待替换为真实景区照片。</desc>
+  <desc id="desc">低调的旅行风景占位图，用于真实照片暂未补充时的回退显示。</desc>
   <defs>
     <linearGradient id="sky" x1="0" x2="1" y1="0" y2="1">
-      <stop offset="0" stop-color="#e0f2fe"/>
-      <stop offset="0.48" stop-color="#ecfeff"/>
+      <stop offset="0" stop-color="#ecfeff"/>
+      <stop offset="0.48" stop-color="#eff6ff"/>
       <stop offset="1" stop-color="#fff7ed"/>
     </linearGradient>
-    <linearGradient id="land" x1="0" x2="1" y1="0" y2="0">
+    <linearGradient id="ridgeA" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#7dd3fc"/>
+      <stop offset="1" stop-color="#c4b5fd"/>
+    </linearGradient>
+    <linearGradient id="ridgeB" x1="0" x2="1" y1="0" y2="0">
       <stop offset="0" stop-color="#0f766e"/>
-      <stop offset="0.55" stop-color="#84cc16"/>
+      <stop offset="0.6" stop-color="#16a34a"/>
       <stop offset="1" stop-color="#f59e0b"/>
     </linearGradient>
   </defs>
   <rect width="1200" height="760" fill="url(#sky)"/>
-  <path d="M0 478 C155 410 245 432 372 388 C520 337 620 304 760 357 C902 410 1010 392 1200 310 L1200 760 L0 760 Z" fill="#bae6fd" opacity="0.72"/>
-  <path d="M0 560 C165 505 252 535 383 488 C541 431 680 441 820 501 C948 555 1068 550 1200 495 L1200 760 L0 760 Z" fill="url(#land)" opacity="0.9"/>
-  <path d="M0 612 C190 578 320 600 480 566 C673 524 818 552 965 608 C1057 643 1135 640 1200 620 L1200 760 L0 760 Z" fill="#134e4a" opacity="0.52"/>
-  <circle cx="940" cy="146" r="62" fill="#fde68a"/>
-  <text x="600" y="350" text-anchor="middle" fill="#134e4a" font-family="Arial, sans-serif" font-size="54" font-weight="700">景区主图待补充</text>
-  <text x="600" y="414" text-anchor="middle" fill="#475569" font-family="Arial, sans-serif" font-size="30">请替换为 assets/scenic/ 下的真实照片</text>
+  <circle cx="924" cy="154" r="54" fill="#fde68a" opacity="0.9"/>
+  <path d="M0 426 C142 372 258 362 392 392 C554 428 644 404 760 352 C902 288 1044 292 1200 336 L1200 760 L0 760 Z" fill="url(#ridgeA)" opacity="0.34"/>
+  <path d="M0 522 C150 470 278 466 404 494 C560 528 676 510 818 462 C930 424 1050 432 1200 482 L1200 760 L0 760 Z" fill="url(#ridgeB)" opacity="0.92"/>
+  <path d="M0 620 C198 588 330 604 466 572 C656 530 812 552 950 608 C1032 640 1108 640 1200 620 L1200 760 L0 760 Z" fill="#134e4a" opacity="0.4"/>
+  <rect x="44" y="44" width="248" height="34" rx="17" fill="rgba(255,255,255,0.52)"/>
+  <rect x="58" y="56" width="118" height="10" rx="5" fill="rgba(15,118,110,0.28)"/>
+  <rect x="182" y="56" width="84" height="10" rx="5" fill="rgba(71,85,105,0.18)"/>
 </svg>

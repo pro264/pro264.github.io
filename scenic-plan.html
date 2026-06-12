@@ -4,29 +4,32 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>每日景区玩法｜新疆伊犁-独库自驾</title>
-<meta name="description" content="新疆伊犁-独库自驾每日景区游玩规划，包含起床、出发、到达、游玩、吃饭、返程和备选方案。">
+<meta name="description" content="新疆伊犁-独库自驾每日景区玩法，包含当天执行版时间轴、景区走法、餐饮建议、返程节奏和待核实信息。">
 <style>
 :root {
   --bg-primary: #fffaf3;
   --bg-secondary: #f4f0e8;
   --bg-elevated: #ffffff;
+  --bg-soft: #fffdf8;
   --text-primary: #1d1d1f;
   --text-secondary: #6b7280;
-  --text-tertiary: #9ca3af;
+  --text-tertiary: #94a3b8;
   --accent: #0f766e;
   --accent-soft: #ecfdf5;
-  --tint-orange: #f97316;
+  --accent-wash: #f0fdfa;
   --tint-blue: #0284c7;
+  --tint-orange: #f97316;
   --tint-green: #16a34a;
   --tint-red: #dc2626;
   --separator: rgba(60, 60, 67, .12);
   --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
-  --shadow-md: 0 8px 26px rgba(15, 23, 42, .08);
+  --shadow-md: 0 10px 30px rgba(15, 23, 42, .08);
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
   background: var(--bg-secondary);
@@ -35,83 +38,142 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 a { color: inherit; text-decoration: none; }
-.page { max-width: 880px; margin: 0 auto; padding: 16px 14px 40px; }
+button { font: inherit; }
+.page { max-width: 920px; margin: 0 auto; padding: 14px 14px 40px; }
 .topbar {
   position: sticky;
   top: 0;
-  z-index: 10;
-  display: flex;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   gap: 10px;
   align-items: center;
-  justify-content: space-between;
   padding: 10px 0;
   background: rgba(244, 240, 232, .9);
   -webkit-backdrop-filter: blur(18px);
   backdrop-filter: blur(18px);
 }
-.back-link,
-.print-btn {
+.topbar-title {
+  text-align: center;
+  font-size: 15px;
+  font-weight: 850;
+  letter-spacing: 0;
+}
+.topbar-actions { display: inline-flex; gap: 8px; justify-self: end; }
+.nav-pill,
+.nav-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 38px;
   padding: 9px 13px;
-  border-radius: var(--radius-sm);
+  border-radius: 999px;
   border: .5px solid var(--separator);
-  background: rgba(255,255,255,.9);
+  background: rgba(255,255,255,.95);
   color: var(--accent);
-  font-size: 14px;
-  font-weight: 750;
+  font-size: 13px;
+  font-weight: 800;
   box-shadow: var(--shadow-sm);
 }
-.print-btn { border: none; cursor: pointer; color: #fff; background: var(--accent); }
+.nav-button {
+  cursor: pointer;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+}
 .hero {
   margin: 8px 0 14px;
   padding: 22px;
   border-radius: var(--radius-lg);
   border: .5px solid rgba(15,118,110,.16);
-  background: linear-gradient(135deg, #f8fafc 0%, #ecfeff 55%, #fff7ed 100%);
+  background: linear-gradient(135deg, #f8fafc 0%, #ecfeff 52%, #fff7ed 100%);
   box-shadow: var(--shadow-md);
 }
-.hero h1 { font-size: 28px; line-height: 1.15; letter-spacing: 0; }
+.hero h1 { font-size: 28px; line-height: 1.1; letter-spacing: 0; }
 .hero p { margin-top: 8px; color: var(--text-secondary); font-size: 15px; }
-.notice {
+.hero-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
   margin-top: 14px;
+}
+.hero-action {
+  display: grid;
+  gap: 4px;
+  padding: 13px 14px;
+  border-radius: var(--radius-md);
+  border: .5px solid rgba(15,118,110,.14);
+  background: rgba(255,255,255,.82);
+  box-shadow: var(--shadow-sm);
+}
+.hero-action .eyebrow {
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.hero-action .title { font-size: 15px; font-weight: 850; }
+.hero-action .desc { color: var(--text-secondary); font-size: 13px; }
+.notice {
+  margin-top: 12px;
   padding: 12px 14px;
   border-radius: var(--radius-md);
+  border: .5px solid rgba(15,118,110,.12);
   background: rgba(255,255,255,.72);
-  border: .5px solid rgba(15,118,110,.14);
   color: #475569;
   font-size: 13px;
 }
-.quick-nav {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+.jump-strip {
+  position: sticky;
+  top: 58px;
+  z-index: 25;
+  display: flex;
   gap: 8px;
-  margin: 14px 0;
+  overflow-x: auto;
+  padding: 8px 2px 12px;
+  background: linear-gradient(180deg, rgba(244,240,232,.96), rgba(244,240,232,.82));
+  scrollbar-width: none;
 }
-.quick-nav a {
-  background: var(--bg-elevated);
+.jump-strip::-webkit-scrollbar { display: none; }
+.jump-link {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  border-radius: 999px;
   border: .5px solid var(--separator);
-  border-radius: var(--radius-md);
-  padding: 10px 12px;
-  box-shadow: var(--shadow-sm);
-  font-size: 13px;
-  font-weight: 750;
+  background: rgba(255,255,255,.92);
   color: var(--accent);
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: var(--shadow-sm);
 }
 .day-card {
   overflow: hidden;
   margin: 14px 0;
   border-radius: var(--radius-lg);
   background: var(--bg-elevated);
-  box-shadow: var(--shadow-md);
   border: .5px solid rgba(15,118,110,.12);
+  box-shadow: var(--shadow-md);
+}
+.image-frame {
+  position: relative;
+  background: linear-gradient(135deg, #e8f5f1, #f7f4ec);
+}
+.image-frame.is-fallback::after {
+  content: "待补图片";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(15,23,42,.56);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .02em;
 }
 .day-hero {
-  position: relative;
   aspect-ratio: 16 / 9;
-  background: #e5e7eb;
 }
 .day-hero img {
   width: 100%;
@@ -124,65 +186,102 @@ a { color: inherit; text-decoration: none; }
   left: 12px;
   right: 12px;
   bottom: 12px;
-  padding: 9px 11px;
+  padding: 10px 12px;
   border-radius: var(--radius-sm);
+  background: linear-gradient(90deg, rgba(15,23,42,.82), rgba(15,23,42,.38));
   color: #fff;
-  background: linear-gradient(90deg, rgba(15,23,42,.78), rgba(15,23,42,.34));
   font-size: 13px;
-  font-weight: 750;
+  font-weight: 800;
+}
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 14px 16px 0;
+}
+.thumb-card {
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  border: .5px solid var(--separator);
+  background: var(--bg-soft);
+  box-shadow: var(--shadow-sm);
+}
+.thumb-card img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  display: block;
+  object-fit: cover;
+}
+.thumb-meta {
+  padding: 8px 10px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 700;
 }
 .day-body { padding: 16px; }
 .day-title { display: grid; gap: 6px; margin-bottom: 12px; }
 .day-title .date { color: var(--accent); font-size: 13px; font-weight: 850; }
-.day-title h2 { font-size: 22px; line-height: 1.18; letter-spacing: 0; }
+.day-title h2 { font-size: 22px; line-height: 1.16; letter-spacing: 0; }
 .goal {
-  padding: 11px 12px;
+  padding: 12px 13px;
   border-radius: var(--radius-md);
   background: var(--accent-soft);
   color: #134e4a;
   font-size: 14px;
   font-weight: 700;
 }
-.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
-.chip {
+.chips,
+.tl-tags,
+.tl-tips,
+.footer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.chips { margin: 12px 0 4px; }
+.chip,
+.tag,
+.tip {
+  display: inline-flex;
+  align-items: center;
   padding: 5px 8px;
   border-radius: 999px;
-  background: #f1f5f9;
-  color: #475569;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 800;
 }
+.chip { background: #f1f5f9; color: #475569; }
+.tag { background: #ecfeff; color: var(--tint-blue); }
+.tip { background: #fff7ed; color: #9a3412; }
 .section { margin-top: 16px; }
 .section h3 {
   margin-bottom: 8px;
-  color: var(--text-primary);
   font-size: 14px;
   font-weight: 850;
 }
 .timeline {
   position: relative;
   display: grid;
-  gap: 8px;
+  gap: 10px;
   padding-left: 18px;
 }
 .timeline::before {
   content: "";
   position: absolute;
   left: 6px;
-  top: 10px;
-  bottom: 10px;
+  top: 12px;
+  bottom: 12px;
   width: 1.5px;
   background: var(--separator);
 }
 .tl {
   position: relative;
   display: grid;
-  grid-template-columns: 58px 1fr;
+  grid-template-columns: 60px 1fr;
   gap: 10px;
-  padding: 10px 12px;
-  border: .5px solid var(--separator);
+  padding: 12px;
   border-radius: var(--radius-md);
-  background: #fffdf8;
+  border: .5px solid var(--separator);
+  background: var(--bg-soft);
 }
 .tl::before {
   content: "";
@@ -195,414 +294,844 @@ a { color: inherit; text-decoration: none; }
   background: var(--accent);
   box-shadow: 0 0 0 3px var(--bg-elevated);
 }
-.tl .time { color: var(--accent); font-size: 13px; font-weight: 850; }
-.tl .name { font-size: 14px; font-weight: 800; }
-.tl .desc { margin-top: 2px; color: var(--text-secondary); font-size: 13px; }
-.info-grid { display: grid; gap: 8px; }
+.tl-time {
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 850;
+}
+.tl-title {
+  font-size: 14px;
+  font-weight: 850;
+}
+.tl-detail {
+  margin-top: 4px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+.tl-tags { margin-top: 6px; }
+.tl-tips { margin-top: 8px; }
+.info-grid {
+  display: grid;
+  gap: 10px;
+}
 .info-box {
-  padding: 11px 12px;
+  padding: 12px 13px;
   border-radius: var(--radius-md);
-  background: #fffdf8;
   border: .5px solid var(--separator);
+  background: var(--bg-soft);
+}
+.info-box strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+.info-box p {
   color: var(--text-secondary);
   font-size: 13px;
 }
-.info-box strong { display: block; margin-bottom: 3px; color: var(--text-primary); font-size: 13px; }
-.refs {
-  margin: 20px 0 6px;
-  padding: 14px 16px;
+.info-box p + p { margin-top: 5px; }
+.section-link {
+  margin-top: 10px;
+}
+.section-link a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 12px;
+  border-radius: 999px;
+  border: .5px solid rgba(15,118,110,.12);
+  background: var(--accent-wash);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 800;
+}
+.refs,
+.pending {
+  margin: 18px 0 8px;
+  padding: 16px;
   border-radius: var(--radius-md);
+  border: .5px solid var(--separator);
   background: #fff;
-  border: .5px solid var(--separator);
+  box-shadow: var(--shadow-sm);
+}
+.refs h2,
+.pending h2 {
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+.refs ul,
+.pending ul {
+  padding-left: 18px;
   color: var(--text-secondary);
   font-size: 13px;
 }
-.refs h2 { color: var(--text-primary); font-size: 16px; margin-bottom: 8px; }
-.refs ul { padding-left: 18px; }
-.refs li + li { margin-top: 4px; }
+.refs li + li,
+.pending li + li { margin-top: 5px; }
+.pending code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+.footer-actions {
+  justify-content: center;
+  margin: 18px 0 6px;
+}
+.footer-actions a,
+.footer-actions button {
+  min-width: 132px;
+}
 @media (min-width: 760px) {
   .page { padding: 22px 20px 52px; }
-  .quick-nav { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .day-body { padding: 20px; }
-  .info-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .hero h1 { font-size: 34px; }
+  .gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .info-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 520px) {
+  .topbar {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "back actions"
+      "title title";
+  }
+  .topbar > .nav-pill { grid-area: back; justify-self: start; }
+  .topbar-title { grid-area: title; text-align: left; padding-left: 2px; }
+  .topbar-actions { grid-area: actions; }
+  .hero-actions { grid-template-columns: 1fr; }
+  .gallery { grid-template-columns: 1fr 1fr; }
+  .tl { grid-template-columns: 54px 1fr; }
 }
 @media print {
   body { background: #fff; }
   .page { max-width: none; padding: 0; }
-  .topbar, .quick-nav { display: none; }
-  .hero, .day-card, .refs { box-shadow: none; break-inside: avoid; }
+  .topbar,
+  .jump-strip,
+  .footer-actions { display: none; }
+  .hero,
+  .day-card,
+  .refs,
+  .pending { box-shadow: none; break-inside: avoid; }
   .day-card { page-break-inside: avoid; margin: 12px 0; }
-  .day-hero { aspect-ratio: 2.2 / 1; }
 }
 </style>
 </head>
 <body>
-<main class="page">
+<main class="page" id="pageTop">
   <nav class="topbar" aria-label="页面导航">
-    <a class="back-link" href="./index.html">返回首页</a>
-    <button class="print-btn" type="button" onclick="window.print()">打印 / 存 PDF</button>
+    <a class="nav-pill" href="./index.html">返回首页</a>
+    <div class="topbar-title">每日景区玩法</div>
+    <div class="topbar-actions">
+      <button class="nav-button" type="button" onclick="window.print()">打印 / PDF</button>
+      <a class="nav-pill" href="#pageTop">回到顶部</a>
+    </div>
   </nav>
 
   <header class="hero">
     <h1>每日景区玩法</h1>
-    <p>按“今天只完成一个核心目标”的思路拆解：几点起床、几点出发、怎么进景区、先玩哪里、哪里吃饭、什么时候撤退。</p>
-    <div class="notice">餐饮和门票以出发前 1-3 天官方渠道、地图近评和你补充的 references 为准；本页没有本地攻略依据的餐厅不硬编，统一标注待补充。</div>
+    <p>保留现在的主行程框架，但把每个景区怎么进、先去哪里、停多久、什么时候撤出来写成执行版，不再只停留在“去玩一下”。</p>
+    <div class="hero-actions">
+      <a class="hero-action" href="./index.html">
+        <span class="eyebrow">主页面</span>
+        <span class="title">回主行程总览</span>
+        <span class="desc">看全程路线、酒店、租车、门票预算和地图总览。</span>
+      </a>
+      <div class="hero-action">
+        <span class="eyebrow">当前页</span>
+        <span class="title">执行版玩法</span>
+        <span class="desc">看每天几点出发、景区里怎么走、吃什么、什么时候撤退。</span>
+      </div>
+    </div>
+    <div class="notice">当前项目本地没有新疆专用的 `references/` 攻略摘录，也没有实景图素材。本页只沿用现有项目数据和你明确提到的点位词；没有本地依据的细节统一标成“待核实”，不把社媒印象当营业时间或末班车规则。</div>
   </header>
 
-  <section class="quick-nav" id="quickNav" aria-label="每日快捷入口"></section>
+  <section class="jump-strip" id="quickNav" aria-label="日期快捷跳转"></section>
   <section id="plans" aria-label="每日游玩规划"></section>
 
   <section class="refs">
-    <h2>参考攻略与待核实信息</h2>
+    <h2>已用到的本地资料</h2>
     <ul>
-      <li>已参考当前项目的 index.html、itinerary.md、share/itinerary-print.html 中的行程、航班、火车、租车和门票预约信息。</li>
-      <li>references 目录当前没有可用的小红书/大众点评本地摘录；餐饮建议以“区域/类型”为主，具体店名待补充。</li>
-      <li>景区门票、学生票、自驾入园、区间车、游船和停车规则变化快，出发前以景区官方小程序/公众号/售票平台为准。</li>
-      <li>图片目前使用 assets/scenic/placeholder.svg，占位处均留有 TODO，可替换为你后续提供的真实照片。</li>
+      <li>当前项目的 `index.html`、`itinerary.md`、`share/itinerary-print.html` 里的行程、门票、航班、火车、租车和酒店信息。</li>
+      <li>`index.html` 内已有的 `FOOD_PICKS`、`HOTEL_STAYS`、路线和门票说明。具体店名只在这些现有数据已经出现时沿用。</li>
+      <li>`trip-map-builder/references/trip-planning.md`：用于收紧“一天一个主任务、餐饮优先顺路、长途日不叠加重景区”的写法。</li>
+      <li>`trip-map-builder/references/xhs-research.md` 与 `dianping-research.md`：只借用“不要把社媒当营业时间、餐厅要服务路线”的方法，不把它们当新疆实地攻略来源。</li>
+      <li>实景图当前未下载外部素材；所有图片路径已预留到 `assets/scenic/`，缺图时自动回退到低调 placeholder。</li>
     </ul>
   </section>
+
+  <section class="pending">
+    <h2>待补充资料</h2>
+    <ul id="pendingAssets"></ul>
+    <ul id="pendingRefs"></ul>
+  </section>
+
+  <div class="footer-actions">
+    <a class="nav-pill" href="./index.html">返回首页</a>
+    <a class="nav-pill" href="#pageTop">回到顶部</a>
+    <button class="nav-button" type="button" onclick="window.print()">打印 / PDF</button>
+  </div>
 </main>
 
 <script>
 const PLACEHOLDER = "./assets/scenic/placeholder.svg";
 
-// TODO: 收到真实照片后，将 hero 替换为 assets/scenic/ 下对应文件。
+const imageAsset = (file, alt, label) => ({
+  src: `./assets/scenic/${file}`,
+  alt,
+  label,
+  file
+});
+
 const scenicImages = {
-  flight: { hero: PLACEHOLDER, alt: "航班抵达乌鲁木齐示意图" },
-  yining: { hero: PLACEHOLDER, alt: "伊宁城市街区与喀赞其游玩示意图" },
-  sailimu: { hero: PLACEHOLDER, alt: "赛里木湖湖景主图待补充" },
-  yizhao: { hero: PLACEHOLDER, alt: "伊昭公路山路风光主图待补充" },
-  kalajun: { hero: PLACEHOLDER, alt: "喀拉峻草原主图待补充" },
-  nalati: { hero: PLACEHOLDER, alt: "那拉提草原主图待补充" },
-  bayinbuluk: { hero: PLACEHOLDER, alt: "巴音布鲁克九曲十八弯主图待补充" },
-  duku: { hero: PLACEHOLDER, alt: "独库公路南段山谷主图待补充" },
-  kuqa: { hero: PLACEHOLDER, alt: "库车天山神秘大峡谷主图待补充" },
-  bosten: { hero: PLACEHOLDER, alt: "博斯腾湖湖区主图待补充" },
-  lopnur: { hero: PLACEHOLDER, alt: "罗布人村寨沙漠胡杨主图待补充" },
-  return: { hero: PLACEHOLDER, alt: "返程机场主图待补充" }
+  arrival: imageAsset("urumqi-arrival-hero.jpg", "乌鲁木齐夜抵与机场出发氛围图", "洛阳出发 / 乌鲁木齐抵达"),
+  yining: imageAsset("yining-city-hero.jpg", "伊宁城市街区与喀赞其氛围图", "伊宁城市街区"),
+  lavender: imageAsset("huocheng-lavender-hero.jpg", "霍城薰衣草花田图", "霍城薰衣草"),
+  guozigou: imageAsset("guozigou-bridge-hero.jpg", "果子沟大桥远景图", "果子沟大桥"),
+  sayram: imageAsset("sayram-lake-hero.jpg", "赛里木湖湖面与雪山图", "赛里木湖"),
+  tekes: imageAsset("tekes-bagua-city-hero.jpg", "特克斯八卦城街区图", "特克斯八卦城"),
+  kalajun: imageAsset("kalajun-grassland-hero.jpg", "喀拉峻草原全景图", "喀拉峻草原"),
+  nalati: imageAsset("nalati-grassland-hero.jpg", "那拉提草原景观图", "那拉提草原"),
+  duku: imageAsset("duku-highway-hero.jpg", "独库公路山路风景图", "独库公路"),
+  bayinbuluk: imageAsset("bayinbuluk-sunset-hero.jpg", "巴音布鲁克九曲十八弯日落图", "巴音布鲁克"),
+  kuqa: imageAsset("kuqa-canyon-hero.jpg", "库车天山神秘大峡谷图", "天山神秘大峡谷"),
+  bosten: imageAsset("bosten-lake-hero.jpg", "博斯腾湖湖区图", "博斯腾湖"),
+  lopnur: imageAsset("lopnur-village-hero.jpg", "罗布人村寨沙漠胡杨图", "罗布人村寨"),
+  korla: imageAsset("korla-city-hero.jpg", "库尔勒城市与孔雀河氛围图", "库尔勒")
 };
+
+const imageChecklist = [
+  scenicImages.arrival,
+  scenicImages.yining,
+  scenicImages.lavender,
+  scenicImages.guozigou,
+  scenicImages.sayram,
+  scenicImages.tekes,
+  scenicImages.kalajun,
+  scenicImages.nalati,
+  scenicImages.duku,
+  scenicImages.bayinbuluk,
+  scenicImages.kuqa,
+  scenicImages.bosten,
+  scenicImages.lopnur,
+  scenicImages.korla
+];
+
+const pendingReferenceNeeds = [
+  "赛里木湖：你自己圈定的环湖停车点、松树头和傍晚机位截图。",
+  "喀拉峻：游客中心 / 区间车入口 / 点将台 / 阔克苏当天开放路线截图。",
+  "那拉提：自驾入园还是区间车、当天开放线路和游客中心排队情况。",
+  "巴音布鲁克：九曲十八弯当天末班区间车、观景台步行时间和日落窗口。",
+  "独库公路与伊昭公路：出发前一天的限行、封路、落石或天气截图。",
+  "库尔勒返乌：6月29日最终火车/航班班次截图。",
+  "真实照片：按 IMAGE_SOURCES.md 里的文件名把图片放进 assets/scenic/。"
+];
+
+const step = (time, title, tags, detail, tips = []) => ({ time, title, tags, detail, tips });
 
 const scenicPlans = [
   {
     id: "d1",
+    shortDate: "6/17",
     date: "6月17日",
     title: "洛阳出发，夜抵乌鲁木齐",
-    imageKey: "flight",
-    goal: "今天不安排景区，把目标压到最低：准点到机场、顺利登机、抵达后尽快入住休息。",
+    heroKey: "arrival",
+    galleryKeys: ["arrival"],
+    goal: "今天不安排景区，把目标压到最低：准点值机、顺利飞到乌鲁木齐、夜里尽快睡下，给第二天 C845 留状态。",
     chips: ["UQ2524", "20:05起飞", "00:05抵达", "轻量日"],
     schedule: [
-      ["16:30", "出门前检查", "身份证、学生证、充电宝、驾驶证、租车订单、火车票截图统一放到手机相册。"],
-      ["17:30", "到洛阳北郊机场", "航班显示柜台 3-6，登机口待定，预计 18:05 前后确认。"],
-      ["18:20", "值机安检", "晚餐优先在机场简单解决，不把时间压到登机前。"],
-      ["20:05", "UQ2524 起飞", "洛阳北郊机场飞乌鲁木齐天山机场，预计飞行约 4 小时。"],
-      ["00:05", "抵达乌鲁木齐", "取行李后直接去机场片区酒店，不再进城夜宵。"]
+      step("16:30", "出发前做最后一轮证件检查", ["出发", "证件"], "身份证、学生证、驾驶证、租车订单、火车票截图统一放到同一个相册或文件夹里，落地后不用临时翻。第一天只做交通转换，不安排任何城市打卡点，目的是把后面 12 天的体力留住。", ["学生票相关证件今晚就装好", "充电宝提前充满"]),
+      step("17:30", "到洛阳北郊机场，先完成值机和托运", ["机场", "值机"], "你提供的航旅纵横信息显示柜台 3-6，但仍以当天机场大屏为准。不要把晚饭压到登机前最后 20 分钟，机场里吃完再过安检更稳。", ["如果排队长，晚饭压缩为简餐", "登机口待 18:05 前后核实"]),
+      step("20:05", "UQ2524 起飞，晚上不安排任何额外计划", ["航班"], "这段飞行只是交通段，重点是按时起飞和别透支体力。到了乌鲁木齐之后直接去机场片区酒店，不再进城吃夜宵。", ["夜抵后只保留取行李和入住", "别临时改成进城晚餐"]),
+      step("00:05", "乌鲁木齐落地后直接去酒店", ["抵达", "入住"], "到达已跨日，网约车或酒店接驳以离航站楼最近、可确认上车点的方案为准。今晚越早躺下，第二天转火车越从容。", ["酒店路线提前收藏", "如果延误，第二天取消任何早餐打卡"])
     ],
-    route: "洛阳北郊机场 -> 乌鲁木齐天山机场 -> 机场片区酒店。",
-    transport: "飞机 + 网约车/酒店接驳。夜间抵达优先选择明确可导航的酒店入口。",
-    meals: "晚餐在洛阳机场或出发前解决；乌鲁木齐夜间不专门安排餐厅。",
-    notes: "航班为赏月航班信息截图来源；登机口仍以当天机场显示为准。",
-    fallback: "若延误超过 1 小时，第二天早上只保留去火车站和乘 C845，不安排市区早餐打卡。",
-    refs: ["用户提供航旅纵横截图", "当前 itinerary.md 大交通信息"]
+    route: [
+      "洛阳北郊机场 -> 乌鲁木齐天山机场 -> 机场片区酒店。",
+      "今天不进市区，不插入额外景点。"
+    ],
+    transport: [
+      "飞机 + 网约车/酒店接驳。",
+      "夜间抵达只做最短链路转移，不安排城市内移动。"
+    ],
+    meals: [
+      "晚餐在洛阳机场或出发前解决，优先简餐和热食，不追求“新疆第一顿”。",
+      "乌鲁木齐夜里不专门找店，酒店附近能补一口就补，不能补就直接休息。"
+    ],
+    notes: [
+      "航班信息来自你提供的航旅纵横截图，登机口和登机方式仍是待当天核实。",
+      "如果延误明显，第二天只保留去车站和乘 C845，不插入城市早餐。"
+    ],
+    fallback: [
+      "延误超过 1 小时时，把第二天的起床时间和退房节奏一起后移。",
+      "夜里太累时，宁可放弃任何额外觅食，也不要睡得过晚。"
+    ],
+    refs: [
+      "用户提供的 UQ2524 航旅纵横截图。",
+      "当前 itinerary.md 的大交通时间。"
+    ]
   },
   {
     id: "d2",
+    shortDate: "6/18",
     date: "6月18日",
-    title: "乌鲁木齐转伊宁，轻逛喀赞其/六星街",
-    imageKey: "yining",
-    goal: "今天核心目标是顺利坐火车到伊宁并适应节奏，城市街区只做轻量散步。",
+    title: "乌鲁木齐转伊宁，轻逛喀赞其 / 六星街",
+    heroKey: "yining",
+    galleryKeys: ["yining"],
+    goal: "核心目标是顺利坐 C845 到伊宁并适应节奏。城市街区只保留一段慢逛和一顿顺路晚餐，不把到达日排成景点刷点日。",
     chips: ["C845", "10:05-15:04", "伊宁适应日"],
     schedule: [
-      ["07:20", "起床退房", "留出早餐、去站和安检时间，不赶极限。"],
-      ["08:10", "前往乌鲁木齐站", "建议提前 70-90 分钟到站，避免早高峰和安检排队。"],
-      ["10:05", "C845 发车", "二等座已出票，车程约 4小时59分。"],
-      ["15:04", "抵达伊宁", "先取车/去酒店，确认晚间停车和第二天出发路线。"],
-      ["17:30", "喀赞其或六星街轻逛", "只选一个街区慢慢走，拍照、喝茶、找晚餐。"],
-      ["21:00", "回酒店休息", "为 D3 开始自驾留体力。"]
+      step("07:20", "起床退房，按铁路节奏而不是航班节奏走", ["早餐", "退房"], "今天真正重要的是别错过 C845，所以起床后的所有动作都要围绕车站展开。早餐只选酒店附近或车站顺路点，不为了好吃绕到市区里。", ["留出 70-90 分钟进站余量", "证件和取车信息再核一次"]),
+      step("08:10", "前往乌鲁木齐站，进站后不再外出", ["火车", "安检"], "这趟车已经出票，重点是别把精力耗在早高峰折返上。进站后只做候车、补水和确认车厢座位，不插入站外找店。", ["车站屏幕核对检票口", "行李尽量一次拿齐"]),
+      step("10:05", "乘 C845 去伊宁，把下午节奏留白", ["交通"], "火车段就是休息段，尽量在车上补眠，不把到伊宁后的傍晚规划得太满。你提供的截图已经确认二等座出票，这一段可以按准点到达来排。", ["二等座已出票", "避免在车上安排复杂转接"]),
+      step("15:04", "抵达伊宁后先取车或回酒店放行李", ["取车", "停车"], "先把车况、油量、备胎和异地还车信息看清楚，今天不用急着冲进老城。到酒店后先确认第二天往霍城和果子沟的出发路线，再决定傍晚逛哪一块。", ["先确认停车", "把 D3 导航点收藏好"]),
+      step("17:30", "喀赞其和六星街二选一慢逛", ["慢逛", "拍照"], "如果状态好，优先去喀赞其看蓝房子、街巷和手工冰淇淋；如果只是想轻松吃饭，就直接去六星街。今天的重点不是“全部逛完”，而是让身体从长途交通切到自驾节奏。", ["只选一个区域", "累了就直接晚餐后回酒店"]),
+      step("19:00", "晚餐沿用项目里已有候选店", ["晚餐", "顺路"], "正餐优先看 `塔西来甫开饭`，如果只是想边走边吃，可以把 `古兰丹姆冰淇淋` 和喀赞其附近烤包子当加餐。这里的店名全部来自当前首页 `FOOD_PICKS`，没有新编外部店。", ["先看当天营业", "甜品不替代正餐"]),
+      step("21:00", "回酒店，给 D3 自驾留完整睡眠", ["返程"], "今晚只要休息够，后面连续几天的草原和公路日都会轻松很多。别为了夜景把回酒店时间拖到太晚。", ["第二天 8:00 前后出门更稳"])
     ],
-    route: "乌鲁木齐站 -> 伊宁站 -> 酒店 -> 喀赞其/六星街二选一。",
-    transport: "火车 + 市区打车/自驾短途。市区停车紧张时不要硬开进巷子。",
-    meals: "伊宁市区已有候选餐厅方向；如要具体店名，请补 references 或出发前用大众点评近评核实。",
-    notes: "C845 截图显示 6车 03A、二等座；具体检票口、候车室以 12306 和车站屏幕为准。",
-    fallback: "如果火车晚点或太累，取消街区散步，酒店附近晚餐后休息。",
-    refs: ["用户提供铁路订单截图", "当前首页餐厅候选信息"]
+    route: [
+      "乌鲁木齐站 -> 伊宁 -> 酒店 -> 喀赞其 / 六星街二选一。",
+      "轻逛以步行为主，不为了拍照反复挪车。"
+    ],
+    transport: [
+      "火车 + 取车后的城市短途。",
+      "市区巷子停车紧张时，不把车硬开进步行街深处。"
+    ],
+    meals: [
+      "首页已有候选：`塔西来甫开饭` 适合正餐，`古兰丹姆冰淇淋` 适合甜品补给，喀赞其烤包子适合加餐。",
+      "如果你到站偏晚，晚餐就退化为酒店附近热饭，不专门追六星街。"
+    ],
+    notes: [
+      "C845、座位和出发时间来自你的订单截图；检票口与候车室待当天核实。",
+      "喀赞其和六星街只保留一个主区域，不在适应日做双区穿插。"
+    ],
+    fallback: [
+      "火车晚点或取车排队久时，取消街区慢逛，直接去酒店附近吃饭。",
+      "如果只想轻松适应，可以只保留六星街晚餐，不再进喀赞其。"
+    ],
+    refs: [
+      "用户提供的 C845 订单截图。",
+      "当前首页 FOOD_PICKS D2：塔西来甫开饭、古兰丹姆冰淇淋、喀赞其烤包子老店。"
+    ]
   },
   {
     id: "d3",
+    shortDate: "6/19",
     date: "6月19日",
     title: "霍城薰衣草、果子沟，傍晚进赛里木湖",
-    imageKey: "sailimu",
-    goal: "今天不急着完整环湖，重点是顺路看花和果子沟，傍晚先感受赛湖光线。",
-    chips: ["伊宁出发", "霍城花田", "果子沟", "赛湖入住"],
+    heroKey: "lavender",
+    galleryKeys: ["lavender", "guozigou", "sayram"],
+    goal: "今天不把赛里木湖一次性刷完，而是先把霍城薰衣草、果子沟大桥和赛湖傍晚光线串成一条顺路线，为第二天完整环湖留空间。",
+    chips: ["霍城花田", "果子沟", "赛湖入住", "顺路日"],
     schedule: [
-      ["08:00", "起床早餐", "检查油量、胎压、证件和导航；今天开始正式自驾。"],
-      ["09:00", "伊宁出发", "先去霍城方向，路上不临时加太多点。"],
-      ["10:30", "霍城薰衣草/花田", "停留 60-90 分钟，花况一般就只拍照不买深度票。"],
-      ["13:00", "午餐", "在霍城/清水河顺路吃简餐，避免空腹进山路。"],
-      ["14:30", "果子沟观景", "以安全停车点为准，停留 20-40 分钟，不在危险路肩拍照。"],
-      ["16:30", "到赛里木湖东门/南门", "办理入住或进湖边看傍晚，完整环湖留给 D4。"],
-      ["20:00", "湖区晚餐", "以住宿点附近为主，早回房间防风降温。"]
+      step("08:00", "伊宁早餐后出发，不在市区加点", ["出发", "自驾"], "今天第一段是从伊宁切到霍城，节奏要稳，不适合先逛市区再赶花田。上车前把油量、胎压和赛湖酒店定位一起确认好，后面沿线就不用反复停。", ["D3 是顺路串景日", "出发前确认花况和天气"]),
+      step("10:30", "霍城薰衣草花田只留一段主停留", ["打卡", "拍照"], "选一个顺路、开放状态明确的花田或花海片区，停留约 60-90 分钟。这里的重点是完成成片花海和近景人物照，不建议为了“换一个园子再看看”把上午全耗在花田。", ["花况一般就压缩停留", "不为单个园区排长队"]),
+      step("12:30", "午餐放在霍城或清水河，优先快上菜", ["午餐", "顺路"], "午餐只解决补给，不承担“美食打卡”任务。优先拌面、丸子汤、抓饭这类出餐快、停车方便的路餐，避免空腹进果子沟和赛湖段。", ["停车方便优先", "不为了餐厅绕进老城区"]),
+      step("15:00", "果子沟大桥只在安全停车位短停", ["观景", "停车"], "果子沟的重点是桥体和山谷尺度，不是走到路肩冒险拍特写。把停留控制在 20-30 分钟内，完成桥景和山谷一张大景就继续走，真正的主任务还在赛湖傍晚。", ["只停正规观景位", "不要在弯道边下车"]),
+      step("16:30", "到赛里木湖东门或南门，先处理入住和进园规则", ["入住", "待核实"], "今天进赛湖的目标只有两个：确认明天环湖的入口逻辑，以及用傍晚光线先拍一组开场照片。自驾票、门票和是否允许当晚进园都要以当天官方售票页为准。", ["风大时先办入住再进湖边", "学生证明天随身带"]),
+      step("18:00", "湖边完成第一组傍晚照片后收手", ["拍照", "日落"], "如果天气好，就在离住处最近的湖边点拍一组低风风险的傍晚照片，重点是湖面颜色、远山和人物站位。今天不追深环线，也不追极限日落，目的只是把赛湖光线先拿到手。", ["20-30 分钟足够", "留体力给 D4 环湖"]),
+      step("20:00", "晚餐回到住处附近，早点休息", ["晚餐", "返程"], "晚餐只补充热量，不安排远店或湖景高价餐。明天才是赛湖完整环湖日，今晚越克制，明天越从容。", ["优先住宿点附近简餐"])
     ],
-    route: "伊宁 -> 霍城花田 -> 果子沟 -> 赛里木湖东门/南门。",
-    transport: "全程自驾；景区入口规则看当天官方通知，想自驾环湖需提前确认自驾票。",
-    meals: "霍城/清水河顺路简餐；赛湖晚餐优先住宿点附近。具体店名待补充。",
-    notes: "赛湖风大降温快，外套随身。花田门票和花期波动大，不为单个园区排长队。",
-    fallback: "天气差或花况一般时跳过花田，把时间留给果子沟和赛湖入住。",
-    refs: ["当前首页 D3 行程", "门票/自驾入园信息待官方核实"]
+    route: [
+      "伊宁 -> 霍城薰衣草 -> 果子沟大桥 -> 赛里木湖东门 / 南门。",
+      "今天把“花田 + 桥 + 湖边傍晚”串成顺路动作，不提前透支赛湖主戏份。"
+    ],
+    transport: [
+      "全程自驾。",
+      "果子沟和赛湖段以安全停车和风况判断为先，所有入园规则待官方核实。"
+    ],
+    meals: [
+      "午餐沿用当前首页 FOOD_PICKS D3 的方向：霍城县城 / 清水河镇拌面、丸子汤、抓饭候选。",
+      "晚餐沿用首页 D3 候选：赛里木湖景区外大盘鸡 / 拌面候选，重点看近评、明码标价和停车。"
+    ],
+    notes: [
+      "花田和赛湖都属于天气敏感点，照片效果差时及时止损，不为“来都来了”硬耗。",
+      "果子沟只作为顺路观景，不反客为主。"
+    ],
+    fallback: [
+      "花田花况差时直接压缩为 30 分钟快拍，时间转给果子沟和赛湖。",
+      "赛湖风太大或到得晚时，只办入住和踩点，傍晚照片改到 D4 早上补。"
+    ],
+    refs: [
+      "当前首页 D3 行程与景区关键词。",
+      "当前首页 FOOD_PICKS D3：霍城午餐候选、赛里木湖景区外大盘鸡 / 拌面候选。"
+    ]
   },
   {
     id: "d4",
+    shortDate: "6/20",
     date: "6月20日",
-    title: "赛里木湖慢环湖",
-    imageKey: "sailimu",
-    goal: "今天只做赛里木湖一件事：环湖、看湖面颜色、找安全停车点拍照。",
-    chips: ["完整半天", "湖边拍照", "不赶路"],
+    title: "赛里木湖执行版环湖",
+    heroKey: "sayram",
+    galleryKeys: ["sayram", "guozigou"],
+    goal: "今天只把赛里木湖玩透。重点不是“环过一圈”，而是按安全停车点把松树头、亲水点、湖湾和雪山同框机位做成一条有取舍的环湖线。",
+    chips: ["赛里木湖", "松树头", "亲水点", "雪山同框"],
     schedule: [
-      ["08:30", "起床早餐", "先看风力和云量，风大时减少下车时间。"],
-      ["09:30", "进入/开始环湖", "按东门、南门或住宿点实际位置顺时针/逆时针均可。"],
-      ["10:30", "亲水点拍照", "每个点 15-25 分钟，避免反复上下车耗时。"],
-      ["12:30", "湖区午餐", "吃简餐或自备路餐，不专门绕远找餐厅。"],
-      ["14:00", "继续环湖", "重点看湖湾、草地、雪山同框位置。"],
-      ["17:00", "返伊宁方向", "不把返程压到太晚，避免疲劳驾驶。"],
-      ["20:00", "伊宁晚餐/入住", "回城后补充休息和物资。"]
+      step("08:00", "早餐后先看风力和云层，再决定顺时针还是逆时针", ["早餐", "待核实"], "如果住在东门或南门附近，优先按不走回头路的方向进环湖线。今天建议把上午留给松树头和第一批湖边机位，下午只保留少量湖湾停靠，别把车开成“每 5 分钟停一次”的状态。", ["出门前确认自驾票 / 门票", "风大就减少亲水停靠"]),
+      step("09:00", "从住宿点出发进入环湖线，先把今天的主停靠顺序定死", ["环湖", "自驾"], "先在脑子里定 3 个必须停的点：松树头、一个湖边亲水点、一个草地和雪山同框点。其他看到顺眼的临停位，只有在视野开阔、停车方便时才补，不做随机频繁上下车。", ["今天只要 3-4 个主停靠点", "临停服从安全"]),
+      step("09:30", "松树头湖边第一组照片", ["打卡", "停车", "拍照"], "先在松树头完成第一组湖面、雪山和公路同框照片，停留约 20-25 分钟。这里适合开场，不建议一下车就走很深，因为后面还有更适合静下来拍人物和湖边的机位。", ["风大就只拍主视角", "不为贴水角度下到湿滑边缘"]),
+      step("10:20", "第一个亲水点只完成“近水 + 远山”主画面", ["亲水点", "拍照"], "到湖边后先拍湖面颜色和人物近景，停留控制在 20 分钟左右。亲水点的价值是完成近水视角，不是长时间坐着耗；如果风一大、鞋子容易打湿，就拍完立刻撤。", ["优先近水视角", "不在水边久坐"]),
+      step("11:30", "沿湖湾和开阔草地继续走，只补一个雪山同框位", ["环湖", "雪山同框"], "继续环湖时优先看湖湾弧线和草地前景，不追求每个湖湾都停。每次只选停车方便、视野通透的点停 15-20 分钟，把雪山、草地、湖面三层结构拍到就走。", ["草地前景优先", "连续停靠不超过两次"]),
+      step("12:40", "午餐改成路餐或景区简餐，别专门找餐厅", ["午餐", "路餐"], "中午是最容易把环湖节奏拖散的节点，建议在停车区或简餐点快速解决。今天的重点是环湖和拍照，不值得为了午饭绕出最佳观景带。", ["自带水和零食更稳", "控制在 30 分钟内"]),
+      step("14:00", "下午只保留一段草地和湖湾的慢停", ["下午线", "拍照"], "下午不要继续频繁下车，优先补一处草地和湖湾同框点，停留 15-20 分钟就够。真正拉开观感的是“点位选择”和“光线方向”，不是停得越久越值。", ["逆光太重就换角度不换点", "视野一般的停车位直接略过"]),
+      step("16:00", "最后一次停靠只服务于收尾，不再开新支线", ["收尾", "返程"], "如果前一晚没有拍到满意的傍晚光线，可在 16:00 左右补一组湖边收尾照；如果今天风大或体力一般，就直接返伊宁方向。赛湖真正怕的不是看少，而是看太贪导致返程疲劳。", ["16:30 后不再新增停靠", "保证天亮状态下返程"]),
+      step("17:00", "出园返伊宁，晚上只吃热饭和休息", ["返程"], "环湖结束就把注意力切回回城安全。回伊宁后晚餐优先当前项目里已有的热饭候选，不再追加城市拍照任务。", ["晚餐前先补水", "当天不再安排新景点"])
     ],
-    route: "赛里木湖住宿点 -> 环湖关键观景点 -> 伊宁。",
-    transport: "自驾入园或景区交通按当天票种执行；停车只停正规停车区。",
-    meals: "湖区午餐以简餐/路餐为主；晚餐回伊宁再吃。具体店名待补充。",
-    notes: "如果购买自驾票，提前核实入园时段；学生票通常只优惠门票，不含车票/景交。",
-    fallback: "大风、降雨、低温时缩短环湖，改为湖边 2-3 个点位拍照后回伊宁。",
-    refs: ["当前门票预约摘要", "景区官方规则待出发前核实"]
+    route: [
+      "赛里木湖住宿点 -> 松树头 -> 亲水点 -> 湖湾 / 草地雪山同框点 -> 伊宁。",
+      "环湖方向以住宿点入口和当天自驾票规则为准，核心是固定 3-4 个主停靠。"
+    ],
+    transport: [
+      "自驾入园或按景区票种执行。",
+      "停车只选正规停车区，环湖不反复掉头，不为机位冒险逆停。"
+    ],
+    meals: [
+      "午餐优先路餐或简餐，避免为了餐厅绕远。",
+      "晚餐回伊宁可沿用首页 FOOD_PICKS D4：`塔西来甫开饭` 或伊宁本地烤肉候选。"
+    ],
+    notes: [
+      "赛里木湖门票、自驾票、学生票和停车规则变化快，全部待官方售票页核实。",
+      "松树头、亲水点、湖湾和雪山同框是今天的核心，非主停靠一律服从安全和时间。"
+    ],
+    fallback: [
+      "大风、低温、云层厚时，只保留松树头和一个亲水点，下午直接返伊宁。",
+      "如果上午已经拍到满意照片，下午就压缩为 1 次收尾停靠，不为“完整环一圈”硬撑。"
+    ],
+    refs: [
+      "用户在需求中明确点名：松树头、亲水点、湖湾、雪山同框、日落点。",
+      "当前首页 D4 行程与门票预约摘要。"
+    ]
   },
   {
     id: "d5",
+    shortDate: "6/21",
     date: "6月21日",
-    title: "伊昭公路进特克斯",
-    imageKey: "yizhao",
-    goal: "今天核心是安全走伊昭公路，景色在路上，不再叠加深度景区。",
-    chips: ["山路日", "安全优先", "特克斯入住"],
+    title: "伊昭公路进特克斯，傍晚八卦城",
+    heroKey: "tekes",
+    galleryKeys: ["tekes"],
+    goal: "今天景色在路上，真正该细化的是‘什么时候停、停多久、到特克斯后怎么轻松逛八卦城’，而不是再叠加一个重景区。",
+    chips: ["伊昭公路", "特克斯", "八卦城", "安全停车"],
     schedule: [
-      ["07:30", "起床早餐", "查询伊昭公路开放、天气、落石和施工。"],
-      ["08:30", "伊宁出发", "加满油，带水和零食，减少山路临停。"],
-      ["10:30", "伊昭公路观景", "只在正规观景台停车，每次 10-20 分钟。"],
-      ["12:30", "路上午餐", "昭苏/路边镇区简餐，不追求网红店。"],
-      ["15:30", "抵达特克斯", "入住后停车，下午不再去琼库什台。"],
-      ["17:30", "八卦城轻逛", "看城市格局、吃晚餐、补给。"],
-      ["21:00", "早休息", "为 D6 喀拉峻留体力。"]
+      step("07:30", "起床后先看伊昭公路通行信息", ["待核实", "山路"], "今天任何景色都没有通行安全重要。出发前先确认封路、落石、天气和限行，如果风险高就直接按普通公路去特克斯，不把一天押在伊昭。", ["以交警 / 路况为准", "封路就立刻切普通路线"]),
+      step("08:30", "伊宁出发，油、水和零食一次补齐", ["出发", "补给"], "进山前把补给做完，后面只保留观景停车，不让加油和买水打断山路节奏。今天不追“沿路小店”，午餐也服从路线。", ["车上备外套", "减少无效停靠"]),
+      step("10:30", "伊昭公路只停正规观景台", ["观景", "停车"], "白石峰、乌孙山这类沿途景观只要在安全观景位看一眼、拍一组，就继续走。山路段真正忌讳的是频繁下车和临时占道拍照，拍照服从停车条件。", ["单点停留 10-15 分钟", "不要在窄路肩停靠"]),
+      step("12:30", "路上午餐选昭苏或顺路镇区", ["午餐", "顺路"], "午餐只解决热量补给，简餐即可。今天最值得保留的是特克斯傍晚和第二天喀拉峻体力，所以不要为一顿饭把自己拖晚。", ["简餐优先", "超过 40 分钟就主动撤"]),
+      step("15:30", "抵达特克斯后先入住，不直奔远郊", ["入住", "停车"], "先把车停稳、确认民宿热水和停车。今天不去琼库什台，所有傍晚时间都留给八卦城中心区和晚饭。", ["住处停车先确认", "今晚不再开远路"]),
+      step("17:30", "八卦城从中心环岛向外走 2-3 条放射街", ["慢逛", "拍照"], "特克斯八卦城最适合的走法不是乱转，而是从中心圈熟悉放射街结构，再顺手找离街和晚餐。白天看路网、傍晚看灯和街口秩序感，停留 60-90 分钟足够。", ["不用追全城机位", "以中心圈和离街为主"]),
+      step("19:00", "晚餐沿用当前首页已有候选", ["晚餐"], "优先看 `速美达农家餐厅`；如果只想吃快一点，就按住处附近找八卦城内圈拌面或烤肉。这里的具体店名全部来自当前首页 `FOOD_PICKS`，没有新补编造。", ["先看近评和停车", "不跨城觅食"]),
+      step("21:00", "早回住处，别把 D6 体力借出去", ["返程"], "明天是喀拉峻主景区日，八卦城夜景只要轻松收尾，不要走成熬夜。今晚睡得好，喀拉峻的区间车和草原线才会舒服。", ["22:00 前睡下更稳"])
     ],
-    route: "伊宁 -> 伊昭公路 -> 昭苏/沿线 -> 特克斯。",
-    transport: "自驾山路；弯道、落石、牛羊和临停车辆都要预判。",
-    meals: "午餐按路上镇区解决；晚餐在特克斯县城，已有候选店方向但需近评核验。",
-    notes: "伊昭公路受天气和管制影响大，不能把它当成必然开放的高速路。",
-    fallback: "若伊昭公路关闭，改走常规公路到特克斯；当天不再补远景点。",
-    refs: ["当前首页 D5 行程", "伊昭公路开放信息待当天核实"]
+    route: [
+      "伊宁 -> 伊昭公路 -> 昭苏 / 顺路镇区 -> 特克斯八卦城。",
+      "山路观景只服务于转场，不抢八卦城和喀拉峻的时间。"
+    ],
+    transport: [
+      "自驾山路。",
+      "观景停靠只在正规停车位和安全观景台，封路时直接切普通路线。"
+    ],
+    meals: [
+      "晚餐沿用首页 FOOD_PICKS D5：`速美达农家餐厅`，或特克斯八卦城内圈拌面 / 烤肉候选。",
+      "午餐只在顺路镇区解决，不围着美食走山路。"
+    ],
+    notes: [
+      "伊昭公路是天气和管制高度敏感路段，今天的任何景点都可以让位于通行安全。",
+      "八卦城傍晚只做轻逛，不把它写成“逛古城”式大任务。"
+    ],
+    fallback: [
+      "伊昭封闭时，整天退化为普通转场 + 特克斯晚餐 + 八卦城短逛。",
+      "如果到特克斯已经偏晚，只保留入住和晚餐，八卦城留给第二天回城后补。"
+    ],
+    refs: [
+      "当前首页 D5 行程。",
+      "当前首页 FOOD_PICKS D5：速美达农家餐厅、特克斯县城拌面烤肉候选。"
+    ]
   },
   {
     id: "d6",
+    shortDate: "6/22",
     date: "6月22日",
-    title: "喀拉峻草原区一日游",
-    imageKey: "kalajun",
-    goal: "今天只玩喀拉峻，不贪琼库什台；核心是草原、峡谷视野和轻徒步。",
-    chips: ["草原主日", "区间车", "住特克斯"],
+    title: "喀拉峻草原区执行版",
+    heroKey: "kalajun",
+    galleryKeys: ["kalajun", "tekes"],
+    goal: "今天只打喀拉峻，不再贪琼库什台。关键不是“去喀拉峻”，而是把游客中心、区间车、点将台和草原线走得有先后、有撤退点。",
+    chips: ["喀拉峻", "游客中心", "点将台", "区间车"],
     schedule: [
-      ["07:30", "起床早餐", "带外套、防晒、雨具和身份证/学生证。"],
-      ["08:20", "特克斯出发", "导航到喀拉峻游客中心或当天开放入口。"],
-      ["09:00", "到游客中心", "买/验票，确认区间车路线和末班车时间。"],
-      ["09:40", "进入草原区", "先去视野开阔点，上午光线适合看层次。"],
-      ["12:30", "景区午餐/路餐", "不为餐厅绕路，带能量补给更稳。"],
-      ["14:00", "峡谷/鲜花台方向", "根据体力选择 1-2 个停靠点，单点停留 30-60 分钟。"],
-      ["17:30", "返回游客中心", "避开末班车和集中返程排队。"],
-      ["19:00", "特克斯晚餐", "回县城吃饭，晚上不再开远路。"]
+      step("07:20", "特克斯早餐后直接去游客中心，不在县城兜圈", ["早餐", "出发"], "喀拉峻真正耗时间的是买票、排队和区间车转乘，所以早一点到比多睡半小时更有价值。学生证、身份证、防风外套和零食一开始就带上，别等到服务区再补。", ["早点到比多看一店重要", "学生票证件随身"]),
+      step("08:20", "自驾到喀拉峻游客中心 / 当天售票入口", ["停车", "待核实"], "先找稳定停车位，再处理买票或核票。今天第一件事不是急着上车，而是确认区间车怎么走、末班时间是什么、点将台和阔克苏当前开放到什么程度。", ["入口和开放片区待当天核实", "先问清末班车"]),
+      step("09:00", "进区间车前先把主线顺序定下来", ["区间车"], "今天建议先去点将台，再根据体力决定是补草原观景线还是往阔克苏方向深入。这样能先把最稳定的大景拿到手，后面哪怕天气变差也不算白来。", ["先保点将台", "只保留 1 条次级线"]),
+      step("09:40", "点将台完成第一组全景和草原线条照片", ["点将台", "拍照"], "到点将台后先拍地形起伏和草原层次，不急着来回走动。这里适合停留 35-45 分钟，把人物站位、远景和广角都拍完；如果天气已经压得很低，就拍完就撤，不继续深走。", ["先拍大景再拍人物", "遇大风就缩短停留"]),
+      step("11:20", "草原主观景线只挑 1-2 个停靠点", ["草原线", "拍照"], "继续往草原观景带走时，不要每个下车点都停。优先保留视野宽、下车就能看到层次的停靠点，每个点 20-30 分钟，够拍、够看就走。", ["不要追求全刷", "体力留给下午返程"]),
+      step("12:40", "午餐用路餐或景区简餐，不把中午塞满", ["午餐"], "喀拉峻中午最容易被排队和找座拖慢，所以简餐和自备补给反而更稳。今天最怕的是午饭后已经疲惫，却还想硬冲第二条深线。", ["午餐控制在 30 分钟内", "喝水优先于找店"]),
+      step("13:40", "阔克苏 / 人体草原二选一，不双开", ["次级线", "待核实"], "如果天气和体力都不错，再从阔克苏或人体草原里选一个方向补足；只保留一个就够。这里的原则是“选一条有代表性的次级线”，不是为了多看一块草地把返程拖到末班车边缘。", ["能见度差就放弃次级线", "排队重就直接回点将台出口线"]),
+      step("16:30", "主动回区间车线，提前撤", ["返程", "区间车"], "16:30 左右就开始往回收，别等到大家一起挤末班车。喀拉峻值钱的是从容，不是把最后一班区间车也坐满。", ["不赌末班车", "回县城后吃热饭"]),
+      step("19:00", "特克斯晚餐只选顺路热饭", ["晚餐"], "晚餐沿用当前项目里的 `速美达农家餐厅` 或县城简餐候选。草原回来后不再找远店，停车快、上菜快、吃完能直接回住处才是最优解。", ["家常热菜优先"])
     ],
-    route: "特克斯 -> 喀拉峻游客中心 -> 草原区/峡谷区择重点 -> 特克斯。",
-    transport: "自驾到游客中心，景区内按区间车/步行执行；票种和开放片区提前确认。",
-    meals: "午餐建议自备或景区简餐；晚餐回特克斯。具体店名待 references 补充。",
-    notes: "高原草原天气变化快，晴雨和风都会影响体感。学生带证件现场核验。",
-    fallback: "下雨或能见度差时只玩游客中心附近和 1 个核心区，下午提前回特克斯休整。",
-    refs: ["当前首页 D6 行程", "喀拉峻门票/区间车规则待官方核实"]
+    route: [
+      "特克斯 -> 喀拉峻游客中心 -> 点将台 -> 草原主观景线 -> 阔克苏 / 人体草原二选一 -> 特克斯。",
+      "今天先保点将台，再决定是否补次级线。"
+    ],
+    transport: [
+      "自驾到游客中心 + 景区区间车 + 少量步行。",
+      "区间车路线、开放区域和末班车时间待当天官方核实。"
+    ],
+    meals: [
+      "午餐优先路餐或景区简餐，不为了找店走散队形。",
+      "晚餐沿用首页 FOOD_PICKS D6：`速美达农家餐厅` 或特克斯丸子汤 / 拌面候选。"
+    ],
+    notes: [
+      "你在需求里明确要求写清点将台、区间车入口和返程时间，所以今天的主线就是先点将台后次级线。",
+      "没有本地 references 截图的细节点一律标为待核实，不编造末班车。"
+    ],
+    fallback: [
+      "天气差时，只保留游客中心 -> 点将台 -> 回程这一条最稳主线。",
+      "如果排队已经很重，下午次级线直接取消，早点回特克斯。"
+    ],
+    refs: [
+      "用户需求里明确点名：游客中心、区间车入口、点将台、返程时机。",
+      "当前首页 D6 行程与 FOOD_PICKS D6。"
+    ]
   },
   {
     id: "d7",
+    shortDate: "6/23",
     date: "6月23日",
-    title: "特克斯到那拉提，换区休整",
-    imageKey: "nalati",
-    goal: "今天是转场日，不安排重景区；核心是平稳到新源/那拉提，为 D8 留完整体力。",
-    chips: ["转场日", "补给", "早睡"],
+    title: "特克斯到新源，补给日",
+    heroKey: "nalati",
+    galleryKeys: ["nalati"],
+    goal: "今天不是观景主日，而是把补给、休息和第二天那拉提的票务确认做到位。转场日越稳，草原主日越舒服。",
+    chips: ["转场", "补给", "新源"],
     schedule: [
-      ["08:30", "起床早餐", "比前两天稍晚，恢复体力。"],
-      ["09:30", "特克斯出发", "沿途按路况走，不临时加远点。"],
-      ["12:30", "途中午餐", "在新源或沿线镇区吃简餐。"],
-      ["15:30", "到那拉提/新源住宿", "先办理入住，确认第二天景区入口和票务。"],
-      ["17:00", "轻量补给", "买水、零食、晕车药、防晒；给车辆补油。"],
-      ["19:00", "晚餐", "住宿点附近解决。"],
-      ["21:30", "早休息", "第二天尽量早进景区。"]
+      step("08:30", "晚一点起床，主动把昨天的疲劳消掉", ["休整"], "喀拉峻后的第二天不需要再抢天亮出门，恢复状态更重要。今天如果节奏做快了，反而会把那拉提主日拖成疲劳日。", ["不安排早景点"]),
+      step("09:30", "从特克斯出发，只按主路线转场", ["出发"], "今天不临时绕去支线点位，导航只保留去新源 / 那拉提住宿地的主路线。转场日最怕的是“反正顺路看看”，最后把自己拖晚。", ["不加额外景区"]),
+      step("12:30", "途中午餐只选主路镇区", ["午餐", "顺路"], "午餐还是服从线路，停车方便和出餐快优先。今天的价值在于把那拉提前夜准备做好，不在于多吃一顿。", ["简餐即可"]),
+      step("15:30", "到新源或那拉提住宿，先办入住和补给", ["入住", "补给"], "先把明天要带进景区的水、防晒、外套、零食补齐，再去看自驾票 / 区间车票。今天下午最该花时间的是确认那拉提第二天怎么玩，而不是继续游玩。", ["油量今晚补满", "把景区入口收藏"]),
+      step("17:30", "把那拉提第二天的主线先想清楚", ["待核实", "票务"], "现在就决定：如果自驾入园成功，就优先空中草原；如果只能坐区间车，就保空中草原 + 一条次级线。这样明天到游客中心后不会现场犹豫。", ["别把三四条线都写进明天", "只保一主一辅"]),
+      step("19:00", "晚餐按住处附近解决", ["晚餐"], "如果住新源，优先首页已有的新源抓饭 / 羊肉串候选；如果临时改住那拉提镇，就把面肺子店候选当轻量晚餐。今天的晚餐仍然服从第二天早起。", ["住哪吃哪", "不跨区觅食"])
     ],
-    route: "特克斯 -> 新源/那拉提镇。",
-    transport: "自驾转场；今天尽量不开夜路。",
-    meals: "途中和住宿点附近简餐；具体店名待补充。",
-    notes: "重点不是玩，而是查那拉提自驾入园/区间车票，确认次日路线。",
-    fallback: "如果前一天太累，出发时间可推后，但不要影响当天入住。",
-    refs: ["当前首页 D7 行程"]
+    route: [
+      "特克斯 -> 新源 / 那拉提住宿地。",
+      "今天只做转场和次日准备，不做重景区。"
+    ],
+    transport: [
+      "自驾转场。",
+      "优先在县城完成加油、洗车和零食补给。"
+    ],
+    meals: [
+      "首页 FOOD_PICKS D7 可沿用：新源抓饭羊肉串候选，或那拉提镇面肺子店候选。",
+      "哪家顺路、停车方便、当天营业，就用哪家。"
+    ],
+    notes: [
+      "今天最大的任务其实是为那拉提做准备。",
+      "票务、开放线路和入园方式仍是待核实信息。"
+    ],
+    fallback: [
+      "如果昨天太累，今天更可以只保留入住、补给和晚餐。",
+      "若临时住到那拉提镇，D8 出发时间可再顺 20-30 分钟。"
+    ],
+    refs: [
+      "当前首页 D7 行程。",
+      "当前首页 FOOD_PICKS D7。"
+    ]
   },
   {
     id: "d8",
+    shortDate: "6/24",
     date: "6月24日",
-    title: "那拉提草原完整游玩",
-    imageKey: "nalati",
-    goal: "今天只安排那拉提，优先空中草原/河谷草原，不为了打卡把路线走散。",
-    chips: ["提前预约", "自驾/景交", "草原慢玩"],
+    title: "那拉提执行版草原日",
+    heroKey: "nalati",
+    galleryKeys: ["nalati"],
+    goal: "今天只保那拉提，把空中草原放在第一优先级。关键不是“进去玩”，而是进园后不要贪多，把一主一辅两条线做成舒服节奏。",
+    chips: ["那拉提", "空中草原", "区间车 / 自驾", "一主一辅"],
     schedule: [
-      ["07:20", "起床早餐", "检查票务、自驾入园名额或区间车票。"],
-      ["08:10", "出发到游客中心", "旺季排队不可控，尽量早到。"],
-      ["09:00", "入园", "若能自驾入园按规定线路走；不能自驾就换景区交通。"],
-      ["10:00", "空中草原/核心观景", "上午先看核心草原和雪山背景，停留 2-3 小时。"],
-      ["12:30", "午餐", "景区简餐或自备路餐，避免把黄金游玩时间花在排队吃饭。"],
-      ["14:00", "河谷草原/次重点", "下午选择一个区域慢玩，不做全景区通刷。"],
-      ["17:30", "出园返镇", "晚高峰前撤出，降低排队和疲劳。"],
-      ["19:00", "那拉提/新源晚餐", "回住宿地附近吃饭休息。"]
+      step("07:10", "早餐前先查自驾入园和区间车状态", ["待核实", "票务"], "今天最核心的不确定项是能不能自驾入园、哪些线开放、游客中心排队多久。先确认规则，再决定是早到抢前排还是把节奏放得更稳。", ["自驾票没确认前不写死路线", "学生票仅门票部分优惠可能性高"]),
+      step("08:00", "到那拉提游客中心，先把主线拿稳", ["游客中心", "排队"], "不管是自驾还是区间车，游客中心都是今天真正开始计时的地方。先把入园、停车、区间车入口、回程时间看清楚，再决定辅线还要不要补。", ["先确认回程节奏", "不要一进门就临时改线"]),
+      step("09:00", "第一优先级：空中草原", ["主线", "拍照"], "如果能自驾，就优先把车开到空中草原核心观景带；如果只能坐区间车，也先把空中草原放在第一段。上午光线更适合看草原层次和远山背景，停留 2-3 小时最值。", ["主线先拍全景再拍人物", "别为了小点位来回折返"]),
+      step("11:30", "空中草原核心点只挑 1-2 个机位停深一点", ["草原线", "拍照"], "那拉提容易让人每看到一处坡地就想停，但今天真正该保的是最开阔、最容易拍出层次的机位。每个主机位 25-40 分钟，够拍、够走就撤。", ["避免一路碎停", "风大就减少停留"]),
+      step("12:40", "午餐放在景区内或自备路餐", ["午餐"], "中午不要专门为一顿饭换线或回游客中心。景区简餐和自备路餐虽然普通，但能把最好的体力留给下午第二段。", ["午餐控制在 30 分钟内"]),
+      step("13:40", "第二优先级：河谷草原或当天开放辅线", ["辅线", "待核实"], "下午只补一条辅线，推荐河谷草原；如果当天开放情况不同，就按游客中心实际线路做一主一辅，不把所有支线都塞进今天。你给出的要求是“哪些地方不要贪多”，这里就是最该克制的地方。", ["只开一条辅线", "行程过半开始留返程余量"]),
+      step("16:30", "开始撤回游客中心，不赌傍晚排队", ["返程", "排队"], "16:30 左右就该开始回程，别等到大家一起退场时才走。那拉提最怕的是下午还想补点位，结果返程排队把整天好心情拖垮。", ["回程早点比多停一个点更值"]),
+      step("19:00", "晚餐只选回住处最顺路的热食", ["晚餐"], "如果回新源，优先 `新源抓饭候选`；如果住那拉提镇，就用 `面肺子店候选` 收尾。今天晚饭不是探索夜生活，而是补一顿热饭后早点睡。", ["住哪吃哪"])
     ],
-    route: "住宿点 -> 那拉提游客中心 -> 空中草原/河谷草原择重点 -> 住宿点。",
-    transport: "自驾到入口；景区内按自驾票或区间车执行。那拉提自驾名额是全程最需要提前关注的票务。",
-    meals: "午餐自备/景区简餐；晚餐回镇区。具体店名待补充。",
-    notes: "学生票通常只对门票部分优惠，区间车/自驾票多按全价。入园规则以官方售票页为准。",
-    fallback: "若自驾票没抢到，改区间车路线；若下雨，缩短为 2 个核心点后回镇休息。",
-    refs: ["当前门票预约摘要", "那拉提官方票务待核实"]
+    route: [
+      "住宿地 -> 那拉提游客中心 -> 空中草原主线 -> 河谷草原 / 当天开放辅线 -> 住宿地。",
+      "今天坚持一主一辅，不追全景区通刷。"
+    ],
+    transport: [
+      "自驾到游客中心，景区内按自驾票或区间车规则执行。",
+      "自驾入园名额、开放线路和返程队列都待当天官方核实。"
+    ],
+    meals: [
+      "午餐景区简餐或自备路餐。",
+      "晚餐沿用首页 FOOD_PICKS D8：那拉提镇面肺子店候选，或新源抓饭候选。"
+    ],
+    notes: [
+      "那拉提最该优化的是主线取舍，而不是加更多点。",
+      "如果你们三人里有人体力下降，空中草原拍完就可以提前撤，不必硬补辅线。"
+    ],
+    fallback: [
+      "自驾票没抢到时，直接按区间车做空中草原主线，不再追深支线。",
+      "下雨或能见度低时，只保空中草原和游客中心周边短线。"
+    ],
+    refs: [
+      "用户需求里明确要求：游客中心、区间车 / 自驾规则、核心草原观景点、不要贪多。",
+      "当前首页 D8 行程与 FOOD_PICKS D8。"
+    ]
   },
   {
     id: "d9",
+    shortDate: "6/25",
     date: "6月25日",
-    title: "那拉提到巴音布鲁克，九曲十八弯日落",
-    imageKey: "bayinbuluk",
-    goal: "今天核心是巴音布鲁克九曲十八弯，日落看天气，不为执念熬到过度疲劳。",
-    chips: ["转场+景区", "日落点", "高海拔温差"],
+    title: "巴音布鲁克执行版：九曲十八弯日落",
+    heroKey: "bayinbuluk",
+    galleryKeys: ["bayinbuluk"],
+    goal: "今天的主任务只有九曲十八弯。所有前置动作都应该服务于“不要把返程压太晚、不要把排队和步行估计得过于乐观”。",
+    chips: ["巴音布鲁克", "九曲十八弯", "日落", "返程缓冲"],
     schedule: [
-      ["08:00", "起床早餐", "查独库/国道通行和巴音布鲁克天气。"],
-      ["09:00", "那拉提出发", "前往巴音布鲁克，路上只做安全观景停靠。"],
-      ["12:30", "抵达镇区午餐", "先吃饭、入住或寄放行李，补充衣物。"],
-      ["15:30", "进入巴音布鲁克景区", "买/验票后乘区间车进核心区域。"],
-      ["17:00", "天鹅湖/草原点位", "根据区间车安排游玩，不拖到太晚。"],
-      ["19:30", "九曲十八弯日落点", "提前占位，但风大很冷，注意保暖。"],
-      ["22:00", "返镇晚餐/休息", "日落后人流集中，给返程排队留时间。"]
+      step("08:00", "起床先看路况和天气，再决定日落执念要不要降一点", ["待核实", "天气"], "今天既有转场又有景区，最怕一开始就预设“必须等满日落”。如果云层太厚、风大或景区排队风险高，就把目标改成“九曲十八弯主画面 + 天黑前安全回镇”。", ["日落不是刚性 KPI", "高海拔保暖提前带好"]),
+      step("09:00", "从那拉提出发，路上只做安全停靠", ["转场"], "独库中段和去巴音布鲁克的路上不安排深停点，所有路边景色都服务于按时到镇上。今天真正重要的是下午进景区前把午饭、衣服和停车一次处理好。", ["把路程当成前置交通", "别在路上贪拍"]),
+      step("12:30", "到镇区先吃饭、补衣服、看是否能寄放行李", ["午餐", "补给"], "先在镇区吃一顿热饭，把厚外套、帽子、热水准备好，再进景区。这个步骤做扎实，晚上从观景台下来才不会慌。", ["进园前先解决保暖", "午餐别拖太久"]),
+      step("15:00", "到游客中心 / 区间车入口，先问最晚回程节奏", ["游客中心", "区间车"], "今天最值得问清楚的不是“还能不能看更多”，而是最晚一班区间车、观景台步行时间和回程排队情况。确认这些之后，再决定是否在前置停靠点短停。", ["末班区间车待核实", "回程时间先问清"]),
+      step("16:00", "如果时间富余，可在前置草原点短停 15-20 分钟", ["草原点", "可选"], "如果你们进园顺利，可以在前置草原或天鹅湖相关停靠点短停一会儿；但只要时间略紧，就直接奔九曲十八弯。今天宁可少看一个点，也不要把上观景台时间压得太晚。", ["时间紧就跳过前置停靠", "主任务永远是九曲十八弯"]),
+      step("18:00", "到九曲十八弯观景台步道起点，开始往上走", ["观景台", "步行"], "把上观景台当成今天真正的体力节点，提前预留排队和慢走时间。到平台后先站稳位置，再考虑拍视频或延时，不要一上来就四处找角度。", ["先站位后拍摄", "体力一般就保平台主视角"]),
+      step("19:30", "日落窗口只保主视角，不追过度等待", ["日落", "拍照"], "天气好时，九曲十八弯的关键就是河道弯线、金色光斑和平台高度关系。停留到日落后 10-15 分钟足够，除非现场非常稳，不然不要贪晚霞尾段。", ["拍完主画面就准备下撤", "风大时别久站边缘"]),
+      step("20:40", "天刚暗就下撤，留出区间车排队时间", ["返程", "区间车"], "巴音布鲁克真正的坑不是日落，而是日落后人流一起退。你在需求里特别强调“不能把返程压太晚”，这里就必须主动早点下。", ["不赌最后一班区间车", "回镇后只吃热饭休息"])
     ],
-    route: "那拉提 -> 巴音布鲁克镇 -> 景区区间车 -> 九曲十八弯 -> 巴音布鲁克镇。",
-    transport: "自驾到镇区/游客中心，景区内以区间车为主；末班车时间必须进园时确认。",
-    meals: "午餐镇区解决；晚餐可能较晚，建议带热水和零食。具体店名待补充。",
-    notes: "日落不保证，天气、云层、排队都可能影响体验。高海拔夜间冷，外套必须带。",
-    fallback: "天气差或排队太久时，不等日落，提前出园休息，为 D10 独库南段留安全余量。",
-    refs: ["当前首页 D9 行程", "巴音布鲁克票务/区间车末班待官方核实"]
+    route: [
+      "那拉提 -> 巴音布鲁克镇 -> 游客中心 / 区间车入口 -> 九曲十八弯观景台 -> 镇区酒店。",
+      "所有前置短停都服从九曲十八弯和回程缓冲。"
+    ],
+    transport: [
+      "自驾到镇区 + 景区区间车 + 观景台步行。",
+      "区间车末班、平台步行时长和停车位待当天核实。"
+    ],
+    meals: [
+      "午餐在镇区解决，晚餐尽量压到回镇后、离酒店近的位置。",
+      "晚餐沿用首页 FOOD_PICKS D9：牦牛肉火锅候选或拌面汤饭候选。"
+    ],
+    notes: [
+      "巴音布鲁克值钱的是节奏判断，不是逗留时长。",
+      "天气和排队任何一个不友好，都足以触发“提前撤”。"
+    ],
+    fallback: [
+      "天气差时只保九曲十八弯主平台，不等完整日落。",
+      "排队已经很长时，直接把前置草原点取消，把体力都留给观景台和回程。"
+    ],
+    refs: [
+      "用户需求里明确要求：九曲十八弯、日落、区间车、观景台、返程缓冲。",
+      "当前首页 D9 行程与 FOOD_PICKS D9。"
+    ]
   },
   {
     id: "d10",
+    shortDate: "6/26",
     date: "6月26日",
-    title: "独库南段到库车",
-    imageKey: "duku",
-    goal: "今天核心不是多玩景区，而是安全通过独库南段，沿途只在正规点短停。",
-    chips: ["独库南段", "长驾驶", "库车入住"],
+    title: "独库南段执行版到库车",
+    heroKey: "duku",
+    galleryKeys: ["duku"],
+    goal: "今天的关键词不是多拍，是安全。把大小龙池和少数正规停车点当成‘压缩后的观景序列’，而不是一路见景就停。",
+    chips: ["独库南段", "大小龙池", "安全停车", "山路日"],
     schedule: [
-      ["07:00", "起床早餐", "当天第一件事查独库开放、天气、落石和管制。"],
-      ["08:00", "巴音布鲁克出发", "油量充足，车上备水、干粮和保暖衣物。"],
-      ["10:30", "沿途观景短停", "每个停车点 10-20 分钟，不在弯道/窄路边停车。"],
-      ["12:30", "路餐/沿线午餐", "不为餐厅绕路，以安全和时间为先。"],
-      ["15:30", "进入库车方向峡谷地貌", "视路况拍照短停，避免天黑前还在山路。"],
-      ["18:30", "抵达库车", "入住、休整、检查车辆。"],
-      ["20:00", "库车晚餐", "今晚只在市区轻松吃饭。"]
+      step("07:00", "起床后先看独库开放、天气和落石提示", ["待核实", "路况"], "独库南段的第一原则是当天确认，不是靠前几天消息想当然。只要管制、降雨或落石提示偏高，就把今天改成安全绕行思维，不硬把“独库打卡”做成目标。", ["当天信息优先", "不要用旧截图代替实况"]),
+      step("08:00", "巴音布鲁克出发，油、水和干粮全部到位", ["出发", "补给"], "上路前把加油和水补齐，今天山路段不安排多余购物停靠。真正该保留的停靠只有少数正规停车区和大小龙池一类代表性点位。", ["今天不追沿线小店", "外套和热水带上"]),
+      step("09:40", "第一个正规观景停车点只做快拍", ["观景", "停车"], "沿线遇到开阔、安全、已形成停车带的点位再停，完成一组道路、山谷和远山层次照就走。独库的魅力在路上整体气质，不在把每个弯都停下来。", ["单点 10-15 分钟", "不在窄肩停车"]),
+      step("11:00", "大小龙池二选一深停，不双开", ["大小龙池", "拍照"], "如果当天路况允许，就在大小龙池里选一个更顺路、更好停车的点稍微深停 20-30 分钟。这里的价值是完成山路里最稳定的一组湖面和山体照片，而不是两个都走完。", ["只保一个龙池", "体力一般就不下太深"]),
+      step("12:40", "午餐只做路餐或沿线简餐", ["午餐", "路餐"], "独库南段不适合为吃饭大幅改线，路餐和简餐反而更稳。今天真正耗神的是驾驶，不是找饭。", ["吃完立刻上路", "司机优先休息"]),
+      step("14:30", "后半段减少停靠，把注意力切回下山安全", ["安全", "返程"], "进入下山段后就别再把自己当观光车，尽量减少无必要停靠。到这个时段，最值钱的是在天亮状态下进库车，而不是多拍一处路边山体。", ["14:30 后停靠更克制", "不要疲劳驾驶"]),
+      step("18:30", "到库车先入住、补水、看车辆状态", ["入住", "补给"], "独库下来第一件事不是去老城，而是先把身体和车都稳住。检查轮胎和刹车气味，今晚只留市区晚餐。", ["今晚不再开远路"]),
+      step("20:00", "晚餐优先库车市区抓饭、烤肉或鸽子汤", ["晚餐"], "可沿用当前首页 FOOD_PICKS D10 的库车抓饭烤肉候选或老城鸽子汤候选。今天吃饭的唯一标准就是热、近、停车方便。", ["热汤和补水优先"])
     ],
-    route: "巴音布鲁克 -> 独库公路南段 -> 库车。",
-    transport: "全程自驾，山路安全优先；不建议夜间赶独库。",
-    meals: "午餐以路餐或沿线简餐为主；晚餐库车市区。具体店名当前页面已有候选方向，仍需近评核验。",
-    notes: "独库公路受天气和交通管制影响很大，出发前必须确认开放。",
-    fallback: "若独库关闭或天气恶劣，按导航/交警建议绕行或调整住宿，不硬闯。",
-    refs: ["当前首页 D10 行程", "独库通行信息待当天核实"]
+    route: [
+      "巴音布鲁克 -> 独库南段 -> 正规观景点少量快停 -> 大小龙池二选一 -> 库车。",
+      "今天不追拍满，主打安全进城。"
+    ],
+    transport: [
+      "全程自驾山路。",
+      "大小龙池、沿线停车点和交通管制全部待当天核实。"
+    ],
+    meals: [
+      "午餐路餐或沿线简餐。",
+      "晚餐沿用首页 FOOD_PICKS D10：库车市区抓饭烤肉候选、库车老城鸽子汤候选。"
+    ],
+    notes: [
+      "你在需求里特别点到大小龙池和安全停车点，所以今天所有景色都只服从这两个关键词。",
+      "独库南段不适合夜间疲劳驾驶，傍晚前进库车是底线。"
+    ],
+    fallback: [
+      "只要天气或管制不妙，就改绕行，不把独库当作必须完成项。",
+      "体力下降时，连龙池都可以放弃，优先把车和人安全带到库车。"
+    ],
+    refs: [
+      "用户需求里明确点名：观景台、停车点、大小龙池、安全和不频繁停车。",
+      "当前首页 D10 行程与 FOOD_PICKS D10。"
+    ]
   },
   {
     id: "d11",
+    shortDate: "6/27",
     date: "6月27日",
-    title: "库车休整，天山神秘大峡谷",
-    imageKey: "kuqa",
-    goal: "今天在库车附近玩，重点是天山神秘大峡谷；库车老城/王府只做轻量补充。",
-    chips: ["峡谷", "休整日", "库车市区"],
+    title: "库车休整，天山神秘大峡谷执行版",
+    heroKey: "kuqa",
+    galleryKeys: ["kuqa"],
+    goal: "今天重点不是“去了大峡谷”，而是把进谷时间、步行深度、光线窗口和返程时机控制住，让它成为独库后的恢复性景区日。",
+    chips: ["库车", "大峡谷", "步行深度", "光线"],
     schedule: [
-      ["08:30", "起床早餐", "比独库日放松一些，先恢复体力。"],
-      ["09:30", "库车出发", "前往天山神秘大峡谷，确认天气和景区开放。"],
-      ["10:40", "到景区入口", "买/验票，峡谷内注意落石、积水和防晒。"],
-      ["11:00", "峡谷游玩", "停留 2-3 小时，重点看红色峡谷纹理和光影。"],
-      ["13:30", "午餐/返库车", "回库车市区吃饭，避免下午在峡谷暴晒。"],
-      ["16:30", "库车老城/王府轻逛", "只选一个轻量点，作为文化补充。"],
-      ["19:30", "市区晚餐", "早点休息，第二天要去博斯腾湖和库尔勒。"]
+      step("08:30", "慢一点起床，把独库疲劳彻底消掉", ["休整"], "今天和前几天最大的区别是可以故意慢一点，不用抢清晨赶路。保持节奏松，是为了让大峡谷只消耗半天注意力。", ["先恢复再出门"]),
+      step("09:30", "库车出发去天山神秘大峡谷", ["出发"], "出发前先看景区开放和天气，如果有暴雨、落石或积水提醒，就别硬去。今天的玩法建立在“谷里能安全步行”的前提上。", ["天气差就启动库车市区备选"]),
+      step("10:40", "到景区停车、买票、确认入谷状态", ["停车", "待核实"], "先把停车和入谷条件弄清楚，再决定走多深。大峡谷最好玩的其实是前段和中前段的光影纹理，不是一定要走到体力极限。", ["先问能走到哪", "鞋子防滑优先"]),
+      step("11:00", "入谷后先把前段窄壁和红色纹理拍到手", ["拍照", "步行"], "11:00 左右的光线更容易让谷壁层次显出来，所以前段不需要走很快。先把最稳定的红色纹理、窄壁和人物对比照拍到，再决定还要不要继续往里。", ["前段先拍够", "别一上来就冲最深处"]),
+      step("12:00", "按体力和谷内状况决定步行深度", ["取舍", "待核实"], "如果谷内积水少、体力也稳定，可以继续往里再走 20-40 分钟；如果已经热、滑或拥挤，就在中前段折返。今天的目标是“舒服地看好”，不是“走到最深”。", ["中前段就足够成片", "滑就立刻回撤"]),
+      step("13:00", "主动出谷，避免下午最晒时段还在谷底", ["返程"], "13:00 左右就开始往外走，别把自己晒到疲惫才想到返程。大峡谷最适合的结束方式是留点力气回库车吃午饭，而不是把下午全耗在谷里。", ["出谷后先补水"]),
+      step("14:30", "回库车吃午饭 / 午后热食", ["午餐"], "午饭回市区解决更稳，既能坐下休息，也方便顺路回酒店。独库后的一天，热汤和热饭比“再冲一个景点”更值。", ["市区停车方便的店优先"]),
+      step("16:30", "库车老城或王府只补一个轻量点", ["古城", "轻逛"], "如果状态好，就在老城或王府里选一个轻量点走走，看看街区氛围或傍晚光线；如果还有疲劳，就直接回酒店休整。今天不把“库车文化线”写成完整半日游。", ["只补一个点", "累了就放弃"]),
+      step("19:00", "晚餐沿用库车已有候选", ["晚餐"], "库车老城鸽子汤候选、馕坑肉 / 抓饭候选都可以继续用。今天最重要的是早点睡，给 D12 库车 -> 博斯腾湖 -> 库尔勒的长日程做准备。", ["热汤或热饭优先"])
     ],
-    route: "库车市区 -> 天山神秘大峡谷 -> 库车市区 -> 老城/王府备选。",
-    transport: "自驾往返；峡谷内步行为主。暴雨或落石预警时不要进峡谷。",
-    meals: "午晚餐在库车市区，当前已有候选店方向；具体仍以近评核验。",
-    notes: "峡谷天气敏感，暴雨后可能关闭或体验变差。学生票以景区规则为准。",
-    fallback: "如果峡谷关闭，改为库车王府、老城、市区休整和补给。",
-    refs: ["当前首页 D11 行程", "天山神秘大峡谷票务待官方核实"]
+    route: [
+      "库车市区 -> 天山神秘大峡谷 -> 库车午餐 -> 老城 / 王府轻补。",
+      "今天把大峡谷压成半天强度，后半天留恢复余量。"
+    ],
+    transport: [
+      "自驾往返 + 谷内步行。",
+      "开放、积水和安全步行深度待当天核实。"
+    ],
+    meals: [
+      "午晚餐沿用首页 FOOD_PICKS D11：库车老城鸽子汤候选、库车馕坑肉 / 抓饭候选。",
+      "不为餐厅反向走远路。"
+    ],
+    notes: [
+      "你明确要求写进谷时间、步行深度、光线和返程时机，所以今天最重要的是中午前后的谷内节奏。",
+      "没有本地实测资料支持时，不编造谷底最深处的详细玩法。"
+    ],
+    fallback: [
+      "天气差或景区关闭时，直接改库车老城 / 王府 / 市区休整。",
+      "如果独库后疲劳残留明显，就把大峡谷压缩成前段快看。"
+    ],
+    refs: [
+      "用户需求里明确要求：入谷时间、步行深度、光线、返程。",
+      "当前首页 D11 行程与 FOOD_PICKS D11。"
+    ]
   },
   {
     id: "d12",
+    shortDate: "6/28",
     date: "6月28日",
     title: "库车到博斯腾湖，再到库尔勒",
-    imageKey: "bosten",
-    goal: "今天把博斯腾湖作为正式观光，但只选一个入口，不做全湖环线。",
-    chips: ["长转场", "博斯腾湖", "库尔勒入住"],
+    heroKey: "bosten",
+    galleryKeys: ["bosten", "korla"],
+    goal: "今天是长转场，但博斯腾湖已经正式保留。执行策略不是“多看几个入口”，而是大河口 / 莲海世界 / 金沙滩三选一，只做一段湖区观光后去库尔勒住下。",
+    chips: ["博斯腾湖", "单入口", "库尔勒入住", "长转场"],
     schedule: [
-      ["07:30", "起床早餐", "今天路程不短，先确认湖区风力、开放入口和游船班次。"],
-      ["08:30", "库车出发", "沿高速/主路前往博斯腾湖方向，中途服务区休息。"],
-      ["12:30", "途中午餐", "以服务区或顺路县城为主，不绕远找餐。"],
-      ["14:00", "到博斯腾湖入口", "大河口/莲海世界/金沙滩三选一，现场按开放和风力决定。"],
-      ["14:30", "湖区游玩", "停留 1.5-2.5 小时：湖边拍照、栈道散步、可选短游船。"],
-      ["17:00", "出发去库尔勒", "不在湖区拖到傍晚，给入住和晚餐留时间。"],
-      ["19:00", "到库尔勒入住", "晚餐在市区解决，检查第二天还车交通。"]
+      step("07:30", "起床后先确认湖区风力和入口开放", ["待核实", "风力"], "博斯腾湖今天真正的不确定项是风力、游船和开放入口，不是路上能不能赶到。出发前先看大河口、莲海世界、金沙滩哪个更适合当天条件，再决定导航目标。", ["只选一个入口", "风大就不赌游船"]),
+      step("08:30", "库车出发，今天中途休息要提前规划", ["出发", "长途"], "D12 是整个后半段最容易疲惫的一天之一，所以服务区休息要主动安排，不要等累了再想停。今天的“快”不是猛开，而是少做无效绕路。", ["服务区休息主动安排", "司机注意补水"]),
+      step("12:30", "午餐放在顺路服务区或县城", ["午餐", "顺路"], "午餐继续服从主路，不把自己从博斯腾湖观光窗口里拖掉。这里优先看停车方便、上菜快、离出口近。", ["午餐不超 40 分钟"]),
+      step("14:00", "到博斯腾湖后先决定只玩哪一个入口", ["入口", "取舍"], "大河口更偏开阔湖面，莲海世界偏湿地芦苇，金沙滩更适合轻松拍照。今天不要再出现“既然来了再去第二个入口看看”的冲动，只挑一个把它玩明白就够了。", ["入口三选一", "不做全湖环线"]),
+      step("14:20", "停好车后先走湖边主视线，再决定要不要短游船", ["停车", "湖边"], "先完成湖边步道、栈道或开阔水面照片，再判断风力是否适合短游船。湖区风一旦起来，乘船体验会掉得很快，所以船只是附加项，不是主任务。", ["先拍湖边再决定游船", "风大就只走栈道"]),
+      step("15:20", "湖区观光控制在 1.5-2 小时", ["拍照", "观光"], "博斯腾湖今天最好的玩法是做一段轻量观光：湖边、芦苇或沙滩完成一组图，停够 90-120 分钟就收。你已经明确说不想页面空泛，所以这里最重要的执行动作就是“只做一段，不全湖乱跑”。", ["单入口停留别超过 2.5 小时", "到点就撤"]),
+      step("17:00", "从湖区出发去库尔勒，不在傍晚追加别的点", ["返程"], "只要离开湖区，就把今天剩余时间全部给库尔勒入住、吃饭和第二天还车。孔雀河散步可以有，但不再开远路看第二个景。", ["住下比补点更重要"]),
+      step("19:00", "库尔勒晚餐用已有候选收尾", ["晚餐"], "晚餐沿用首页 FOOD_PICKS D12：库尔勒本地新疆菜候选，或拌面 / 丸子汤候选。今天餐饮标准仍然是停车方便、上菜快、离住处近。", ["住处附近优先", "晚餐后准备还车资料"])
     ],
-    route: "库车 -> 博斯腾湖一个入口 -> 库尔勒市区。",
-    transport: "自驾转场；湖区按停车场、游船、步行栈道执行。",
-    meals: "午餐路上解决；晚餐库尔勒市区新疆菜/拌面候选，具体店名待补充。",
-    notes: "湖区风大时游船体验和班次会受影响。门票、停车、游船价格出发前一天再查。",
-    fallback: "如果风太大或到得晚，只在湖边拍照 40-60 分钟后直奔库尔勒。",
-    refs: ["当前首页 D12 行程", "博斯腾湖门票/游船待官方核实"]
+    route: [
+      "库车 -> 博斯腾湖单入口观光 -> 库尔勒市区。",
+      "博斯腾湖只保一个入口，不做“多入口拼盘”。"
+    ],
+    transport: [
+      "全程自驾，湖区步行栈道 / 停车场动线为主。",
+      "入口开放、游船班次和风力待当天核实。"
+    ],
+    meals: [
+      "午餐服务于转场；晚餐沿用首页 FOOD_PICKS D12 的库尔勒新疆菜或快餐候选。",
+      "今天不为吃饭绕远。"
+    ],
+    notes: [
+      "博斯腾湖今天已经是正式观光点，但仍然要克制成‘单入口轻量玩’。",
+      "你要的是页面更像真实攻略，所以这里最关键的就是‘入口三选一’和‘游船只是附加项’。"
+    ],
+    fallback: [
+      "风太大或到得晚时，只保留 40-60 分钟湖边照片，然后直接去库尔勒。",
+      "如果人已经很累，孔雀河散步也可以取消。"
+    ],
+    refs: [
+      "用户在此前需求中已确认要正式加入博斯腾湖观光。",
+      "当前首页 D12 行程与 FOOD_PICKS D12。"
+    ]
   },
   {
     id: "d13",
+    shortDate: "6/29",
     date: "6月29日",
     title: "库尔勒还车，罗布人村寨备选，返乌",
-    imageKey: "lopnur",
-    goal: "今天第一目标是顺利还车和返乌；沙漠景观只在交通宽松时加入。",
-    chips: ["无异地还车费", "沙漠备选", "返乌入住机场"],
+    heroKey: "korla",
+    galleryKeys: ["korla", "lopnur"],
+    goal: "今天第一目标永远是顺利还车和返乌。罗布人村寨只是条件允许时的半日加分项，不允许它反过来威胁返乌交通。",
+    chips: ["库尔勒还车", "罗布人村寨", "返乌", "机场片区入住"],
     schedule: [
-      ["08:00", "起床早餐", "整理行李，拍车况、油表、里程、轮胎、内饰。"],
-      ["09:00", "加满油/洗车视规则", "按租车 App 要求处理，还车前确认 ETC 和停车费凭证。"],
-      ["10:00", "库尔勒还车", "你已确认无异地还车费，建议锁定库尔勒还车。"],
-      ["11:00", "判断是否去罗布人村寨", "只有返乌车票/航班时间宽松时才去。"],
-      ["12:30", "午餐", "库尔勒或景区附近简餐。"],
-      ["13:30", "罗布人村寨备选", "看沙漠、胡杨、塔里木河组合；停留 2-3 小时即可。"],
-      ["17:30", "返回库尔勒/前往交通站点", "按已购返乌交通执行。"],
-      ["22:00", "乌鲁木齐机场片区入住", "6月30日早班机，必须住到机场附近。"]
+      step("08:00", "起床后先做还车资料整理", ["还车", "证据"], "把车身四角、轮胎、油表、里程、内饰、ETC 页面和停车费凭证都拍一遍，避免还车时临时手忙脚乱。今天的节奏必须围绕还车完成时间来倒推，而不是先想沙漠要不要去。", ["车牌公开页继续只写川G·LS***", "照片先拍再挪车"]),
+      step("09:00", "加满油并确认还车门店要求", ["加油", "待核实"], "还车前把油量处理到租车平台要求的状态，顺手核一次门店营业时间、停车点和押金规则。你已经确认无异地还车费，所以今天真正值钱的是省掉疲劳长途，而不是把空档塞满。", ["先完成还车再谈备选景点"]),
+      step("10:00", "库尔勒还车只做标准流程，不拖成半天", ["还车"], "到门店后优先确认车况、ETC、违章押金和停车凭证上传。只要还车完毕，今天的大风险就已经切掉一半。", ["留出门店排队时间", "还车后立刻确认返乌交通"]),
+      step("11:30", "用返乌班次来判断罗布人村寨是否还能保留", ["取舍", "待核实"], "只有在返乌火车 / 航班时间足够宽松、去景区的交通也好衔接时，罗布人村寨才值得保留。否则就把它当成这次行程里主动删掉的点，换取返乌和早班机的确定性。", ["返乌票没锁定就直接取消景区", "不要临时拼包车冒险"]),
+      step("13:00", "如果保留罗布人村寨，只做 2-3 小时轻量版本", ["沙漠", "备选"], "罗布人村寨最有价值的是沙漠、胡杨、河流同框和文化氛围，不需要把每个项目都刷一遍。到点后优先看主景观和栈道，拍完代表性画面就回，不做拖太晚的深度停留。", ["天气热或风沙大就缩短", "景区规则仍待核实"]),
+      step("17:00", "按已买返乌交通返回乌鲁木齐方向", ["返程", "交通"], "今天的绝对底线是晚上住进乌鲁木齐机场片区。所有晚餐、伴手礼和城市想法都要让位于这个底线。", ["晚上必须到机场片区", "不要把返乌拖到 D14 当天"]),
+      step("21:30", "机场片区入住后只留简餐，不再进城", ["入住", "晚餐"], "晚餐在机场片区或交通站点附近简单解决就够了，不再安排乌鲁木齐市区餐厅。今天最对的选择就是把最后一晚住稳。", ["早班机前夜不再折腾"])
     ],
-    route: "库尔勒市区 -> 还车点 -> 罗布人村寨可选 -> 库尔勒交通站点 -> 乌鲁木齐机场片区。",
-    transport: "还车后公共交通返乌；罗布人村寨需要根据还车后交通和包车/打车可行性判断。",
-    meals: "库尔勒午餐待补充；返乌路上以车站/机场片区简餐为主。",
-    notes: "不公开完整车牌；页面只保留川G·LS***。返乌交通未锁定前，不建议把沙漠备选写死。",
-    fallback: "如果返乌交通时间紧，取消罗布人村寨，直接还车后去车站/机场。",
-    refs: ["用户确认库尔勒无异地还车费", "当前租车订单截图摘要"]
+    route: [
+      "库尔勒市区 -> 还车点 -> 罗布人村寨可选 -> 返乌交通 -> 乌鲁木齐机场片区。",
+      "所有备选动作都服从返乌班次。"
+    ],
+    transport: [
+      "还车前短途自驾，还车后公共交通返乌。",
+      "罗布人村寨是否保留取决于返乌交通和景区接驳可行性。"
+    ],
+    meals: [
+      "库尔勒午餐只选顺路简餐或酒店附近新疆菜候选，不为吃饭绕路。",
+      "返乌后晚餐只保机场片区简餐，不再安排 `米拉吉` 这类市区正餐。"
+    ],
+    notes: [
+      "你已确认无异地还车费，这是今天整个策略成立的前提。",
+      "返乌交通没锁定前，罗布人村寨只能当备选，不能写成刚性主项。"
+    ],
+    fallback: [
+      "返乌时间紧时，罗布人村寨直接删掉。",
+      "如果还车排队久，午餐也压缩成快餐，不再追任何景区。"
+    ],
+    refs: [
+      "用户明确确认：库尔勒无异地还车费。",
+      "当前租车订单截图摘要与首页 D13 逻辑。"
+    ]
   },
   {
     id: "d14",
+    shortDate: "6/30",
     date: "6月30日",
     title: "乌鲁木齐早班机返洛阳",
-    imageKey: "return",
-    goal: "今天只有一个目标：稳稳赶上 UQ2641，安全回洛阳。",
-    chips: ["UQ2641", "07:00起飞", "10:45抵达"],
+    heroKey: "arrival",
+    galleryKeys: ["arrival"],
+    goal: "今天只完成一件事：稳稳赶上 UQ2641。返程日不再创造新任务。",
+    chips: ["UQ2641", "07:00起飞", "10:45抵达", "返程日"],
     schedule: [
-      ["04:30", "起床退房", "早班机不压时间，提前叫车/确认酒店送机。"],
-      ["05:00", "到机场", "航旅纵横显示近期 92% 靠廊桥，但仍以当天为准。"],
-      ["05:20", "值机安检", "登机口待定，柜台信息按机场屏幕。"],
-      ["07:00", "UQ2641 起飞", "乌鲁木齐天山机场飞洛阳北郊机场，预计 3小时45分。"],
-      ["10:45", "抵达洛阳", "结束行程。"]
+      step("04:30", "起床退房，直接进机场流程", ["起床", "退房"], "你们前一晚已经把返乌和入住做完，所以今天不要再加任何市区或购物动作。把所有精力都留给值机、安检和登机。", ["提前约好送机更稳"]),
+      step("05:00", "到乌鲁木齐天山机场，只确认航司信息", ["机场", "值机"], "航旅纵横显示近期准点率不错，但柜台、登机口和靠桥仍然只看当天信息。越是最后一天，越别因为“应该没问题”而压缩提前量。", ["以机场屏幕为准"]),
+      step("05:20", "完成值机安检后再决定要不要买早餐", ["安检", "早餐"], "早餐和伴手礼都只能发生在值机安检之后，这样不会反过来威胁登机。候机区里只做轻量补给，不再逛。", ["先过安检再吃"]),
+      step("07:00", "UQ2641 起飞，返洛阳", ["航班"], "这段就是收尾交通，不再附带任何观光心态。到了洛阳之后，整趟行程才真正结束。", ["证件和登机牌一直放手边"]),
+      step("10:45", "抵达洛阳，行程结束", ["抵达"], "下机后只需要回到正常生活节奏，不再安排补景点。把这趟路线里还没核实完的门票、图片和攻略留给后续网页继续补。", ["行程复盘可回首页或本页看"])
     ],
-    route: "乌鲁木齐机场片区酒店 -> 天山机场 -> 洛阳北郊机场。",
-    transport: "酒店接驳/网约车 + 飞机。",
-    meals: "机场早餐或落地后再吃，不安排市区绕行。",
-    notes: "行李、证件和学生证前一晚收好；早班机不要临时购物压缩安检时间。",
-    fallback: "若 6月29日晚无法住机场片区，需要把 6月30日凌晨交通提前预约好。",
-    refs: ["用户提供航旅纵横截图", "当前首页大交通信息"]
+    route: [
+      "机场片区酒店 -> 乌鲁木齐天山机场 -> 洛阳北郊机场。",
+      "返程日不进城、不加景点。"
+    ],
+    transport: [
+      "酒店接驳 / 网约车 + 飞机。",
+      "柜台、航站楼和安检节奏待当天核实。"
+    ],
+    meals: [
+      "早餐只在安检后解决，机场简餐即可。",
+      "如果不饿，就把所有餐饮动作推迟到落地后。"
+    ],
+    notes: [
+      "前一晚住机场片区，是今天能轻松起飞的关键。",
+      "返程日不再为了伴手礼挤压安检时间。"
+    ],
+    fallback: [
+      "如果机场片区接驳不稳，提前预约网约车。",
+      "任何购物和餐饮需求都让位于值机和登机。"
+    ],
+    refs: [
+      "用户提供的返程航班截图。",
+      "当前首页 D14 大交通信息。"
+    ]
   }
 ];
 
@@ -610,14 +1139,37 @@ function esc(text) {
   return String(text).replace(/[&<>"']/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch]));
 }
 
+function renderParagraphs(items) {
+  return items.map(item => `<p>${esc(item)}</p>`).join("");
+}
+
+function renderGallery(keys) {
+  if (!keys || !keys.length) return "";
+  return `
+    <section class="gallery">
+      ${keys.map(key => {
+        const img = scenicImages[key];
+        if (!img) return "";
+        return `
+          <div class="thumb-card image-frame">
+            <img src="${esc(img.src)}" alt="${esc(img.alt)}" loading="lazy" onerror="handleImageFallback(this)">
+            <div class="thumb-meta">${esc(img.label)}</div>
+          </div>
+        `;
+      }).join("")}
+    </section>
+  `;
+}
+
 function renderPlan(plan) {
-  const img = scenicImages[plan.imageKey] || scenicImages.flight;
+  const hero = scenicImages[plan.heroKey];
   return `
     <article class="day-card" id="${esc(plan.id)}">
-      <div class="day-hero">
-        <img src="${esc(img.hero)}" alt="${esc(img.alt)}" loading="lazy">
+      <div class="day-hero image-frame">
+        <img src="${esc(hero.src)}" alt="${esc(hero.alt)}" loading="lazy" onerror="handleImageFallback(this)">
         <div class="caption">${esc(plan.date)} · ${esc(plan.title)}</div>
       </div>
+      ${renderGallery(plan.galleryKeys)}
       <div class="day-body">
         <div class="day-title">
           <div class="date">${esc(plan.date)}</div>
@@ -625,33 +1177,62 @@ function renderPlan(plan) {
         </div>
         <div class="goal">${esc(plan.goal)}</div>
         <div class="chips">${plan.chips.map(chip => `<span class="chip">${esc(chip)}</span>`).join("")}</div>
+
         <section class="section">
-          <h3>时间轴规划</h3>
+          <h3>执行版时间轴</h3>
           <div class="timeline">
-            ${plan.schedule.map(item => `<div class="tl"><div class="time">${esc(item[0])}</div><div><div class="name">${esc(item[1])}</div><div class="desc">${esc(item[2])}</div></div></div>`).join("")}
+            ${plan.schedule.map(item => `
+              <div class="tl">
+                <div class="tl-time">${esc(item.time)}</div>
+                <div>
+                  <div class="tl-title">${esc(item.title)}</div>
+                  <div class="tl-tags">${item.tags.map(tag => `<span class="tag">${esc(tag)}</span>`).join("")}</div>
+                  <div class="tl-detail">${esc(item.detail)}</div>
+                  ${item.tips.length ? `<div class="tl-tips">${item.tips.map(tip => `<span class="tip">${esc(tip)}</span>`).join("")}</div>` : ""}
+                </div>
+              </div>
+            `).join("")}
           </div>
         </section>
+
         <section class="section">
-          <h3>执行攻略</h3>
+          <h3>当天攻略</h3>
           <div class="info-grid">
-            <div class="info-box"><strong>推荐路线</strong>${esc(plan.route)}</div>
-            <div class="info-box"><strong>交通方式</strong>${esc(plan.transport)}</div>
-            <div class="info-box"><strong>吃饭建议</strong>${esc(plan.meals)}</div>
-            <div class="info-box"><strong>注意事项</strong>${esc(plan.notes)}</div>
-            <div class="info-box"><strong>备选方案</strong>${esc(plan.fallback)}</div>
-            <div class="info-box"><strong>参考攻略</strong>${plan.refs.map(esc).join("；")}</div>
+            <div class="info-box"><strong>推荐路线</strong>${renderParagraphs(plan.route)}</div>
+            <div class="info-box"><strong>交通方式</strong>${renderParagraphs(plan.transport)}</div>
+            <div class="info-box"><strong>吃饭建议</strong>${renderParagraphs(plan.meals)}</div>
+            <div class="info-box"><strong>注意事项</strong>${renderParagraphs(plan.notes)}</div>
+            <div class="info-box"><strong>备选方案</strong>${renderParagraphs(plan.fallback)}</div>
+            <div class="info-box"><strong>参考依据</strong>${renderParagraphs(plan.refs)}</div>
           </div>
+          <div class="section-link"><a href="./index.html">回主行程总览</a></div>
         </section>
       </div>
     </article>
   `;
 }
 
+function handleImageFallback(img) {
+  if (img.dataset.fallbackApplied === "1") return;
+  img.dataset.fallbackApplied = "1";
+  const frame = img.closest(".image-frame");
+  if (frame) frame.classList.add("is-fallback");
+  img.src = PLACEHOLDER;
+}
+
 document.getElementById("quickNav").innerHTML = scenicPlans.map(plan =>
-  `<a href="#${esc(plan.id)}">${esc(plan.date)} ${esc(plan.title.split("，")[0])}</a>`
+  `<a class="jump-link" href="#${esc(plan.id)}">${esc(plan.shortDate)}</a>`
 ).join("");
 
 document.getElementById("plans").innerHTML = scenicPlans.map(renderPlan).join("");
+
+document.getElementById("pendingAssets").innerHTML = imageChecklist.map(item =>
+  `<li><code>assets/scenic/${esc(item.file)}</code>：用于 ${esc(item.label)}。当前仓库还没有这张实景图，页面会自动回退到 placeholder。</li>`
+).join("");
+
+document.getElementById("pendingRefs").innerHTML = pendingReferenceNeeds.map(item =>
+  `<li>${esc(item)}</li>`
+).join("");
 </script>
 </body>
 </html>
