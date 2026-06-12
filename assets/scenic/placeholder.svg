@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">景区图片占位图</title>
+  <desc id="desc">用于每日景区玩法页面，等待替换为真实景区照片。</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#e0f2fe"/>
+      <stop offset="0.48" stop-color="#ecfeff"/>
+      <stop offset="1" stop-color="#fff7ed"/>
+    </linearGradient>
+    <linearGradient id="land" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#0f766e"/>
+      <stop offset="0.55" stop-color="#84cc16"/>
+      <stop offset="1" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="760" fill="url(#sky)"/>
+  <path d="M0 478 C155 410 245 432 372 388 C520 337 620 304 760 357 C902 410 1010 392 1200 310 L1200 760 L0 760 Z" fill="#bae6fd" opacity="0.72"/>
+  <path d="M0 560 C165 505 252 535 383 488 C541 431 680 441 820 501 C948 555 1068 550 1200 495 L1200 760 L0 760 Z" fill="url(#land)" opacity="0.9"/>
+  <path d="M0 612 C190 578 320 600 480 566 C673 524 818 552 965 608 C1057 643 1135 640 1200 620 L1200 760 L0 760 Z" fill="#134e4a" opacity="0.52"/>
+  <circle cx="940" cy="146" r="62" fill="#fde68a"/>
+  <text x="600" y="350" text-anchor="middle" fill="#134e4a" font-family="Arial, sans-serif" font-size="54" font-weight="700">景区主图待补充</text>
+  <text x="600" y="414" text-anchor="middle" fill="#475569" font-family="Arial, sans-serif" font-size="30">请替换为 assets/scenic/ 下的真实照片</text>
+</svg>

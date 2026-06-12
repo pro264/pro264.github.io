@@ -136,3 +136,12 @@ git push -u origin master
 - 赛里木湖、那拉提、喀拉峻、巴音布鲁克的门票、自驾入园、区间车和停车规则。
 - 酒店订单、停车、晚到、退改政策。
 - 餐厅营业状态和近 7-14 天评价。
+
+## 每日景区玩法
+
+新增的手机友好页面：
+```text
+http://localhost:8002/scenic-plan.html
+```
+
+该页面按日期展示当天景区怎么玩，包括起床、早餐、出发、到达景区、入园、游玩路线、吃饭、返程/入住、注意事项和备选方案。当前景区图片使用 `assets/scenic/placeholder.svg` 占位，后续真实照片请放入 `assets/scenic/` 后在 `scenic-plan.html` 的 `scenicImages` 中替换路径。

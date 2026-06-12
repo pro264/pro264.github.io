@@ -220,6 +220,28 @@ a:hover { text-decoration: underline; }
 .btn.xhs    { background: #ff2442; color: #fff; }
 .btn.dp     { background: #ffa700; color: #fff; }
 .btn.rsv    { background: var(--tint-green); color: #fff; }
+.plan-entry {
+  display: grid;
+  gap: 6px;
+  margin: 10px 0 18px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #0f766e, #0d9488);
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(15,118,110,.24);
+}
+.plan-entry .plan-title { font-size: 16px; font-weight: 850; line-height: 1.25; }
+.plan-entry .plan-desc { color: rgba(255,255,255,.86); font-size: 13px; line-height: 1.55; }
+.plan-entry .plan-cta {
+  width: fit-content;
+  margin-top: 4px;
+  padding: 7px 11px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,.18);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+}
 
 /* Action Sheet */
 .as-overlay {
@@ -745,6 +767,11 @@ function overviewContent() {
   <div class="stat-pill"><div class="k">少开长途</div><div class="v">约 520-600km</div></div>
   <div class="stat-pill"><div class="k">沙漠备选</div><div class="v">罗布人村寨</div></div>
 </div>
+<a class="plan-entry" href="./scenic-plan.html">
+  <span class="plan-title">每日景区玩法</span>
+  <span class="plan-desc">按日期查看起床、出发、进景区、游玩路线、吃饭、返程和备选方案，适合手机截图和打印。</span>
+  <span class="plan-cta">打开当天游玩规划</span>
+</a>
 <div class="info-grid">
   <div class="info-card"><div class="label">硬约束</div><div class="value">6/17 UQ2524 洛阳飞乌鲁木齐<br>6/18 C845 到伊宁<br>6/30 UQ2641 返程洛阳</div></div>
   <div class="info-card"><div class="label">主线</div><div class="value">伊宁 - 赛里木湖 - 伊昭公路 - 特克斯 - 喀拉峻 - 那拉提 - 独库 - 库车 - 博斯腾湖 - 库尔勒</div></div>
