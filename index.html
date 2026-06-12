@@ -266,6 +266,43 @@ a:hover { text-decoration: underline; }
 .pay-summary h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
 .pay-summary .warn { color: var(--tint-red); }
 .pay-summary .ok-text { color: var(--tint-green); }
+.decision-board {
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 10px;
+  margin: 12px 0 18px;
+}
+.decision-card {
+  background: linear-gradient(180deg, #ffffff, #f8fffb);
+  border: .5px solid rgba(15,118,110,.18);
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: var(--shadow-sm);
+}
+.decision-card.primary { background: linear-gradient(135deg, #ecfdf5, #ffffff 72%); }
+.decision-card .eyebrow {
+  color: #0f766e;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.decision-card .decision-title { font-size: 16px; font-weight: 850; line-height: 1.28; }
+.decision-card .decision-text { color: var(--text-secondary); font-size: 13px; line-height: 1.58; margin-top: 7px; }
+.decision-list { display: grid; gap: 8px; margin-top: 10px; }
+.decision-item { display: grid; grid-template-columns: 58px 1fr; gap: 8px; align-items: start; font-size: 12px; line-height: 1.45; }
+.decision-item .tag { color: #0f766e; font-weight: 850; }
+.mini-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 10px 0 16px; }
+.mini-card {
+  background: var(--bg-elevated);
+  border: .5px solid var(--separator);
+  border-radius: 14px;
+  padding: 13px 14px;
+  box-shadow: var(--shadow-sm);
+}
+.mini-card .mini-title { font-size: 14px; font-weight: 850; margin-bottom: 5px; }
+.mini-card .mini-text { color: var(--text-secondary); font-size: 12px; line-height: 1.55; }
 
 .quick-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0 18px; }
 .stat-pill {
@@ -331,6 +368,8 @@ a:hover { text-decoration: underline; }
 @media (max-width: 560px) {
   .quick-stats { grid-template-columns: 1fr; }
   .route-card .route-grid { grid-template-columns: repeat(2, 1fr); }
+  .decision-board, .mini-grid { grid-template-columns: 1fr; }
+  .decision-item { grid-template-columns: 52px 1fr; }
 }
 
 /* ── Legend ── */
@@ -415,8 +454,8 @@ const HOTEL_STAYS = {
   9: { date:'6月25日', name:'巴音布鲁克浩博酒店', city:'巴音布鲁克镇', address:'巴音布鲁克镇赛马场南侧/镇区片区（以高德店名导航为准）', lat:42.8370, lng:84.1500, verdict:'合理。走完独库中段后就地休息，是这天最省体力的选择。', risk:'巴音布鲁克镇旺季房源紧、价格波动，重点确认供暖/热水/停车和是否可晚到。', source:'公开地图搜索；小红书巴音布鲁克住宿笔记补充' },
   10:{ date:'6月26日', name:'汉庭库车南湖', city:'库车市区', address:'库车市南湖片区（以高德店名导航为准）', lat:41.7088, lng:82.9606, verdict:'合理。独库南段下山后住市区，吃饭、补给、休整都比景区路边稳。', risk:'D10 抵达可能偏晚，提前确认停车和前台保留时间。', source:'公开地图搜索；库车小红书美食笔记补充' },
   11:{ date:'6月27日', name:'汉庭库车南湖', city:'库车市区', address:'库车市南湖片区（以高德店名导航为准）', lat:41.7088, lng:82.9606, verdict:'合理。独库后连住库车一晚，有恢复余量；也方便选择是否去天山神秘大峡谷。', risk:'如果你实际只订了一晚，需要把 D11 调整为库车到库尔勒。', source:'公开地图搜索；路线逻辑复核' },
-  12:{ date:'6月28日', name:'库尔勒建国北路金三角酒店', city:'库尔勒市区', address:'库尔勒建国北路金三角片区（以高德店名导航为准）', lat:41.7418, lng:86.1548, verdict:'合理。作为库车回乌鲁木齐前的缓冲点，住市区方便吃饭和补给。', risk:'第二天去乌鲁木齐仍然很长，建议住处附近加油/洗车，早出发。', source:'公开地图搜索；库尔勒市区片区定位' },
-  13:{ date:'6月29日', name:'海友乌鲁木齐天山国际机场', city:'乌鲁木齐机场', address:'乌鲁木齐天山国际机场片区（以高德店名导航为准）', lat:43.9016, lng:87.4870, verdict:'很合理。最后一晚住机场片区，给 19:30 前还车和 UQ2641 早班返程留余量。', risk:'离市区远，最后一晚不建议再进城吃饭；还车前拍照留证、确认油量、ETC 和押金。', source:'公开地图搜索；机场片区定位' }
+  12:{ date:'6月28日', name:'库尔勒建国北路金三角酒店', city:'库尔勒市区', address:'库尔勒建国北路金三角片区（以高德店名导航为准）', lat:41.7418, lng:86.1548, verdict:'合理。库车经博斯腾湖到库尔勒后住市区，方便吃饭、补给和次日还车。', risk:'如果 D13 去罗布人村寨，早上先退房、带好水和防晒；库尔勒还车时间要以门店为准。', source:'公开地图搜索；库尔勒市区片区定位' },
+  13:{ date:'6月29日', name:'海友乌鲁木齐天山国际机场', city:'乌鲁木齐机场', address:'乌鲁木齐天山国际机场片区（以高德店名导航为准）', lat:43.9016, lng:87.4870, verdict:'很合理。D13 公共交通返乌后住机场片区，给 UQ2641 早班返程留足余量。', risk:'离市区远，最后一晚不建议再进城吃饭；库尔勒到乌鲁木齐的火车/航班必须提前买好。', source:'公开地图搜索；机场片区定位' }
 };
 
 const DAYS = [
@@ -527,29 +566,30 @@ const DAYS = [
     ]
   },
   {
-    id:12, label:'D12', date:'6月28日 · 库车 → 库尔勒', title:'库车到库尔勒，补铁门关/孔雀河', color:'#d97706',
+    id:12, label:'D12', date:'6月28日 · 库车 → 博斯腾湖 → 库尔勒', title:'博斯腾湖观光，住库尔勒', color:'#d97706',
     locations:[
-      { name:'库车 → 库尔勒', lat:41.7259, lng:86.1746, type:'transport', time:'09:30', desc:'约 4-5 小时高速/国道转场，中途不强塞季节不对的胡杨林。', gmap:'库车 到 库尔勒' },
-      { name:'铁门关景区', lat:41.8040, lng:86.1500, type:'spot', time:'15:00', desc:'到库尔勒前后最顺路的轻量景点，适合做转场日补充。', detail:'比绕去轮台胡杨林或博斯腾湖更省体力；如果当天热或到得晚，直接跳过。', xhsKeyword:'库尔勒 铁门关 景区 攻略', dianpingKeyword:'库尔勒 铁门关', gmap:'库尔勒 铁门关' },
-      { name:'孔雀河沿岸散步', lat:41.7259, lng:86.1746, type:'spot', time:'傍晚', desc:'住下后在市区轻松散步，不再开远路。', xhsKeyword:'库尔勒 孔雀河 傍晚', gmap:'库尔勒 孔雀河' },
+      { name:'库车 → 博斯腾湖', lat:41.9800, lng:86.7100, type:'transport', time:'08:30', desc:'上午从库车出发，目标是下午只玩博斯腾湖一个片区。', detail:'这天不再绕轮台胡杨林；季节和路程都不划算。司机状态优先，路上每 2 小时休息一次。', gmap:'库车 到 博斯腾湖' },
+      { name:'博斯腾湖：大河口/莲海世界/金沙滩三选一', lat:41.9800, lng:86.7100, type:'spot', time:'14:00', desc:'正式加入观光，但只选一个入口。大河口偏湖面开阔，莲海世界偏湿地芦苇，金沙滩偏轻松拍照。', detail:'提前一天看开放入口、游船班次和风力。湖区风大或到得晚，就压缩为湖边散步拍照，不做全湖环线。', xhsKeyword:'博斯腾湖 大河口 莲海世界 金沙滩 攻略', dianpingKeyword:'博斯腾湖 门票 游船', gmap:'博斯腾湖 大河口' },
+      { name:'博斯腾湖 → 库尔勒', lat:41.7259, lng:86.1746, type:'transport', time:'17:00', desc:'傍晚到库尔勒，住下后只安排吃饭和轻量散步。', gmap:'博斯腾湖 到 库尔勒' },
+      { name:'孔雀河沿岸散步', lat:41.7259, lng:86.1746, type:'spot', time:'傍晚可选', desc:'住下后在市区轻松散步，不再开远路。铁门关只保留为到得很早时的可选项。', xhsKeyword:'库尔勒 孔雀河 傍晚', gmap:'库尔勒 孔雀河' },
       { name:'库尔勒建国北路金三角酒店', lat:HOTEL_STAYS[12].lat, lng:HOTEL_STAYS[12].lng, type:'hotel', time:'夜宿', desc:'6月28日晚实际住宿。地址：'+HOTEL_STAYS[12].address, detail:HOTEL_STAYS[12].verdict+' '+HOTEL_STAYS[12].risk, gmap:'库尔勒 建国北路 金三角 酒店' },
       { name:'晚餐关键词：梨城本地新疆菜/烤肉/拌面', lat:41.7259, lng:86.1746, type:'food', time:'晚餐', desc:'小红书搜索库尔勒美食，本地菜为主，别安排大餐硬赶路。', budget:'¥40-120/人', xhsKeyword:'库尔勒 美食 新疆菜 本地人', dianpingKeyword:'库尔勒 晚餐 新疆菜', pay:{cash:1, alipay:1, wechat:1} }
     ]
   },
   {
-    id:13, label:'D13', date:'6月29日 · 库尔勒 → 乌鲁木齐', title:'回乌鲁木齐，可选天山大峡谷', color:'#dc2626',
+    id:13, label:'D13', date:'6月29日 · 库尔勒还车 → 乌鲁木齐', title:'库尔勒还车，公共交通返乌', color:'#dc2626',
     locations:[
-      { name:'库尔勒 → 乌鲁木齐', lat:43.8256, lng:87.6168, type:'transport', time:'08:00', desc:'约 6-7 小时，今天核心仍是安全回城并完成还车。若要加天山大峡谷，必须早出发。', detail:'还车截止按租车订单 6月29日 19:30，地点为天山国际机场北航站楼服务点；不要把还车拖到 6月30日早班机当天。', gmap:'库尔勒 到 乌鲁木齐' },
-      { name:'乌鲁木齐天山大峡谷', lat:43.4800, lng:87.4300, type:'spot', time:'下午可选', desc:'新增为可选加项：若 15:00 前抵达乌鲁木齐南郊且体力足，可走短线；否则放弃。', detail:'这一天本身路程很长，天山大峡谷不作为硬性任务；任何情况下都要优先保证 19:30 前机场服务点还车。', xhsKeyword:'乌鲁木齐 天山大峡谷 6月 自驾', dianpingKeyword:'乌鲁木齐 天山大峡谷', gmap:'乌鲁木齐天山大峡谷' },
-      { name:'天山国际机场北航站楼服务点还车', lat:43.9071, lng:87.4742, type:'transport', time:'19:30前', desc:'租车订单：大众探歌，车牌公开页脱敏为川G·LS***，ETC 已启用。', detail:'还车前加满油，拍车身、轮胎、油表、里程和车内；确认 ETC 明细、违章押金、停车费凭证上传。', gmap:'天山国际机场北航站楼服务点' },
+      { name:'库尔勒还车', lat:41.7259, lng:86.1746, type:'transport', time:'上午', desc:'推荐改为库尔勒还车：你已确认无异地还车费，能直接省掉库尔勒到乌鲁木齐 520-600km 疲劳驾驶。', detail:'还车前加满油，拍车身、轮胎、油表、里程和车内；确认 ETC 明细、违章押金、停车费凭证上传。具体门店和时间以租车 App 最终改签结果为准。', gmap:'库尔勒 租车还车' },
+      { name:'罗布人村寨/塔里木河沙漠胡杨备选', lat:41.2800, lng:86.8200, type:'spot', time:'半日可选', desc:'如果想补沙漠景观，这是库尔勒附近最合适的选择：沙漠、胡杨、河流和罗布人文化组合，比单纯找沙丘更有看点。', detail:'只在库尔勒还车且返乌交通时间允许时加入；天气太热、风沙大或公共交通时间紧就放弃。门票、区间交通和开放时间出发前一天再查。', xhsKeyword:'罗布人村寨 沙漠 胡杨 攻略', dianpingKeyword:'罗布人村寨 门票', gmap:'罗布人村寨' },
+      { name:'库尔勒 → 乌鲁木齐', lat:43.8256, lng:87.6168, type:'transport', time:'下午/傍晚', desc:'公共交通返乌，优先选能在晚上抵达乌鲁木齐并住到机场片区的班次。', detail:'具体火车/动车/航班班次需要在 12306/航司购票页确认；不要把返乌交通压到 6月30日早班机当天。', gmap:'库尔勒 到 乌鲁木齐' },
       { name:'海友乌鲁木齐天山国际机场', lat:HOTEL_STAYS[13].lat, lng:HOTEL_STAYS[13].lng, type:'hotel', time:'夜宿', desc:'6月29日晚实际住宿。地址：'+HOTEL_STAYS[13].address, detail:HOTEL_STAYS[13].verdict+' '+HOTEL_STAYS[13].risk, gmap:'海友乌鲁木齐天山国际机场' },
-      { name:'晚餐关键词：乌鲁木齐新疆菜收尾', lat:43.8256, lng:87.6168, type:'food', time:'晚餐', desc:'小红书近期乌鲁木齐本地馆子内容多；大众点评城市检索本次不稳定，现场用关键词筛近评。', budget:'¥50-150/人', xhsKeyword:'乌鲁木齐 新疆菜 本地人 不排队', dianpingKeyword:'乌鲁木齐 新疆菜 抓饭 拌面', pay:{cash:1, alipay:1, wechat:1} }
+      { name:'晚餐关键词：机场片区简餐/新疆菜收尾', lat:43.9016, lng:87.4870, type:'food', time:'晚餐', desc:'返乌后不再进市区觅食，优先机场片区简单吃，保证第二天早班机。', budget:'¥40-120/人', xhsKeyword:'乌鲁木齐机场 附近 新疆菜 简餐', dianpingKeyword:'乌鲁木齐机场 晚餐', pay:{cash:1, alipay:1, wechat:1} }
     ]
   },
   {
     id:14, label:'D14', date:'6月30日 · 乌鲁木齐返程', title:'机场返程，UQ2641 乌鲁木齐返回洛阳', color:'#475569',
     locations:[
-      { name:'机场酒店 → 乌鲁木齐天山机场', lat:43.9071, lng:87.4742, type:'transport', time:'04:30-05:00', desc:'6月29日晚已完成还车，今天只处理机场短驳、值机、安检和返程。', detail:'早班机不要再安排市区或景区；行李额、航站楼、值机截止时间以航司信息为准。', gmap:'乌鲁木齐天山机场' },
+      { name:'机场酒店 → 乌鲁木齐天山机场', lat:43.9071, lng:87.4742, type:'transport', time:'04:30-05:00', desc:'6月29日已在库尔勒完成还车并返乌，今天只处理机场短驳、值机、安检和返程。', detail:'早班机不要再安排市区或景区；行李额、航站楼、值机截止时间以航司信息为准。', gmap:'乌鲁木齐天山机场' },
       { name:'乌鲁木齐天山机场', lat:43.9071, lng:87.4742, type:'transport', time:'07:00-10:45', desc:'UQ2641 乌鲁木齐天山机场 07:00 起飞，10:45 到洛阳北郊机场。', detail:'建议 04:30-05:00 开始值机和安检准备；6月29日晚住机场片区是正确选择。', gmap:'乌鲁木齐天山机场' },
       { name:'机场简餐/伴手礼', lat:43.9071, lng:87.4742, type:'food', time:'候机', desc:'最后一天不再安排市区景点，避免误机。', budget:'按机场价', dianpingKeyword:'乌鲁木齐机场 餐饮', xhsKeyword:'乌鲁木齐机场 伴手礼', pay:{cash:1, alipay:1, wechat:1} }
     ]
@@ -560,7 +600,7 @@ const COST_MODEL = {
   fuelType: '95号汽油',
   pricePerLiter: 8.7,
   consumption: 7.5,
-  note: '按 1.4T 家用车保守估算：综合油耗 7.5L/100km；山路、满载、空调会升到 8-9L/100km。油价按 8.7 元/L 估算，实际以加油站当天为准。'
+  note: '按 1.4T 紧凑 SUV 保守估算：综合油耗 7.5L/100km；山路、满载、空调会升到 8-9L/100km。当前推荐库尔勒还车，预计比继续开回乌鲁木齐少约 520-600km；实际油费以加油站当天价格和最终还车点为准。'
 };
 
 const HOTEL_STAYS_RESEARCH = {
@@ -592,9 +632,9 @@ const OVERVIEW_ROUTE = [
   { name:'新源/那拉提', lat:43.3355, lng:84.0260 },
   { name:'巴音布鲁克', lat:42.8380, lng:84.1500 },
   { name:'库车', lat:41.7179, lng:82.9637 },
-  { name:'铁门关/库尔勒', lat:41.8040, lng:86.1500 },
+  { name:'博斯腾湖', lat:41.9800, lng:86.7100 },
   { name:'库尔勒', lat:41.7259, lng:86.1746 },
-  { name:'乌鲁木齐天山大峡谷', lat:43.4800, lng:87.4300 },
+  { name:'罗布人村寨备选', lat:41.2800, lng:86.8200 },
   { name:'乌鲁木齐', lat:43.8256, lng:87.6168 },
   { name:'地窝堡机场', lat:43.9071, lng:87.4742 }
 ];
@@ -611,9 +651,9 @@ const DAY_PATHS = {
   9: [[HOTEL_STAYS[8].lat,HOTEL_STAYS[8].lng],[43.3355,84.0260],[42.8380,84.1500]],
   10:[[42.8380,84.1500],[42.0200,83.3400],[41.7179,82.9637]],
   11:[[41.7179,82.9637],[42.0950,83.0500],[41.7270,82.9360],[41.7179,82.9637]],
-  12:[[41.7179,82.9637],[41.8040,86.1500],[41.7259,86.1746]],
-  13:[[41.7259,86.1746],[43.4800,87.4300],[43.8256,87.6168],[43.8383,87.5290]],
-  14:[[43.8383,87.5290],[43.9071,87.4742]]
+  12:[[41.7179,82.9637],[41.9800,86.7100],[41.7259,86.1746]],
+  13:[[41.7259,86.1746],[41.2800,86.8200],[43.8256,87.6168],[43.9016,87.4870]],
+  14:[[43.9016,87.4870],[43.9071,87.4742]]
 };
 
 const ROUTE_STATS = {
@@ -629,8 +669,8 @@ const ROUTE_STATS = {
   10:{ route:'巴音布鲁克 -> 独库南段 -> 库车', mode:'自驾山路', km:'约 260-300km', drive:'约 5.5-7h', fuel:'23-30L / ¥200-260', toll:'少量或无，按当天道路为准', cost:'约 ¥200-260', note:'全天只跑独库南段和沿途观景，不追加重景区。' },
   11:{ route:'库车市区 -> 天山神秘大峡谷 -> 库车', mode:'自驾', km:'约 130-170km', drive:'约 2.5-4h', fuel:'10-15L / ¥90-130', toll:'门票/停车另算', cost:'油费约 ¥90-130', note:'天山神秘大峡谷正式加入，但遇暴雨、落石或前日过累就缩短游览。' },
   12:{ route:'库车 -> 博斯腾湖 -> 库尔勒', mode:'自驾 + 湖区观光', km:'约 380-450km', drive:'约 6-7.5h 含观光', fuel:'29-36L / ¥250-310', toll:'约 ¥120-220', cost:'约 ¥370-530 + 景区费用', note:'博斯腾湖正式加入观光，只选一个入口；铁门关/孔雀河降级为到库尔勒还早才顺手看。' },
-  13:{ route:'库尔勒 -> 乌鲁木齐/天山大峡谷 -> 机场片区', mode:'自驾', km:'约 520-600km', drive:'约 7-9h 含可选绕行', fuel:'39-50L / ¥340-435', toll:'约 ¥150-240', cost:'约 ¥490-675', note:'乌鲁木齐天山大峡谷只在早出发、早到达、体力足时短线加入。' },
-  14:{ route:'机场酒店 -> 乌鲁木齐天山机场', mode:'短驳/步行/接驳', km:'机场片区短距离', drive:'约 10-30 分钟', fuel:'—', toll:'接驳/停车为主', cost:'约 ¥0-50', note:'6月29日 19:30 前已完成还车，D14 不再安排还车流程。' }
+  13:{ route:'库尔勒还车 -> 罗布人村寨可选 -> 乌鲁木齐机场片区', mode:'还车 + 公共交通', km:'自驾约 0-180km；公共交通返乌', drive:'半日弹性', fuel:'按是否去罗布人村寨计算', toll:'门票/接驳另算', cost:'返乌车票/机票另算', note:'无异地还车费时推荐库尔勒还车；罗布人村寨只在返乌交通时间宽松时加入。' },
+  14:{ route:'机场酒店 -> 乌鲁木齐天山机场', mode:'短驳/步行/接驳', km:'机场片区短距离', drive:'约 10-30 分钟', fuel:'—', toll:'接驳/停车为主', cost:'约 ¥0-50', note:'6月29日已在库尔勒完成还车，D14 不再安排还车流程。' }
 };
 
 const FOOD_PICKS = {
@@ -699,35 +739,59 @@ const FOOD_PICKS = {
 
 function overviewContent() {
   return `
-<div class="hero hero-panel"><h1>新疆伊犁-独库公路自驾</h1><p class="subtitle">6月17日-6月30日 · 大众探歌自驾 · 6/29 机场还车 · 慢玩不赶路</p></div>
+<div class="hero hero-panel"><h1>新疆伊犁-独库公路自驾</h1><p class="subtitle">6月17日-6月30日 · 伊犁草原 + 独库南段 + 博斯腾湖 · 推荐库尔勒还车</p></div>
 <div class="quick-stats">
-  <div class="stat-pill"><div class="k">自驾里程</div><div class="v">约 2500-3000km</div></div>
-  <div class="stat-pill"><div class="k">1.4T 油费</div><div class="v">约 ¥1650-2050</div></div>
-  <div class="stat-pill"><div class="k">高速/停车</div><div class="v">约 ¥550-1000</div></div>
+  <div class="stat-pill"><div class="k">推荐调整</div><div class="v">库尔勒还车</div></div>
+  <div class="stat-pill"><div class="k">少开长途</div><div class="v">约 520-600km</div></div>
+  <div class="stat-pill"><div class="k">沙漠备选</div><div class="v">罗布人村寨</div></div>
 </div>
 <div class="info-grid">
   <div class="info-card"><div class="label">硬约束</div><div class="value">6/17 UQ2524 洛阳飞乌鲁木齐<br>6/18 C845 到伊宁<br>6/30 UQ2641 返程洛阳</div></div>
-  <div class="info-card"><div class="label">主线</div><div class="value">伊宁 - 赛里木湖 - 伊昭公路 - 特克斯 - 喀拉峻 - 新源/那拉提 - 独库 - 库车 - 库尔勒 - 乌鲁木齐</div></div>
-  <div class="info-card"><div class="label">已确认租车</div><div class="value">大众探歌 · 川G·LS***<br>ETC 已启用<br>6/29 19:30 前机场服务点还车</div></div>
+  <div class="info-card"><div class="label">主线</div><div class="value">伊宁 - 赛里木湖 - 伊昭公路 - 特克斯 - 喀拉峻 - 那拉提 - 独库 - 库车 - 博斯腾湖 - 库尔勒</div></div>
+  <div class="info-card"><div class="label">租车建议</div><div class="value">大众探歌 · 川G·LS***<br>ETC 已启用<br>推荐改库尔勒还车</div></div>
   <div class="info-card"><div class="label">节奏</div><div class="value">慢玩优先<br>每天一个主任务<br>长途后安排缓冲</div></div>
 </div>
+<div class="decision-board">
+  <div class="decision-card primary">
+    <div class="eyebrow">当前最优决策</div>
+    <div class="decision-title">无异地还车费时，推荐改成库尔勒还车</div>
+    <div class="decision-text">这样 D13 不再硬开库尔勒到乌鲁木齐的长途，直接把体力留给返程和应急。6月29日用公共交通返乌鲁木齐，晚上住机场片区，6月30日早班机更稳。</div>
+    <div class="decision-list">
+      <div class="decision-item"><div class="tag">D12</div><div>库车经博斯腾湖到库尔勒，住库尔勒市区。</div></div>
+      <div class="decision-item"><div class="tag">D13</div><div>库尔勒还车；时间允许再去罗布人村寨，否则直接公共交通返乌。</div></div>
+      <div class="decision-item"><div class="tag">D14</div><div>机场片区出发，UQ2641 07:00 返洛阳。</div></div>
+    </div>
+  </div>
+  <div class="decision-card">
+    <div class="eyebrow">必须提前锁定</div>
+    <div class="decision-title">库尔勒到乌鲁木齐交通</div>
+    <div class="decision-text">先买 6月29日库尔勒到乌鲁木齐的火车/航班，再最终改还车点。原则是当天晚上必须住到乌鲁木齐机场片区，不把风险留到 6月30日。</div>
+  </div>
+</div>
 <div class="section-head">整体总结</div>
-<div class="pay-summary"><h4>这条线怎么走</h4><div>前半段在伊犁慢玩：伊宁适应，赛里木湖留完整半天，D5 走伊昭公路进特克斯，D6 固定喀拉峻。后半段保留那拉提慢玩，D9 正式参观巴音布鲁克九曲十八弯，再从库车经库尔勒回乌鲁木齐，6月29日 19:30 前完成机场还车。</div></div>
-<div class="pay-summary"><h4>节奏判断</h4><div>最累的是 D5 伊昭公路、D10 独库南段和 D13 库尔勒回乌鲁木齐；天山神秘大峡谷放在库车休整日，乌鲁木齐天山大峡谷只做早到达时的可选加项。餐厅以顺路、停车方便、价格可控为优先。</div></div>
+<div class="pay-summary"><h4>这条线怎么走</h4><div>前半段在伊犁慢玩：伊宁适应，赛里木湖留完整半天，D5 走伊昭公路进特克斯，D6 固定喀拉峻。后半段保留那拉提慢玩，D9 正式参观巴音布鲁克九曲十八弯，D10 走独库南段到库车，D12 加博斯腾湖后到库尔勒。</div></div>
+<div class="pay-summary"><h4>节奏判断</h4><div>最累的是 D5 伊昭公路、D10 独库南段和 D12 库车到博斯腾湖再到库尔勒。把还车改到库尔勒后，D13 从“疲劳长途驾驶”变成“还车 + 沙漠备选 + 公共交通返乌”，安全性更高。</div></div>
 <div class="pay-summary"><h4>地图说明</h4><div>总览地图上的青色粗线是全程参考主线，单日地图上的虚线是当天城市/景区之间的移动方向；它不是精准导航路线，正式行车仍以高德/车机实时路况为准。</div></div>
+<div class="section-head">新增取舍</div>
+<div class="mini-grid">
+  <div class="mini-card"><div class="mini-title">博斯腾湖保留</div><div class="mini-text">D12 只选大河口/莲海世界/金沙滩一个入口，不全湖绕行；铁门关和孔雀河降级为到得早才看。</div></div>
+  <div class="mini-card"><div class="mini-title">罗布人村寨备选</div><div class="mini-text">想看沙漠、胡杨、塔里木河时放在 D13；如果返乌交通时间紧，就直接放弃。</div></div>
+  <div class="mini-card"><div class="mini-title">乌鲁木齐天山大峡谷删除</div><div class="mini-text">库尔勒还车后不再自驾回乌鲁木齐，这个点不顺路；返程安全优先。</div></div>
+  <div class="mini-card"><div class="mini-title">最后一晚机场片区</div><div class="mini-text">6月29日晚必须到乌鲁木齐机场片区住下，6月30日 07:00 早班机不留机动风险。</div></div>
+</div>
 <div class="section-head">实际住宿与评估</div>
 <div class="hotel-table">${Object.values(HOTEL_STAYS).map(h=>`<div class="hotel-row"><div class="top"><div><div class="name">${h.name}</div><div class="addr">${h.city} · ${h.address}</div></div><div class="date">${h.date}</div></div><div class="hotel-risk">${h.verdict}</div></div>`).join('')}</div>
 <div class="section-head">行程概览</div>
 <div class="day-list">${DAYS.slice(1).map(d=>`<div class="card" onclick="go(${d.id})"><div class="name"><span class="dot" style="background:${d.color}"></span>${d.label} · ${d.title}</div><div class="desc">${d.date}</div></div>`).join('')}</div>
 <div class="section-head">支付提醒</div>
 <div class="pay-summary"><h4>交通核对</h4><div>大交通已更新：UQ2524 6月17日 20:05 洛阳北郊起飞，6月18日 00:05 到乌鲁木齐；C845 6月18日 10:05-15:04 到伊宁；UQ2641 6月30日 07:00-10:45 返洛阳。</div></div>
-<div class="pay-summary"><h4>租车核对</h4><div>租车订单显示：大众探歌，车牌公开页脱敏为川G·LS***，ETC 已启用；租期 5月31日 19:30 到 6月29日 19:30，还车点为天山国际机场北航站楼服务点。还车前加满油、拍车况/油表/里程，按 App 提示上传停车费凭证并确认 ETC 明细。</div></div>
+<div class="pay-summary"><h4>租车核对</h4><div>租车订单显示：大众探歌，车牌公开页脱敏为川G·LS***，ETC 已启用；原还车点为天山国际机场北航站楼服务点。现在因你确认库尔勒无异地还车费，建议先锁定 6月29日库尔勒返乌交通，再把还车点改到库尔勒。还车前加满油、拍车况/油表/里程，按 App 提示上传停车费凭证并确认 ETC 明细。</div></div>
 <div class="pay-summary"><h4>景区门票与预约</h4><div>按 2 名成人 + 1 名学生估算，必玩景区普通门票/景交约 ¥1800-2250；如果赛里木湖和那拉提都选择自驾入园，预算约 ¥2400-3150。学生票通常只优惠门票，区间车、游船、自驾票、停车多数按全价。</div></div>
 <div class="pay-summary"><h4>重点预约顺序</h4><div>那拉提自驾入园名额最需要提前看；赛里木湖如果想开车环湖也要提前抢自驾票。巴音布鲁克建议提前 1 天买票并预留日落排队时间；博斯腾湖提前看开放入口和游船班次即可。</div></div>
 <div class="pay-summary"><h4>学生票准备</h4><div>学生本人带身份证、学生证，最好准备学信网学籍页截图。到景区或平台购票时优先买学生门票，区间车/游船/自驾票按现场规则补全。</div></div>
 <div class="pay-summary"><h4>独库与伊昭</h4><div>本版按独库开放主线执行：那拉提 - 巴音布鲁克 - 库车；D5 新增伊昭公路。两条路都要在出发前确认当天限行、天气、落石、施工和临时交通管制。</div></div>
 <div class="pay-summary"><h4>费用模型</h4><div>${COST_MODEL.note}</div></div>
-<div class="pay-summary"><h4>门票明细</h4><div>完整表格在打印版：share/itinerary-print.html，包含赛里木湖、喀拉峻、那拉提、巴音布鲁克、天山神秘大峡谷、博斯腾湖、铁门关/孔雀河、乌鲁木齐天山大峡谷的价格口径和购买建议。</div></div>
+<div class="pay-summary"><h4>门票明细</h4><div>完整表格在打印版：share/itinerary-print.html。当前网页主线优先看赛里木湖、喀拉峻、那拉提、巴音布鲁克、天山神秘大峡谷、博斯腾湖；铁门关/孔雀河只做轻量备选，罗布人村寨按 D13 交通余量决定。</div></div>
 <div class="pay-summary"><h4>餐厅调研状态</h4><div>页面已改为具体餐厅/候选店：乌鲁木齐、伊宁、特克斯、库车有明确店名；景区镇如赛里木湖、巴音布鲁克、那拉提因旺季营业和评价波动大，给“具体可导航候选类型 + 现场近评核验”。</div></div>
 <div class="section-head">图例</div>
 <div class="legend">
