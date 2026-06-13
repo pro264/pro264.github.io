@@ -13,3 +13,10 @@ node_modules/
 
 # Local server caches
 .cache/
+
+# Local scenic image capture scratch files
+assets/scenic/tmp-*.png
+assets/scenic/__*-test.png
+assets/scenic/__*-direct.png
+assets/scenic/__*-crop.png
+assets/scenic/__*-html.png

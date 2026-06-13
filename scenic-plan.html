@@ -452,7 +452,7 @@ button { font: inherit; }
       <li>`index.html` 内已有的 `FOOD_PICKS`、`HOTEL_STAYS`、路线和门票说明。具体店名只在这些现有数据已经出现时沿用。</li>
       <li>`trip-map-builder/references/trip-planning.md`：用于收紧“一天一个主任务、餐饮优先顺路、长途日不叠加重景区”的写法。</li>
       <li>`trip-map-builder/references/xhs-research.md` 与 `dianping-research.md`：只借用“不要把社媒当营业时间、餐厅要服务路线”的方法，不把它们当新疆实地攻略来源。</li>
-      <li>实景图当前未下载外部素材；所有图片路径已预留到 `assets/scenic/`，缺图时自动回退到低调 placeholder。</li>
+      <li>景区主图已接入到 `assets/scenic/`；若后续替换成你更喜欢的照片，保持同名文件即可无缝更新页面。</li>
     </ul>
   </section>
 
@@ -480,20 +480,20 @@ const imageAsset = (file, alt, label) => ({
 });
 
 const scenicImages = {
-  arrival: imageAsset("urumqi-arrival-hero.jpg", "乌鲁木齐夜抵与机场出发氛围图", "洛阳出发 / 乌鲁木齐抵达"),
-  yining: imageAsset("yining-city-hero.jpg", "伊宁城市街区与喀赞其氛围图", "伊宁城市街区"),
-  lavender: imageAsset("huocheng-lavender-hero.jpg", "霍城薰衣草花田图", "霍城薰衣草"),
-  guozigou: imageAsset("guozigou-bridge-hero.jpg", "果子沟大桥远景图", "果子沟大桥"),
-  sayram: imageAsset("sayram-lake-hero.jpg", "赛里木湖湖面与雪山图", "赛里木湖"),
-  tekes: imageAsset("tekes-bagua-city-hero.jpg", "特克斯八卦城街区图", "特克斯八卦城"),
-  kalajun: imageAsset("kalajun-grassland-hero.jpg", "喀拉峻草原全景图", "喀拉峻草原"),
-  nalati: imageAsset("nalati-grassland-hero.jpg", "那拉提草原景观图", "那拉提草原"),
-  duku: imageAsset("duku-highway-hero.jpg", "独库公路山路风景图", "独库公路"),
-  bayinbuluk: imageAsset("bayinbuluk-sunset-hero.jpg", "巴音布鲁克九曲十八弯日落图", "巴音布鲁克"),
-  kuqa: imageAsset("kuqa-canyon-hero.jpg", "库车天山神秘大峡谷图", "天山神秘大峡谷"),
-  bosten: imageAsset("bosten-lake-hero.jpg", "博斯腾湖湖区图", "博斯腾湖"),
-  lopnur: imageAsset("lopnur-village-hero.jpg", "罗布人村寨沙漠胡杨图", "罗布人村寨"),
-  korla: imageAsset("korla-city-hero.jpg", "库尔勒城市与孔雀河氛围图", "库尔勒")
+  arrival: imageAsset("urumqi-arrival-hero.png", "乌鲁木齐夜抵与机场出发氛围图", "洛阳出发 / 乌鲁木齐抵达"),
+  yining: imageAsset("yining-city-hero.png", "伊宁城市街区与喀赞其氛围图", "伊宁城市街区"),
+  lavender: imageAsset("huocheng-lavender-hero.png", "霍城薰衣草花田图", "霍城薰衣草"),
+  guozigou: imageAsset("guozigou-bridge-hero.png", "果子沟大桥远景图", "果子沟大桥"),
+  sayram: imageAsset("sayram-lake-hero.png", "赛里木湖湖面与雪山图", "赛里木湖"),
+  tekes: imageAsset("tekes-bagua-city-hero.png", "特克斯八卦城街区图", "特克斯八卦城"),
+  kalajun: imageAsset("kalajun-grassland-hero.png", "喀拉峻草原全景图", "喀拉峻草原"),
+  nalati: imageAsset("nalati-grassland-hero.png", "那拉提草原景观图", "那拉提草原"),
+  duku: imageAsset("duku-highway-hero.png", "独库公路山路风景图", "独库公路"),
+  bayinbuluk: imageAsset("bayinbuluk-sunset-hero.png", "巴音布鲁克九曲十八弯日落图", "巴音布鲁克"),
+  kuqa: imageAsset("kuqa-canyon-hero.png", "库车天山神秘大峡谷图", "天山神秘大峡谷"),
+  bosten: imageAsset("bosten-lake-hero.png", "博斯腾湖湖区图", "博斯腾湖"),
+  lopnur: imageAsset("lopnur-village-hero.png", "罗布人村寨沙漠胡杨图", "罗布人村寨"),
+  korla: imageAsset("korla-city-hero.png", "库尔勒城市与孔雀河氛围图", "库尔勒")
 };
 
 const imageChecklist = [
@@ -520,7 +520,7 @@ const pendingReferenceNeeds = [
   "巴音布鲁克：九曲十八弯当天末班区间车、观景台步行时间和日落窗口。",
   "独库公路与伊昭公路：出发前一天的限行、封路、落石或天气截图。",
   "库尔勒返乌：6月29日最终火车/航班班次截图。",
-  "真实照片：按 IMAGE_SOURCES.md 里的文件名把图片放进 assets/scenic/。"
+  "真实照片：当前主图已接入，如需替换，按 IMAGE_SOURCES.md 里的文件名覆盖 assets/scenic/ 对应文件。"
 ];
 
 const step = (time, title, tags, detail, tips = []) => ({ time, title, tags, detail, tips });
@@ -1227,7 +1227,7 @@ document.getElementById("quickNav").innerHTML = scenicPlans.map(plan =>
 document.getElementById("plans").innerHTML = scenicPlans.map(renderPlan).join("");
 
 document.getElementById("pendingAssets").innerHTML = imageChecklist.map(item =>
-  `<li><code>assets/scenic/${esc(item.file)}</code>：用于 ${esc(item.label)}。当前仓库还没有这张实景图，页面会自动回退到 placeholder。</li>`
+  `<li><code>assets/scenic/${esc(item.file)}</code>：已接入 ${esc(item.label)} 实景图；若个别图片加载失败，页面会自动回退到 placeholder。</li>`
 ).join("");
 
 document.getElementById("pendingRefs").innerHTML = pendingReferenceNeeds.map(item =>
