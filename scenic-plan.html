@@ -147,6 +147,11 @@ button { font: inherit; }
   font-weight: 800;
   box-shadow: var(--shadow-sm);
 }
+.jump-link.is-active {
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+}
 .day-card {
   overflow: hidden;
   margin: 14px 0;
@@ -239,6 +244,43 @@ button { font: inherit; }
   gap: 6px;
 }
 .chips { margin: 12px 0 4px; }
+.summary-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 12px 0 4px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: .5px solid var(--separator);
+  background: linear-gradient(180deg, rgba(15,118,110,.05), rgba(255,255,255,.92));
+}
+.summary-item {
+  min-height: 70px;
+  padding: 10px 12px;
+  display: grid;
+  align-content: space-between;
+  gap: 4px;
+}
+.summary-item:nth-child(odd) {
+  border-right: .5px solid var(--separator);
+}
+.summary-item:nth-child(-n + 2) {
+  border-bottom: .5px solid var(--separator);
+}
+.summary-label {
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .02em;
+}
+.summary-value {
+  font-size: 18px;
+  font-weight: 850;
+  line-height: 1.1;
+}
+.summary-note {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
 .chip,
 .tag,
 .tip {
@@ -382,6 +424,10 @@ button { font: inherit; }
 @media (min-width: 760px) {
   .page { padding: 22px 20px 52px; }
   .hero h1 { font-size: 34px; }
+  .summary-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .summary-item { min-height: 78px; }
+  .summary-item:nth-child(-n + 2) { border-bottom: none; }
+  .summary-item:not(:last-child) { border-right: .5px solid var(--separator); }
   .gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .info-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -439,7 +485,7 @@ button { font: inherit; }
         <span class="desc">看每天几点出发、景区里怎么走、吃什么、什么时候撤退。</span>
       </div>
     </div>
-    <div class="notice">当前项目本地没有新疆专用的 `references/` 攻略摘录，也没有实景图素材。本页只沿用现有项目数据和你明确提到的点位词；没有本地依据的细节统一标成“待核实”，不把社媒印象当营业时间或末班车规则。</div>
+    <div class="notice">本页现在已经接入本地主图素材，并结合当前项目里的行程信息与本地 references 调研结果整理。仍然会随天气、景区公告、区间车班次和道路通行变化的细节，统一保留为“待核实 / 出发前一天再确认”。</div>
   </header>
 
   <section class="jump-strip" id="quickNav" aria-label="日期快捷跳转"></section>
@@ -457,7 +503,7 @@ button { font: inherit; }
   </section>
 
   <section class="pending">
-    <h2>待补充资料</h2>
+    <h2>出发前再核实</h2>
     <ul id="pendingAssets"></ul>
     <ul id="pendingRefs"></ul>
   </section>
@@ -480,20 +526,20 @@ const imageAsset = (file, alt, label) => ({
 });
 
 const scenicImages = {
-  arrival: imageAsset("urumqi-arrival-hero.png", "乌鲁木齐夜抵与机场出发氛围图", "洛阳出发 / 乌鲁木齐抵达"),
-  yining: imageAsset("yining-city-hero.png", "伊宁城市街区与喀赞其氛围图", "伊宁城市街区"),
-  lavender: imageAsset("huocheng-lavender-hero.png", "霍城薰衣草花田图", "霍城薰衣草"),
-  guozigou: imageAsset("guozigou-bridge-hero.png", "果子沟大桥远景图", "果子沟大桥"),
-  sayram: imageAsset("sayram-lake-hero.png", "赛里木湖湖面与雪山图", "赛里木湖"),
-  tekes: imageAsset("tekes-bagua-city-hero.png", "特克斯八卦城街区图", "特克斯八卦城"),
-  kalajun: imageAsset("kalajun-grassland-hero.png", "喀拉峻草原全景图", "喀拉峻草原"),
-  nalati: imageAsset("nalati-grassland-hero.png", "那拉提草原景观图", "那拉提草原"),
-  duku: imageAsset("duku-highway-hero.png", "独库公路山路风景图", "独库公路"),
-  bayinbuluk: imageAsset("bayinbuluk-sunset-hero.png", "巴音布鲁克九曲十八弯日落图", "巴音布鲁克"),
-  kuqa: imageAsset("kuqa-canyon-hero.png", "库车天山神秘大峡谷图", "天山神秘大峡谷"),
-  bosten: imageAsset("bosten-lake-hero.png", "博斯腾湖湖区图", "博斯腾湖"),
-  lopnur: imageAsset("lopnur-village-hero.png", "罗布人村寨沙漠胡杨图", "罗布人村寨"),
-  korla: imageAsset("korla-city-hero.png", "库尔勒城市与孔雀河氛围图", "库尔勒")
+  arrival: imageAsset("urumqi-arrival-hero.jpg", "乌鲁木齐夜抵与机场出发氛围图", "洛阳出发 / 乌鲁木齐抵达"),
+  yining: imageAsset("yining-city-hero.jpg", "伊宁城市街区与喀赞其氛围图", "伊宁城市街区"),
+  lavender: imageAsset("huocheng-lavender-hero.jpg", "霍城薰衣草花田图", "霍城薰衣草"),
+  guozigou: imageAsset("guozigou-bridge-hero.jpg", "果子沟大桥远景图", "果子沟大桥"),
+  sayram: imageAsset("sayram-lake-hero.jpg", "赛里木湖湖面与雪山图", "赛里木湖"),
+  tekes: imageAsset("tekes-bagua-city-hero.jpg", "特克斯八卦城街区图", "特克斯八卦城"),
+  kalajun: imageAsset("kalajun-grassland-hero.jpg", "喀拉峻草原全景图", "喀拉峻草原"),
+  nalati: imageAsset("nalati-grassland-hero.jpg", "那拉提草原景观图", "那拉提草原"),
+  duku: imageAsset("duku-highway-hero.jpg", "独库公路山路风景图", "独库公路"),
+  bayinbuluk: imageAsset("bayinbuluk-sunset-hero.jpg", "巴音布鲁克九曲十八弯日落图", "巴音布鲁克"),
+  kuqa: imageAsset("kuqa-canyon-hero.jpg", "库车天山神秘大峡谷图", "天山神秘大峡谷"),
+  bosten: imageAsset("bosten-lake-hero.jpg", "博斯腾湖湖区图", "博斯腾湖"),
+  lopnur: imageAsset("lopnur-village-hero.jpg", "罗布人村寨沙漠胡杨图", "罗布人村寨"),
+  korla: imageAsset("korla-city-hero.jpg", "库尔勒城市与孔雀河氛围图", "库尔勒")
 };
 
 const imageChecklist = [
@@ -519,8 +565,7 @@ const pendingReferenceNeeds = [
   "那拉提：自驾入园还是区间车、当天开放线路和游客中心排队情况。",
   "巴音布鲁克：九曲十八弯当天末班区间车、观景台步行时间和日落窗口。",
   "独库公路与伊昭公路：出发前一天的限行、封路、落石或天气截图。",
-  "库尔勒返乌：6月29日最终火车/航班班次截图。",
-  "真实照片：当前主图已接入，如需替换，按 IMAGE_SOURCES.md 里的文件名覆盖 assets/scenic/ 对应文件。"
+  "库尔勒返乌：6月29日最终火车/航班班次截图。"
 ];
 
 const step = (time, title, tags, detail, tips = []) => ({ time, title, tags, detail, tips });
@@ -1143,11 +1188,12 @@ function renderParagraphs(items) {
   return items.map(item => `<p>${esc(item)}</p>`).join("");
 }
 
-function renderGallery(keys) {
-  if (!keys || !keys.length) return "";
+function renderGallery(keys, heroKey) {
+  const galleryKeys = [...new Set((keys || []).filter(key => key && key !== heroKey))];
+  if (!galleryKeys.length) return "";
   return `
     <section class="gallery">
-      ${keys.map(key => {
+      ${galleryKeys.map(key => {
         const img = scenicImages[key];
         if (!img) return "";
         return `
@@ -1161,6 +1207,36 @@ function renderGallery(keys) {
   `;
 }
 
+function renderSummary(plan, hero) {
+  const firstStop = plan.schedule[0]?.time || "--:--";
+  const lastStop = plan.schedule[plan.schedule.length - 1]?.time || "--:--";
+  const focusLabel = hero?.label || plan.chips[0] || "当天主线";
+  return `
+    <div class="summary-strip" aria-label="当天执行摘要">
+      <div class="summary-item">
+        <span class="summary-label">起步</span>
+        <span class="summary-value">${esc(firstStop)}</span>
+        <span class="summary-note">建议最晚离房时间</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">收队</span>
+        <span class="summary-value">${esc(lastStop)}</span>
+        <span class="summary-note">当日最后一个节点</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">节点数</span>
+        <span class="summary-value">${esc(plan.schedule.length)} 段</span>
+        <span class="summary-note">按时间轴推进，不用贪多</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">主看</span>
+        <span class="summary-value">${esc(focusLabel)}</span>
+        <span class="summary-note">当天只守一条主线</span>
+      </div>
+    </div>
+  `;
+}
+
 function renderPlan(plan) {
   const hero = scenicImages[plan.heroKey];
   return `
@@ -1169,13 +1245,14 @@ function renderPlan(plan) {
         <img src="${esc(hero.src)}" alt="${esc(hero.alt)}" loading="lazy" onerror="handleImageFallback(this)">
         <div class="caption">${esc(plan.date)} · ${esc(plan.title)}</div>
       </div>
-      ${renderGallery(plan.galleryKeys)}
+      ${renderGallery(plan.galleryKeys, plan.heroKey)}
       <div class="day-body">
         <div class="day-title">
           <div class="date">${esc(plan.date)}</div>
           <h2>${esc(plan.title)}</h2>
         </div>
         <div class="goal">${esc(plan.goal)}</div>
+        ${renderSummary(plan, hero)}
         <div class="chips">${plan.chips.map(chip => `<span class="chip">${esc(chip)}</span>`).join("")}</div>
 
         <section class="section">
@@ -1221,18 +1298,42 @@ function handleImageFallback(img) {
 }
 
 document.getElementById("quickNav").innerHTML = scenicPlans.map(plan =>
-  `<a class="jump-link" href="#${esc(plan.id)}">${esc(plan.shortDate)}</a>`
+  `<a class="jump-link" data-plan-nav="${esc(plan.id)}" href="#${esc(plan.id)}">${esc(plan.shortDate)}</a>`
 ).join("");
 
 document.getElementById("plans").innerHTML = scenicPlans.map(renderPlan).join("");
 
-document.getElementById("pendingAssets").innerHTML = imageChecklist.map(item =>
-  `<li><code>assets/scenic/${esc(item.file)}</code>：已接入 ${esc(item.label)} 实景图；若个别图片加载失败，页面会自动回退到 placeholder。</li>`
-).join("");
+document.getElementById("pendingAssets").innerHTML = `
+  <li>景区主图已接入 ${imageChecklist.length}/${imageChecklist.length} 张，文件统一放在 <code>assets/scenic/</code>；后续如果你想替换成自己的实拍图，保持同名文件直接覆盖即可。</li>
+`;
 
 document.getElementById("pendingRefs").innerHTML = pendingReferenceNeeds.map(item =>
   `<li>${esc(item)}</li>`
 ).join("");
+
+const navLinks = Array.from(document.querySelectorAll("[data-plan-nav]"));
+const setActiveNav = id => {
+  navLinks.forEach(link => {
+    link.classList.toggle("is-active", link.dataset.planNav === id);
+  });
+};
+
+const planObserver = new IntersectionObserver(entries => {
+  const visibleEntries = entries
+    .filter(entry => entry.isIntersecting)
+    .sort((a, b) => Math.abs(a.boundingClientRect.top) - Math.abs(b.boundingClientRect.top));
+  if (visibleEntries[0]) setActiveNav(visibleEntries[0].target.id);
+}, {
+  rootMargin: "-28% 0px -54% 0px",
+  threshold: [0.2, 0.45, 0.7]
+});
+
+scenicPlans.forEach(plan => {
+  const node = document.getElementById(plan.id);
+  if (node) planObserver.observe(node);
+});
+
+if (scenicPlans[0]) setActiveNav(scenicPlans[0].id);
 </script>
 </body>
 </html>
